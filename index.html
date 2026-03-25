@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CheapCheapEat — Affordable Eats Near You</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0c09;
+    --surface: #1a1710;
+    --surface2: #252118;
+    --gold: #f5c842;
+    --gold-dim: #b8942f;
+    --red: #e8402a;
+    --cream: #f0ead8;
+    --muted: #7a7060;
+    --border: rgba(245, 200, 66, 0.15);
+    --radius: 12px;
+    --green: #4caf7d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(14, 12, 9, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--cream); }
+
+  .header-actions { display: flex; gap: 12px; align-items: center; }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+  .btn-primary {
+    background: var(--gold);
+    color: #0e0c09;
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #ffd740; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 72px 24px 48px;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(245,200,66,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(245,200,66,0.12);
+    border: 1px solid rgba(245,200,66,0.3);
+    color: var(--gold);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--cream);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .hero p {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+  }
+
+  /* ── PRICE TIER BADGES ── */
+  .price-tiers {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .tier-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  .tier-badge.t10 { background: rgba(76,175,125,0.12); border-color: rgba(76,175,125,0.4); color: #4caf7d; }
+  .tier-badge.t15 { background: rgba(245,200,66,0.12); border-color: rgba(245,200,66,0.4); color: var(--gold); }
+  .tier-badge.t20 { background: rgba(232,64,42,0.12); border-color: rgba(232,64,42,0.4); color: var(--red); }
+
+  /* ── SEARCH BAR ── */
+  .search-bar {
+    max-width: 680px;
+    margin: 0 auto 48px;
+    padding: 0 24px;
+    display: flex;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .search-bar:focus-within { border-color: var(--gold-dim); }
+
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 14px 16px;
+  }
+  .search-bar input::placeholder { color: var(--muted); }
+
+  .search-bar button {
+    background: var(--gold);
+    color: #0e0c09;
+    border: none;
+    padding: 14px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .search-bar button:hover { background: #ffd740; }
+  .search-bar button:active { background: #e6b800; transform: scale(0.97); }
+  .search-bar button.searching { background: #e6b800; transform: scale(0.97); }
+
+  /* ── MAP AREA ── */
+  .map-section {
+    padding: 0 24px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .map-wrapper {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  #map {
+    width: 100%;
+    height: 480px;
+  }
+
+  .map-overlay-msg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    gap: 12px;
+  }
+
+  .map-icon { font-size: 3rem; }
+
+  .map-overlay-msg h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    color: var(--cream);
+  }
+
+  .map-overlay-msg p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-align: center;
+    max-width: 320px;
+  }
+
+  .map-overlay-msg .btn-primary { margin-top: 8px; font-size: 0.9rem; }
+
+  /* ── LISTINGS ── */
+  .listings-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 64px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .section-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--cream);
+  }
+
+  .section-header .count { font-size: 0.85rem; color: var(--muted); }
+
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Price filter row */
+  .price-filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .price-filter-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-right: 4px;
+  }
+
+  .filter-chip {
+    padding: 6px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-chip:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .filter-chip.active { background: var(--gold); border-color: var(--gold); color: #0e0c09; font-weight: 600; }
+
+  .filter-chip.p10.active { background: #4caf7d; border-color: #4caf7d; color: #fff; }
+  .filter-chip.p15.active { background: var(--gold); border-color: var(--gold); color: #0e0c09; }
+  .filter-chip.p20.active { background: var(--red); border-color: var(--red); color: #fff; }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  /* Loading state */
+  .loading-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .loading-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.25s;
+    cursor: pointer;
+    position: relative;
+  }
+  .card:hover {
+    border-color: var(--gold-dim);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  }
+
+  .card-img {
+    height: 180px;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+  }
+
+  .card-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, rgba(26,23,16,0.8));
+  }
+
+  .owner-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 1;
+  }
+
+  /* Price tier indicator on card */
+  .price-tier-dot {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    z-index: 1;
+    border: 2px solid rgba(0,0,0,0.3);
+  }
+  .price-tier-dot.t10 { background: #4caf7d; }
+  .price-tier-dot.t15 { background: var(--gold); }
+  .price-tier-dot.t20 { background: var(--red); }
+
+  .card-body { padding: 16px; }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+
+  .card-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+
+  .price-tag {
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 3px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .price-tag.t10 { background: rgba(76,175,125,0.15); border: 1px solid rgba(76,175,125,0.3); color: #4caf7d; }
+  .price-tag.t15 { background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.3); color: var(--gold); }
+  .price-tag.t20 { background: rgba(232,64,42,0.15); border: 1px solid rgba(232,64,42,0.3); color: var(--red); }
+
+  .card-cuisine { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+
+  .card-dish {
+    font-size: 0.88rem;
+    color: var(--cream);
+    opacity: 0.85;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-location { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--muted); }
+
+  .stars { font-size: 0.78rem; color: var(--gold); letter-spacing: 1px; }
+
+  /* ── SUBMIT FORM ── */
+  .submit-section {
+    max-width: 700px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+  }
+
+  .submit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--red), var(--gold));
+  }
+
+  .submit-card h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    margin-bottom: 8px;
+    color: var(--cream);
+  }
+
+  .submit-card > p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  .form-group label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .form-group label .required { color: var(--gold); }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--gold-dim); }
+
+  .form-group select option { background: #252118; }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  /* Photo upload */
+  .photo-upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    background: var(--surface2);
+  }
+  .photo-upload-area:hover { border-color: var(--gold-dim); }
+  .photo-upload-area input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+  }
+  .photo-upload-area .upload-icon { font-size: 2rem; margin-bottom: 8px; }
+  .photo-upload-area p { font-size: 0.85rem; color: var(--muted); }
+  .photo-upload-area p span { color: var(--gold); }
+
+  .photo-preview {
+    display: none;
+    margin-top: 12px;
+    position: relative;
+  }
+  .photo-preview img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .photo-preview .remove-photo {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .upload-progress {
+    display: none;
+    margin-top: 8px;
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .upload-progress-bar {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+
+  .owner-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(245,200,66,0.07);
+    border: 1px solid rgba(245,200,66,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+
+  .owner-check input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; }
+
+  .owner-check label { font-size: 0.88rem; color: var(--cream); cursor: pointer; }
+  .owner-check label span { color: var(--gold); font-weight: 600; }
+
+  .free-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+    text-align: center;
+    justify-content: center;
+  }
+  .free-note strong { color: var(--gold); }
+
+  .pending-note {
+    background: rgba(76,175,125,0.08);
+    border: 1px solid rgba(76,175,125,0.25);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    color: #4caf7d;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .submit-btn:hover { background: #ffd740; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,200,66,0.25); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+  }
+
+  .how-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--cream);
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+  }
+
+  .step {
+    text-align: center;
+    padding: 28px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s;
+  }
+  .step:hover { border-color: var(--gold-dim); }
+
+  .step-num {
+    font-family: 'Fraunces', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgba(245,200,66,0.25);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .step-icon { font-size: 1.8rem; margin-bottom: 10px; }
+
+  .step h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .step p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  footer strong { color: var(--gold); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    animation: modalIn 0.25s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: var(--surface2);
+    border: none;
+    color: var(--muted);
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { color: var(--cream); }
+
+  .modal-photo {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+  }
+
+  .modal h3 { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+  .modal .modal-cuisine { color: var(--muted); font-size: 0.85rem; margin-bottom: 16px; }
+  .modal .modal-price { font-size: 2rem; font-family: 'Fraunces', serif; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
+  .modal .modal-dish { color: var(--cream); font-size: 0.95rem; margin-bottom: 16px; line-height: 1.5; }
+  .modal .modal-meta { display: flex; flex-direction: column; gap: 8px; }
+  .modal .meta-row { display: flex; gap: 10px; font-size: 0.85rem; }
+  .modal .meta-label { color: var(--muted); min-width: 80px; }
+  .modal .meta-val { color: var(--cream); }
+  .modal .map-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 20px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+    width: 100%;
+    justify-content: center;
+  }
+  .modal .map-link:hover { background: #ffd740; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 14px 22px;
+    border-radius: 10px;
+    z-index: 300;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    max-width: 320px;
+  }
+  .toast.show { transform: none; opacity: 1; }
+  .toast.error { background: var(--red); color: #fff; }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .header-actions .btn-ghost { display: none; }
+    .submit-card { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">CheapCheap<span>Eat</span></div>
+  <div class="header-actions">
+    <button class="btn btn-ghost" onclick="scrollToList()">Browse</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('adminPanel').style.display='block';document.body.style.overflow='hidden'">🔐 Admin</button>
+    <button class="btn btn-primary" onclick="scrollToForm()">+ Add Restaurant</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">100% Free · Community Powered</div>
+  <h1>Real meals.<br><em>Cheap eats.</em><br>Near you.</h1>
+  <p>A crowd-sourced directory of restaurants serving delicious food for $20 or less. Restaurant owners list for free — always.</p>
+
+  <div class="price-tiers">
+    <div class="tier-badge t10">🟢 Under $10</div>
+    <div class="tier-badge t15">🟡 Under $15</div>
+    <div class="tier-badge t20">🔴 Under $20</div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search by suburb, cuisine, or dish..." oninput="filterCards()" onkeydown="if(event.key==='Enter') triggerSearch()">
+  <button id="searchBtn" onclick="triggerSearch()">Search</button>
+</div>
+
+<!-- MAP -->
+<section class="map-section">
+  <div class="map-wrapper">
+    <div id="map"></div>
+    <div class="map-overlay-msg" id="mapOverlay">
+      <div class="map-icon">📍</div>
+      <h3>Interactive Map</h3>
+      <p>Enter your Google Maps API key to show restaurant locations near you.</p>
+      <button class="btn btn-primary" onclick="promptApiKey()">Enable Map</button>
+    </div>
+  </div>
+</section>
+
+<!-- LISTINGS -->
+<section class="listings-section">
+  <div class="section-header">
+    <h2>All Listings</h2>
+    <span class="count" id="listCount">Loading...</span>
+  </div>
+
+  <!-- Cuisine filters -->
+  <div class="filter-row">
+    <button class="filter-chip active" onclick="setCuisineFilter('all', this)">All Cuisines</button>
+    <button class="filter-chip" onclick="setCuisineFilter('asian', this)">Asian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('italian', this)">Italian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('mexican', this)">Mexican</button>
+    <button class="filter-chip" onclick="setCuisineFilter('burgers', this)">Burgers</button>
+    <button class="filter-chip" onclick="setCuisineFilter('vegetarian', this)">Vegetarian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('indian', this)">Indian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('owner', this)">Owner Verified ★</button>
+  </div>
+
+  <!-- Price filters -->
+  <div class="price-filter-row">
+    <span class="price-filter-label">Budget:</span>
+    <button class="filter-chip active" onclick="setPriceFilter('all', this)">All Prices</button>
+    <button class="filter-chip p10" onclick="setPriceFilter('10', this)">Under $10</button>
+    <button class="filter-chip p15" onclick="setPriceFilter('15', this)">Under $15</button>
+    <button class="filter-chip p20" onclick="setPriceFilter('20', this)">Under $20</button>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid">
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Loading restaurants...</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-icon">🍽️</div>
+      <h3>Find a cheap meal</h3>
+      <p>Browse the map or search by cuisine, suburb, or dish to find affordable eats near you.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-icon">📝</div>
+      <h3>Anyone can submit</h3>
+      <p>Community members submit places they love. Restaurant owners get priority placement — for free.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-icon">✅</div>
+      <h3>We review & verify</h3>
+      <p>Every submission is reviewed before going live. Owner-verified spots get a gold badge.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-icon">🗺️</div>
+      <h3>Get directions</h3>
+      <p>Each listing links directly to Google Maps so you can navigate there instantly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SUBMIT FORM -->
+<section class="submit-section" id="submitSection">
+  <div class="submit-card">
+    <h2>Add a Restaurant</h2>
+    <p>Know a spot with great affordable food? Share it with the community. Restaurant owners get priority listing — always free.</p>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Restaurant Name <span class="required">*</span></label>
+        <input type="text" id="f_name" placeholder="e.g. Mum's Noodle House">
+      </div>
+      <div class="form-group">
+        <label>Cuisine Type <span class="required">*</span></label>
+        <select id="f_cuisine">
+          <option value="">Select cuisine...</option>
+          <option value="asian">Asian</option>
+          <option value="italian">Italian</option>
+          <option value="mexican">Mexican</option>
+          <option value="burgers">Burgers</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="indian">Indian</option>
+          <option value="middle-eastern">Middle Eastern</option>
+          <option value="greek">Greek</option>
+          <option value="vietnamese">Vietnamese</option>
+          <option value="thai">Thai</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Dish Name <span class="required">*</span></label>
+        <input type="text" id="f_dish" placeholder="e.g. Pho Bo — a rich beef noodle soup">
+      </div>
+      <div class="form-group">
+        <label>Price <span class="required">*</span></label>
+        <select id="f_price">
+          <option value="">Select price range...</option>
+          <option value="10">Under $10</option>
+          <option value="15">Under $15</option>
+          <option value="20">Under $20</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Exact Price (optional)</label>
+        <input type="text" id="f_exact_price" placeholder="e.g. $8.50">
+      </div>
+      <div class="form-group full">
+        <label>Address / Suburb <span class="required">*</span></label>
+        <input type="text" id="f_address" placeholder="e.g. 12 Smith St, Collingwood VIC">
+      </div>
+      <div class="form-group">
+        <label>Phone (optional)</label>
+        <input type="text" id="f_phone" placeholder="e.g. (03) 9123 4567">
+      </div>
+      <div class="form-group">
+        <label>Hours (optional)</label>
+        <input type="text" id="f_hours" placeholder="e.g. Mon–Fri 11am–3pm">
+      </div>
+      <div class="form-group full">
+        <label>Photo of the Dish / Restaurant (optional)</label>
+        <div class="photo-upload-area" id="uploadArea">
+          <input type="file" id="f_photo" accept="image/*" onchange="previewPhoto(event)">
+          <div class="upload-icon">📸</div>
+          <p>Click to upload a photo · <span>Max 5MB</span></p>
+        </div>
+        <div class="photo-preview" id="photoPreview">
+          <img id="photoPreviewImg" src="" alt="Preview">
+          <button class="remove-photo" onclick="removePhoto()">✕</button>
+        </div>
+        <div class="upload-progress" id="uploadProgress">
+          <div class="upload-progress-bar" id="uploadProgressBar"></div>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label>Additional Notes</label>
+        <textarea id="f_notes" placeholder="Any extra info — dine-in/takeaway, cash only, etc."></textarea>
+      </div>
+    </div>
+
+    <div class="owner-check">
+      <input type="checkbox" id="f_owner">
+      <label for="f_owner">I am the <span>restaurant owner</span> — give me priority placement 🏅</label>
+    </div>
+
+    <div class="pending-note">
+      🔍 All submissions are reviewed before going live — usually within 24 hours.
+    </div>
+
+    <div class="free-note">✦ <strong>100% free</strong> to list — no fees, no ads, no catches ✦</div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Listing →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>CheapCheapEat</strong> — Community powered. Always free. &nbsp;·&nbsp; Built with ❤️ for budget food lovers in Australia.
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ── FIREBASE CONFIG ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyDoLc_QJsdT2Eiz4u5JAVIAgQXjhxbSn-o",
+    authDomain: "cheapcheapeats.firebaseapp.com",
+    projectId: "cheapcheapeats",
+    storageBucket: "cheapcheapeats.firebasestorage.app",
+    messagingSenderId: "47196090968",
+    appId: "1:47196090968:web:205e242bdf064e6bf9102d",
+    measurementId: "G-4VMBV1306Q"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ── CLOUDINARY CONFIG ──
+  const CLOUDINARY_CLOUD = "dv9lmreir";
+  const CLOUDINARY_PRESET = "cheapcheapeat_upload";
+
+  // ── STATE ──
+  let restaurants = [];
+  let activeCuisineFilter = 'all';
+  let activePriceFilter = 'all';
+  let uploadedPhotoUrl = null;
+  let map, markers = [];
+
+  // ── LOAD RESTAURANTS FROM FIREBASE ──
+  async function loadRestaurants() {
+    try {
+      const q = query(
+        collection(db, "restaurants"),
+        where("status", "==", "approved")
+      );
+      const snapshot = await getDocs(q);
+      restaurants = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderCards(getFiltered());
+    } catch (err) {
+      console.error("Error loading restaurants:", err);
+      restaurants = [];
+      renderCards(getFiltered());
+    }
+  }
+
+  // ── PRICE TIER HELPER ──
+  function getPriceTier(priceRange) {
+    if (priceRange === "10") return { cls: "t10", label: "Under $10" };
+    if (priceRange === "15") return { cls: "t15", label: "Under $15" };
+    return { cls: "t20", label: "Under $20" };
+  }
+
+  // ── RENDER CARDS ──
+  function renderCards(list) {
+    const grid = document.getElementById('cardsGrid');
+    document.getElementById('listCount').textContent = `${list.length} restaurant${list.length !== 1 ? 's' : ''}`;
+    grid.innerHTML = '';
+
+    if (list.length === 0) {
+      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🍽️</div><p>No restaurants found. Try a different filter!</p></div>`;
+      return;
+    }
+
+    list.forEach(r => {
+      const tier = getPriceTier(r.priceRange);
+      const displayPrice = r.exactPrice || (r.priceRange === "10" ? "Under $10" : r.priceRange === "15" ? "Under $15" : "Under $20");
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-img">
+          ${r.photoUrl ? `<img src="${r.photoUrl}" alt="${r.name}" loading="lazy">` : (r.emoji || '🍽️')}
+          ${r.isOwner ? '<span class="owner-badge">★ Owner Verified</span>' : ''}
+          <span class="price-tier-dot ${tier.cls}"></span>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-name">${r.name}</div>
+            <div class="price-tag ${tier.cls}">${displayPrice}</div>
+          </div>
+          <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
+          <div class="card-dish">${r.dish}</div>
+          <div class="card-footer">
+            <div class="card-location">📍 ${r.address ? r.address.split(',').slice(1).join(',').trim() : ''}</div>
+            <div class="stars">${'★'.repeat(r.stars || 4)}</div>
+          </div>
+        </div>
+      `;
+      card.onclick = () => openModal(r);
+      grid.appendChild(card);
+    });
+  }
+
+  // ── FILTER LOGIC ──
+  function getFiltered() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    return restaurants.filter(r => {
+      const matchCuisine = activeCuisineFilter === 'all' ? true
+        : activeCuisineFilter === 'owner' ? r.isOwner
+        : r.cuisine === activeCuisineFilter;
+      const matchPrice = activePriceFilter === 'all' ? true
+        : r.priceRange === activePriceFilter;
+      const matchSearch = !q
+        || (r.name || '').toLowerCase().includes(q)
+        || (r.cuisineLabel || '').toLowerCase().includes(q)
+        || (r.dish || '').toLowerCase().includes(q)
+        || (r.address || '').toLowerCase().includes(q);
+      return matchCuisine && matchPrice && matchSearch;
+    });
+  }
+
+  window.triggerSearch = () => {
+    const btn = document.getElementById('searchBtn');
+    btn.textContent = 'Searching...';
+    btn.classList.add('searching');
+    setTimeout(() => {
+      const filtered = getFiltered();
+      renderCards(filtered);
+      updateMapPins(filtered);
+      btn.textContent = filtered.length > 0 ? `${filtered.length} found ✓` : 'No results';
+      setTimeout(() => {
+        btn.textContent = 'Search';
+        btn.classList.remove('searching');
+      }, 2000);
+    }, 300);
+  };
+
+  window.filterCards = () => {
+    const filtered = getFiltered();
+    renderCards(filtered);
+    updateMapPins(filtered);
+  };
+
+  function updateMapPins(filtered) {
+    if (!map) return;
+
+    // Clear all existing markers
+    markers.forEach(m => m.setMap(null));
+    markers = [];
+
+    if (filtered.length === 0) return;
+
+    const withCoords = filtered.filter(r => r.lat && r.lng);
+
+    // Info window shared across all markers
+    const infoWindow = new google.maps.InfoWindow();
+
+    // Add new markers for filtered results
+    withCoords.forEach(r => {
+      const tier = getPriceTier(r.priceRange);
+      const color = tier.cls === 't10' ? '#4caf7d' : tier.cls === 't15' ? '#f5c842' : '#e8402a';
+      const marker = new google.maps.Marker({
+        position: { lat: r.lat, lng: r.lng },
+        map,
+        title: r.name,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 12,
+          fillColor: color,
+          fillOpacity: 1,
+          strokeColor: '#0e0c09',
+          strokeWeight: 2
+        }
+      });
+
+      // Show info bubble on hover
+      marker.addListener('mouseover', () => {
+        const displayPrice = r.exactPrice || `Under $${r.priceRange}`;
+        infoWindow.setContent(`
+          <div style="font-family:DM Sans,sans-serif;padding:4px 6px;min-width:160px">
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:2px">${r.name}</div>
+            <div style="font-size:0.82rem;color:#666;margin-bottom:2px">${r.cuisineLabel || r.cuisine}</div>
+            <div style="font-size:0.82rem;color:${color};font-weight:600">${displayPrice}</div>
+            <div style="font-size:0.78rem;color:#888;margin-top:2px">Click for details</div>
+          </div>
+        `);
+        infoWindow.open(map, marker);
+      });
+
+      // Hide info bubble when mouse leaves
+      marker.addListener('mouseout', () => {
+        infoWindow.close();
+      });
+
+      marker.addListener('click', () => {
+        infoWindow.close();
+        openModal(r);
+      });
+      markers.push(marker);
+    });
+
+    // Pan and zoom map to show results
+    if (withCoords.length === 1) {
+      map.setCenter({ lat: withCoords[0].lat, lng: withCoords[0].lng });
+      map.setZoom(15);
+    } else if (withCoords.length > 1) {
+      const bounds = new google.maps.LatLngBounds();
+      withCoords.forEach(r => bounds.extend({ lat: r.lat, lng: r.lng }));
+      map.fitBounds(bounds);
+      // Prevent zooming in too close
+      const listener = google.maps.event.addListener(map, 'idle', () => {
+        if (map.getZoom() > 15) map.setZoom(15);
+        google.maps.event.removeListener(listener);
+      });
+    }
+  }
+
+  window.setCuisineFilter = (f, el) => {
+    activeCuisineFilter = f;
+    document.querySelectorAll('.filter-row .filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    renderCards(getFiltered());
+  };
+
+  window.setPriceFilter = (f, el) => {
+    activePriceFilter = f;
+    document.querySelectorAll('.price-filter-row .filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    renderCards(getFiltered());
+  };
+
+  // ── MODAL ──
+  window.openModal = (r) => {
+    const tier = getPriceTier(r.priceRange);
+    const displayPrice = r.exactPrice || tier.label;
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((r.name || '') + ' ' + (r.address || ''))}`;
+    document.getElementById('modalContent').innerHTML = `
+      ${r.photoUrl ? `<img class="modal-photo" src="${r.photoUrl}" alt="${r.name}">` : `<div style="font-size:3rem;margin-bottom:12px">${r.emoji || '🍽️'}</div>`}
+      ${r.isOwner ? '<div style="display:inline-block;background:var(--gold);color:#0e0c09;font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:4px;margin-bottom:12px;letter-spacing:0.05em">★ OWNER VERIFIED</div>' : ''}
+      <h3>${r.name}</h3>
+      <div class="modal-cuisine">${r.cuisineLabel || r.cuisine}</div>
+      <div class="modal-price" style="color:${tier.cls === 't10' ? '#4caf7d' : tier.cls === 't20' ? 'var(--red)' : 'var(--gold)'}">${displayPrice}</div>
+      <div class="modal-dish">${r.dish}</div>
+      <div class="modal-meta">
+        <div class="meta-row"><span class="meta-label">Address</span><span class="meta-val">${r.address || '—'}</span></div>
+        <div class="meta-row"><span class="meta-label">Hours</span><span class="meta-val">${r.hours || 'Not listed'}</span></div>
+        <div class="meta-row"><span class="meta-label">Phone</span><span class="meta-val">${r.phone || 'Not provided'}</span></div>
+        <div class="meta-row"><span class="meta-label">Rating</span><span class="meta-val" style="color:var(--gold)">${'★'.repeat(r.stars || 4)}</span></div>
+        ${r.notes ? `<div class="meta-row"><span class="meta-label">Notes</span><span class="meta-val">${r.notes}</span></div>` : ''}
+      </div>
+      <a class="map-link" href="${mapsUrl}" target="_blank">📍 Open in Google Maps</a>
+    `;
+    document.getElementById('modal').classList.add('open');
+  };
+
+  window.closeModal = (e) => {
+    if (e.target === document.getElementById('modal')) {
+      document.getElementById('modal').classList.remove('open');
+    }
+  };
+
+  // ── PHOTO PREVIEW ──
+  window.previewPhoto = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('Photo must be under 5MB', true);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      document.getElementById('photoPreviewImg').src = ev.target.result;
+      document.getElementById('photoPreview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.removePhoto = () => {
+    document.getElementById('f_photo').value = '';
+    document.getElementById('photoPreview').style.display = 'none';
+    document.getElementById('photoPreviewImg').src = '';
+    uploadedPhotoUrl = null;
+  };
+
+  // ── UPLOAD PHOTO TO CLOUDINARY ──
+  async function uploadToCloudinary(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+
+    document.getElementById('uploadProgress').style.display = 'block';
+    document.getElementById('uploadProgressBar').style.width = '30%';
+
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+      method: 'POST',
+      body: formData
+    });
+
+    document.getElementById('uploadProgressBar').style.width = '100%';
+    setTimeout(() => { document.getElementById('uploadProgress').style.display = 'none'; }, 600);
+
+    const data = await res.json();
+    return data.secure_url;
+  }
+
+  // ── SUBMIT FORM ──
+  window.submitForm = async () => {
+    const name = document.getElementById('f_name').value.trim();
+    const cuisine = document.getElementById('f_cuisine').value;
+    const dish = document.getElementById('f_dish').value.trim();
+    const address = document.getElementById('f_address').value.trim();
+    const priceRange = document.getElementById('f_price').value;
+
+    if (!name || !cuisine || !dish || !address || !priceRange) {
+      showToast('Please fill in all required fields.', true);
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    try {
+      // Upload photo if provided
+      let photoUrl = null;
+      const photoFile = document.getElementById('f_photo').files[0];
+      if (photoFile) {
+        btn.textContent = 'Uploading photo...';
+        photoUrl = await uploadToCloudinary(photoFile);
+      }
+
+      // Geocode address using Google Maps Geocoder (works with restricted keys)
+      btn.textContent = 'Getting location...';
+      let lat = null, lng = null;
+      try {
+        await new Promise((resolve) => {
+          const waitForGoogle = setInterval(() => {
+            if (window.google && window.google.maps) {
+              clearInterval(waitForGoogle);
+              const geocoder = new google.maps.Geocoder();
+              geocoder.geocode({ address: address + ', Australia' }, (results, status) => {
+                console.log('Geocode status:', status);
+                if (status === 'OK' && results.length > 0) {
+                  lat = results[0].geometry.location.lat();
+                  lng = results[0].geometry.location.lng();
+                  console.log('Coordinates found:', lat, lng);
+                } else {
+                  console.warn('Geocode failed:', status);
+                }
+                resolve();
+              });
+            }
+          }, 100);
+          // Timeout after 5 seconds
+          setTimeout(() => { clearInterval(waitForGoogle); resolve(); }, 5000);
+        });
+      } catch (geoErr) {
+        console.warn('Geocoding error:', geoErr);
+      }
+
+      const isOwner = document.getElementById('f_owner').checked;
+      const cuisineLabels = {
+        asian: 'Asian', italian: 'Italian', mexican: 'Mexican', burgers: 'Burgers',
+        vegetarian: 'Vegetarian', indian: 'Indian', 'middle-eastern': 'Middle Eastern',
+        greek: 'Greek', vietnamese: 'Vietnamese', thai: 'Thai', other: 'Other'
+      };
+
+      const newEntry = {
+        name,
+        cuisine,
+        cuisineLabel: cuisineLabels[cuisine] || cuisine,
+        dish,
+        priceRange,
+        exactPrice: document.getElementById('f_exact_price').value.trim() || null,
+        address,
+        phone: document.getElementById('f_phone').value.trim() || null,
+        hours: document.getElementById('f_hours').value.trim() || null,
+        notes: document.getElementById('f_notes').value.trim() || null,
+        photoUrl,
+        isOwner,
+        stars: isOwner ? 5 : 4,
+        lat,
+        lng,
+        status: 'pending', // requires your approval before going live
+        createdAt: serverTimestamp()
+      };
+
+      const docRef = await addDoc(collection(db, "restaurants"), newEntry);
+      // Send email notification
+      sendEmailNotification(newEntry);
+
+      // Reset form
+      ['f_name', 'f_dish', 'f_address', 'f_phone', 'f_hours', 'f_notes', 'f_exact_price'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('f_cuisine').selectedIndex = 0;
+      document.getElementById('f_price').selectedIndex = 0;
+      document.getElementById('f_owner').checked = false;
+      window.removePhoto();
+
+      showToast('🎉 Listing submitted! We\'ll review it within 24 hours.');
+      scrollToList();
+
+    } catch (err) {
+      console.error("Submit error:", err);
+      showToast('Something went wrong. Please try again.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit Listing →';
+    }
+  };
+
+  // ── TOAST ──
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'toast' + (isError ? ' error' : '');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+  window.showToast = showToast;
+
+  // ── SCROLL HELPERS ──
+  window.scrollToForm = () => document.getElementById('submitSection').scrollIntoView({ behavior: 'smooth' });
+  window.scrollToList = () => document.querySelector('.listings-section').scrollIntoView({ behavior: 'smooth' });
+
+  // ── GOOGLE MAPS ──
+  const MAPS_API_KEY = "AIzaSyBKjfCUAhDNRYOW41i7M4ou-UWQs8L4mbU";
+
+  window.promptApiKey = () => loadGoogleMap(MAPS_API_KEY);
+
+  function initMapWithRestaurants() {
+    document.getElementById('mapOverlay').style.display = 'none';
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: -37.840, lng: 145.060 },
+      zoom: 11,
+      styles: [
+        { elementType: 'geometry', stylers: [{ color: '#1a1710' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#a09070' }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: '#0e0c09' }] },
+        { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#252118' }] },
+        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0a0807' }] },
+        { featureType: 'poi', stylers: [{ visibility: 'off' }] }
+      ]
+    });
+    // Use updateMapPins to place all markers
+    updateMapPins(restaurants);
+  }
+
+  window.loadGoogleMap = (apiKey) => {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+    script.async = true;
+    window.initMap = initMapWithRestaurants;
+    document.head.appendChild(script);
+  };
+
+  // Auto-load map on page load
+  loadGoogleMap(MAPS_API_KEY);
+
+  // ── EMAILJS CONFIG ──
+  const EMAILJS_SERVICE = "cheapcheapeat_service";
+  const EMAILJS_TEMPLATE = "template_r4op13m";
+  const EMAILJS_PUBLIC_KEY = "UjfzMQjMAfzpbEnOB";
+  const ADMIN_URL = window.location.origin + "?admin=true";
+
+  async function sendEmailNotification(entry) {
+    try {
+      await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+        restaurant_name: entry.name,
+        cuisine: entry.cuisineLabel || entry.cuisine,
+        dish: entry.dish,
+        price: entry.priceRange,
+        address: entry.address || '—',
+        is_owner: entry.isOwner ? 'Yes — Owner Verified' : 'No',
+        phone: entry.phone || '—',
+        hours: entry.hours || '—',
+        notes: entry.notes || '—',
+        admin_url: ADMIN_URL
+      }, EMAILJS_PUBLIC_KEY);
+      console.log("Email notification sent!");
+    } catch (err) {
+      console.error("Email notification failed:", err);
+    }
+  }
+  window.sendEmailNotification = sendEmailNotification;
+
+  // ── ADMIN PANEL ──
+  const ADMIN_PASSWORD = "CheapCheapEat2024!";
+
+  window.checkAdminPassword = () => {
+    const input = document.getElementById('adminPasswordInput').value;
+    if (input === ADMIN_PASSWORD) {
+      document.getElementById('adminLogin').style.display = 'none';
+      document.getElementById('adminContent').style.display = 'block';
+      loadPendingRestaurants();
+    } else {
+      document.getElementById('adminLoginError').style.display = 'block';
+    }
+  };
+
+  async function loadPendingRestaurants() {
+    const list = document.getElementById('pendingList');
+    list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">Loading...</p>';
+    try {
+      const q = query(collection(db, "restaurants"), where("status", "==", "pending"));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px">🎉 No pending submissions!</p>';
+        return;
+      }
+      list.innerHTML = '';
+      snapshot.docs.forEach(docSnap => {
+        const r = { id: docSnap.id, ...docSnap.data() };
+        const card = document.createElement('div');
+        card.className = 'admin-card';
+        card.id = 'admin-card-' + r.id;
+        card.innerHTML = `
+          ${r.photoUrl ? `<img src="${r.photoUrl}" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px;border:1px solid var(--border)">` : ''}
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <strong style="font-family:Fraunces,serif;font-size:1.1rem;color:var(--cream)">${r.name}</strong>
+            <span style="background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);color:var(--gold);padding:2px 8px;border-radius:4px;font-size:0.8rem">Under $${r.priceRange}</span>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">🍽️ ${r.cuisineLabel || r.cuisine}</p>
+          <p style="color:var(--cream);font-size:0.88rem;margin-bottom:4px">${r.dish}</p>
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">📍 ${r.address || '—'}</p>
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">📞 ${r.phone || '—'} &nbsp;·&nbsp; 🕐 ${r.hours || '—'}</p>
+          ${r.isOwner ? '<p style="color:var(--gold);font-size:0.82rem;margin-bottom:8px">★ Claims to be owner</p>' : ''}
+          ${r.notes ? `<p style="color:var(--muted);font-size:0.82rem;margin-bottom:8px">📝 ${r.notes}</p>` : ''}
+          <div style="display:flex;gap:10px;margin-top:12px">
+            <button onclick="approveRestaurant('${r.id}')" style="flex:1;padding:10px;background:#4caf7d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">✅ Approve</button>
+            <button onclick="rejectRestaurant('${r.id}')" style="flex:1;padding:10px;background:#e8402a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">❌ Reject</button>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    } catch (err) {
+      list.innerHTML = '<p style="color:var(--red)">Error loading submissions. Please try again.</p>';
+      console.error(err);
+    }
+  }
+
+  window.approveRestaurant = async (id) => {
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(doc(db, "restaurants", id), { status: "approved" });
+      const card = document.getElementById('admin-card-' + id);
+      if (card) card.remove();
+      showToast('✅ Restaurant approved and now live!');
+      loadRestaurants();
+    } catch (err) {
+      console.error(err);
+      showToast('Error approving. Try again.', true);
+    }
+  };
+
+  window.rejectRestaurant = async (id) => {
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(doc(db, "restaurants", id), { status: "rejected" });
+      const card = document.getElementById('admin-card-' + id);
+      if (card) card.remove();
+      showToast('❌ Restaurant rejected.');
+    } catch (err) {
+      console.error(err);
+      showToast('Error rejecting. Try again.', true);
+    }
+  };
+
+  // Show admin panel if ?admin=true in URL
+  if (window.location.search.includes('admin=true')) {
+    document.getElementById('adminPanel').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  window.closeAdmin = () => {
+    document.getElementById('adminPanel').style.display = 'none';
+    document.body.style.overflow = '';
+    window.history.replaceState({}, '', window.location.pathname);
+  };
+
+  // ── INIT ──
+  loadRestaurants();
+</script>
+
+<!-- EMAILJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<!-- ADMIN PANEL OVERLAY -->
+<div id="adminPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:500;overflow-y:auto;backdrop-filter:blur(8px)">
+  <div style="max-width:700px;margin:40px auto;padding:24px">
+
+    <!-- Login Screen -->
+    <div id="adminLogin" style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:12px">🔐</div>
+      <h2 style="font-family:Fraunces,serif;color:var(--cream);margin-bottom:8px">Admin Panel</h2>
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:24px">Enter your password to review pending submissions</p>
+      <input id="adminPasswordInput" type="password" placeholder="Enter admin password"
+        style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.95rem;padding:12px 16px;outline:none;margin-bottom:12px;transition:border-color 0.2s"
+        onkeydown="if(event.key==='Enter') checkAdminPassword()">
+      <p id="adminLoginError" style="display:none;color:#e8402a;font-size:0.85rem;margin-bottom:12px">❌ Incorrect password. Please try again.</p>
+      <div style="display:flex;gap:10px">
+        <button onclick="checkAdminPassword()" style="flex:1;padding:12px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif;font-size:0.95rem">Enter Admin</button>
+        <button onclick="closeAdmin()" style="padding:12px 20px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Pending Listings -->
+    <div id="adminContent" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+        <h2 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.8rem">Pending Submissions</h2>
+        <button onclick="closeAdmin()" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">✕ Close</button>
+      </div>
+      <div id="pendingList"></div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .admin-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .admin-card:hover { border-color: var(--gold-dim); }
+</style>
+</body>
+</html>
