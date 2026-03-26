@@ -975,21 +975,76 @@
         </select>
       </div>
       <div class="form-group full">
-        <label>Dish Name <span class="required">*</span></label>
-        <input type="text" id="f_dish" placeholder="e.g. Pho Bo — a rich beef noodle soup">
-      </div>
-      <div class="form-group">
-        <label>Price <span class="required">*</span></label>
-        <select id="f_price">
-          <option value="">Select price range...</option>
-          <option value="10">Under $10</option>
-          <option value="15">Under $15</option>
-          <option value="20">Under $20</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Exact Price (optional)</label>
-        <input type="text" id="f_exact_price" placeholder="e.g. $8.50">
+        <label>Dishes <span class="required">*</span> <span style="color:var(--muted);font-size:0.78rem;text-transform:none;letter-spacing:0">(up to 5 dishes — first one is featured)</span></label>
+        
+        <!-- Dish 1 - Required -->
+        <div class="dish-row" id="dish-row-1">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+            <span style="font-size:0.75rem;color:var(--gold);font-weight:600;min-width:60px">Dish 1 ★</span>
+            <input type="text" id="f_dish_1" placeholder="Dish name e.g. Pho Bo" style="flex:2">
+            <input type="text" id="f_price_1" placeholder="Price e.g. $9.50" style="flex:1">
+            <select id="f_tier_1" style="flex:1">
+              <option value="10">Under $10</option>
+              <option value="15">Under $15</option>
+              <option value="20">Under $20</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dish 2-5 - Optional -->
+        <div id="dish-row-2" style="display:none" class="dish-row">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+            <span style="font-size:0.75rem;color:var(--muted);min-width:60px">Dish 2</span>
+            <input type="text" id="f_dish_2" placeholder="Dish name (optional)" style="flex:2">
+            <input type="text" id="f_price_2" placeholder="Price" style="flex:1">
+            <select id="f_tier_2" style="flex:1">
+              <option value="10">Under $10</option>
+              <option value="15">Under $15</option>
+              <option value="20">Under $20</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="dish-row-3" style="display:none" class="dish-row">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+            <span style="font-size:0.75rem;color:var(--muted);min-width:60px">Dish 3</span>
+            <input type="text" id="f_dish_3" placeholder="Dish name (optional)" style="flex:2">
+            <input type="text" id="f_price_3" placeholder="Price" style="flex:1">
+            <select id="f_tier_3" style="flex:1">
+              <option value="10">Under $10</option>
+              <option value="15">Under $15</option>
+              <option value="20">Under $20</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="dish-row-4" style="display:none" class="dish-row">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+            <span style="font-size:0.75rem;color:var(--muted);min-width:60px">Dish 4</span>
+            <input type="text" id="f_dish_4" placeholder="Dish name (optional)" style="flex:2">
+            <input type="text" id="f_price_4" placeholder="Price" style="flex:1">
+            <select id="f_tier_4" style="flex:1">
+              <option value="10">Under $10</option>
+              <option value="15">Under $15</option>
+              <option value="20">Under $20</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="dish-row-5" style="display:none" class="dish-row">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+            <span style="font-size:0.75rem;color:var(--muted);min-width:60px">Dish 5</span>
+            <input type="text" id="f_dish_5" placeholder="Dish name (optional)" style="flex:2">
+            <input type="text" id="f_price_5" placeholder="Price" style="flex:1">
+            <select id="f_tier_5" style="flex:1">
+              <option value="10">Under $10</option>
+              <option value="15">Under $15</option>
+              <option value="20">Under $20</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" id="addDishBtn" onclick="addDishRow()" style="background:transparent;border:1px dashed var(--gold-dim);color:var(--gold);padding:6px 16px;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.82rem;margin-top:4px">+ Add another dish</button>
       </div>
       <div class="form-group full">
         <label>Address / Suburb <span class="required">*</span></label>
@@ -1126,6 +1181,12 @@
       const displayPrice = r.exactPrice || (r.priceRange === "10" ? "Under $10" : r.priceRange === "15" ? "Under $15" : "Under $20");
       const card = document.createElement('div');
       card.className = 'card';
+      // Build dishes list for card
+      const dishes = r.dishes && r.dishes.length > 0 ? r.dishes : 
+        (r.dish ? [{ name: r.dish, price: r.exactPrice || displayPrice, tier: r.priceRange || '10' }] : []);
+      const featuredDish = dishes[0] || {};
+      const extraCount = dishes.length - 1;
+
       card.innerHTML = `
         <div class="card-img">
           ${r.photoUrl ? `<img src="${r.photoUrl}" alt="${r.name}" loading="lazy">` : (r.emoji || '🍽️')}
@@ -1138,7 +1199,17 @@
             <div class="price-tag ${tier.cls}">${displayPrice}</div>
           </div>
           <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
-          <div class="card-dish">${r.dish}</div>
+          <div class="card-dish">${featuredDish.name || r.dish || ''}</div>
+          ${dishes.length > 1 ? `
+          <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
+            ${dishes.slice(1).map(d => {
+              const dt = getPriceTier(d.tier || r.priceRange);
+              return `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--surface2);border-radius:6px;font-size:0.78rem">
+                <span style="color:var(--cream);opacity:0.85">${d.name}</span>
+                <span style="color:${dt.cls === 't10' ? '#4caf7d' : dt.cls === 't15' ? 'var(--gold)' : 'var(--red)'};font-weight:600">${d.price}</span>
+              </div>`;
+            }).join('')}
+          </div>` : '<div style="margin-bottom:12px"></div>'}
           <div class="card-footer">
             <div class="card-location">📍 ${r.address ? r.address.split(',').slice(1).join(',').trim() : ''}</div>
             <div class="stars">${'★'.repeat(r.stars || 4)}</div>
@@ -1289,7 +1360,29 @@
       <h3>${r.name}</h3>
       <div class="modal-cuisine">${r.cuisineLabel || r.cuisine}</div>
       <div class="modal-price" style="color:${tier.cls === 't10' ? '#4caf7d' : tier.cls === 't20' ? 'var(--red)' : 'var(--gold)'}">${displayPrice}</div>
-      <div class="modal-dish">${r.dish}</div>
+      ${(() => {
+        const dishes = r.dishes && r.dishes.length > 0 ? r.dishes :
+          (r.dish ? [{ name: r.dish, price: r.exactPrice || displayPrice, tier: r.priceRange || '10' }] : []);
+        if (dishes.length === 0) return '<div class=\'modal-dish\'>—</div>';
+        const featured = dishes[0];
+        const rest = dishes.slice(1);
+        return '<div style=\'background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:12px\'>' +
+          '<div style=\'font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px\'>Featured dish</div>' +
+          '<div style=\'display:flex;justify-content:space-between;align-items:center\'>' +
+          '<span style=\'font-weight:600;color:var(--cream)\'>' + featured.name + '</span>' +
+          '<span style=\'color:#4caf7d;font-weight:700\'>' + (featured.price || '') + '</span>' +
+          '</div></div>' +
+          (rest.length > 0 ? '<div style=\'margin-bottom:12px\'>' +
+          '<div style=\'font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px\'>More dishes</div>' +
+          '<div style=\'display:flex;flex-direction:column;gap:6px\'>' +
+          rest.map(d => {
+            const dc = d.tier === '10' ? '#4caf7d' : d.tier === '20' ? 'var(--red)' : 'var(--gold)';
+            return '<div style=\'display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--border);border-radius:8px\'>' +
+              '<span style=\'font-size:0.88rem;color:var(--cream)\'>' + d.name + '</span>' +
+              '<span style=\'color:' + dc + ';font-weight:600;font-size:0.88rem\'>' + (d.price || '') + '</span>' +
+              '</div>';
+          }).join('') + '</div></div>' : '');
+      })()}
       <div class="modal-meta">
         <div class="meta-row"><span class="meta-label">Address</span><span class="meta-val">${r.address || '—'}</span></div>
         <div class="meta-row"><span class="meta-label">Hours</span><span class="meta-val">${r.hours || 'Not listed'}</span></div>
@@ -1356,14 +1449,34 @@
   window.submitForm = async () => {
     const name = document.getElementById('f_name').value.trim();
     const cuisine = document.getElementById('f_cuisine').value;
-    const dish = document.getElementById('f_dish').value.trim();
     const address = document.getElementById('f_address').value.trim();
-    const priceRange = document.getElementById('f_price').value;
+    const dish1 = document.getElementById('f_dish_1').value.trim();
+    const price1 = document.getElementById('f_price_1').value.trim();
+    const tier1 = document.getElementById('f_tier_1').value;
 
-    if (!name || !cuisine || !dish || !address || !priceRange) {
-      showToast('Please fill in all required fields.', true);
+    if (!name || !cuisine || !address || !dish1) {
+      showToast('Please fill in all required fields including at least one dish.', true);
       return;
     }
+
+    // Collect all dishes
+    const dishes = [];
+    for (let i = 1; i <= 5; i++) {
+      const dishEl = document.getElementById('f_dish_' + i);
+      const priceEl = document.getElementById('f_price_' + i);
+      const tierEl = document.getElementById('f_tier_' + i);
+      if (dishEl && dishEl.value.trim()) {
+        dishes.push({
+          name: dishEl.value.trim(),
+          price: priceEl ? priceEl.value.trim() : '',
+          tier: tierEl ? tierEl.value : '10'
+        });
+      }
+    }
+
+    // Use first dish tier as the main price range
+    const priceRange = dishes.length > 0 ? dishes[0].tier : '10';
+    const dish = dishes.length > 0 ? dishes[0].name : '';
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
@@ -1419,8 +1532,9 @@
         cuisine,
         cuisineLabel: cuisineLabels[cuisine] || cuisine,
         dish,
+        dishes,
         priceRange,
-        exactPrice: document.getElementById('f_exact_price').value.trim() || null,
+        exactPrice: dishes.length > 0 ? dishes[0].price : null,
         address,
         phone: document.getElementById('f_phone').value.trim() || null,
         hours: document.getElementById('f_hours').value.trim() || null,
@@ -1439,11 +1553,25 @@
       sendEmailNotification(newEntry);
 
       // Reset form
-      ['f_name', 'f_dish', 'f_address', 'f_phone', 'f_hours', 'f_notes', 'f_exact_price'].forEach(id => {
-        document.getElementById(id).value = '';
+      ['f_name', 'f_address', 'f_phone', 'f_hours', 'f_notes'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
       });
+      for (let i = 1; i <= 5; i++) {
+        const d = document.getElementById('f_dish_' + i);
+        const p = document.getElementById('f_price_' + i);
+        const t = document.getElementById('f_tier_' + i);
+        if (d) d.value = '';
+        if (p) p.value = '';
+        if (t) t.selectedIndex = 0;
+        if (i > 1) {
+          const row = document.getElementById('dish-row-' + i);
+          if (row) row.style.display = 'none';
+        }
+      }
+      currentDishRow = 1;
+      document.getElementById('addDishBtn').style.display = 'inline-block';
       document.getElementById('f_cuisine').selectedIndex = 0;
-      document.getElementById('f_price').selectedIndex = 0;
       document.getElementById('f_owner').checked = false;
       window.removePhoto();
 
@@ -1470,6 +1598,18 @@
   window.showToast = showToast;
 
   // ── SCROLL HELPERS ──
+  // ── MULTIPLE DISHES ──
+  let currentDishRow = 1;
+  window.addDishRow = () => {
+    if (currentDishRow >= 5) return;
+    currentDishRow++;
+    const row = document.getElementById('dish-row-' + currentDishRow);
+    if (row) row.style.display = 'block';
+    if (currentDishRow >= 5) {
+      document.getElementById('addDishBtn').style.display = 'none';
+    }
+  };
+
   window.scrollToForm = () => document.getElementById('submitSection').scrollIntoView({ behavior: 'smooth' });
   window.scrollToList = () => document.querySelector('.listings-section').scrollIntoView({ behavior: 'smooth' });
 
