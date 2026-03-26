@@ -1059,6 +1059,10 @@
         <input type="text" id="f_hours" placeholder="e.g. Mon–Fri 11am–3pm">
       </div>
       <div class="form-group full">
+        <label>Restaurant Website (optional)</label>
+        <input type="text" id="f_website" placeholder="e.g. https://www.myrestaurant.com.au">
+      </div>
+      <div class="form-group full">
         <label>Photo of the Dish / Restaurant (optional)</label>
         <div class="photo-upload-area" id="uploadArea">
           <input type="file" id="f_photo" accept="image/*" onchange="previewPhoto(event)">
@@ -1391,6 +1395,7 @@
         ${r.notes ? `<div class="meta-row"><span class="meta-label">Notes</span><span class="meta-val">${r.notes}</span></div>` : ''}
       </div>
       <a class="map-link" href="${mapsUrl}" target="_blank">📍 Open in Google Maps</a>
+      ${r.website ? `<a class="map-link" href="${r.website}" target="_blank" style="margin-top:8px;background:var(--surface2);color:var(--cream);border:1px solid var(--border)">🌐 Visit Restaurant Website</a>` : ''}
     `;
     document.getElementById('modal').classList.add('open');
   };
@@ -1539,6 +1544,7 @@
         phone: document.getElementById('f_phone').value.trim() || null,
         hours: document.getElementById('f_hours').value.trim() || null,
         notes: document.getElementById('f_notes').value.trim() || null,
+        website: document.getElementById('f_website').value.trim() || null,
         photoUrl,
         isOwner,
         stars: isOwner ? 5 : 4,
@@ -1553,7 +1559,7 @@
       sendEmailNotification(newEntry);
 
       // Reset form
-      ['f_name', 'f_address', 'f_phone', 'f_hours', 'f_notes'].forEach(id => {
+      ['f_name', 'f_address', 'f_phone', 'f_hours', 'f_notes', 'f_website'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
@@ -1715,6 +1721,7 @@
           <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">📍 ${r.address || '—'}</p>
           <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">📞 ${r.phone || '—'} &nbsp;·&nbsp; 🕐 ${r.hours || '—'}</p>
           ${r.isOwner ? '<p style="color:var(--gold);font-size:0.82rem;margin-bottom:8px">★ Claims to be owner</p>' : ''}
+          ${r.website ? `<p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">🌐 <a href="${r.website}" target="_blank" style="color:var(--gold)">${r.website}</a></p>` : ''}
           ${r.notes ? `<p style="color:var(--muted);font-size:0.82rem;margin-bottom:8px">📝 ${r.notes}</p>` : ''}
           <div style="display:flex;gap:10px;margin-top:12px">
             <button onclick="approveRestaurant('${r.id}')" style="flex:1;padding:10px;background:#4caf7d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">✅ Approve</button>
