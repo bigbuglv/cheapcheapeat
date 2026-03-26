@@ -863,6 +863,7 @@
 <!-- SEARCH -->
 <div class="search-bar">
   <input type="text" id="searchInput" placeholder="Search by suburb, cuisine, or dish..." oninput="filterCards()" onkeydown="if(event.key==='Enter') triggerSearch()">
+  <button id="locationBtn" onclick="useMyLocation()" title="Use my location" style="background:var(--surface2);color:var(--cream);border:none;padding:14px 16px;font-size:1.1rem;cursor:pointer;transition:background 0.2s;border-right:1px solid var(--border)">📍</button>
   <button id="searchBtn" onclick="triggerSearch()">Search</button>
 </div>
 
@@ -896,6 +897,7 @@
     <button class="filter-chip" onclick="setCuisineFilter('vegetarian', this)">Vegetarian</button>
     <button class="filter-chip" onclick="setCuisineFilter('indian', this)">Indian</button>
     <button class="filter-chip" onclick="setCuisineFilter('owner', this)">Owner Verified ★</button>
+    <button class="filter-chip" onclick="setCuisineFilter('promo', this)" style="border-color:rgba(245,200,66,0.4);color:var(--gold)">🏷️ Promotions</button>
   </div>
 
   <!-- Price filters -->
@@ -956,6 +958,10 @@
       <div class="form-group">
         <label>Restaurant Name <span class="required">*</span></label>
         <input type="text" id="f_name" placeholder="e.g. Mum's Noodle House">
+      </div>
+      <div class="form-group">
+        <label>Restaurant Website (optional)</label>
+        <input type="text" id="f_website" placeholder="e.g. https://www.myrestaurant.com.au">
       </div>
       <div class="form-group">
         <label>Cuisine Type <span class="required">*</span></label>
@@ -1059,8 +1065,38 @@
         <input type="text" id="f_hours" placeholder="e.g. Mon–Fri 11am–3pm">
       </div>
       <div class="form-group full">
-        <label>Restaurant Website (optional)</label>
-        <input type="text" id="f_website" placeholder="e.g. https://www.myrestaurant.com.au">
+        <label style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="f_is_promo" onchange="togglePromoFields(this.checked)" style="width:16px;height:16px;accent-color:var(--gold)">
+          This listing has a <span style="color:var(--gold);font-weight:600">limited time promotion</span>
+        </label>
+      </div>
+      <div id="promoFields" style="display:none;grid-column:1/-1">
+        <div class="form-grid" style="margin-bottom:0">
+          <div class="form-group">
+            <label>Promo Price <span class="required">*</span></label>
+            <input type="text" id="f_promo_price" placeholder="e.g. $8">
+          </div>
+          <div class="form-group">
+            <label>Promo Tier</label>
+            <select id="f_promo_tier">
+              <option value="10">Under $10</option>
+              <option value="15">Under $15</option>
+              <option value="20">Under $20</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Valid From</label>
+            <input type="date" id="f_promo_start">
+          </div>
+          <div class="form-group">
+            <label>Valid Until <span class="required">*</span></label>
+            <input type="date" id="f_promo_end">
+          </div>
+          <div class="form-group full">
+            <label>Promo Description</label>
+            <input type="text" id="f_promo_desc" placeholder="e.g. Happy hour special — normally $15">
+          </div>
+        </div>
       </div>
       <div class="form-group full">
         <label>Photo of the Dish / Restaurant (optional)</label>
@@ -1181,8 +1217,11 @@
     }
 
     list.forEach(r => {
-      const tier = getPriceTier(r.priceRange);
-      const displayPrice = r.exactPrice || (r.priceRange === "10" ? "Under $10" : r.priceRange === "15" ? "Under $15" : "Under $20");
+      const promoActive = isPromoActive(r);
+      const effectiveTier = getEffectivePriceRange(r);
+      const tier = getPriceTier(effectiveTier);
+      const displayPrice = promoActive && r.promoPrice ? r.promoPrice 
+        : r.exactPrice || (r.priceRange === "10" ? "Under $10" : r.priceRange === "15" ? "Under $15" : "Under $20");
       const card = document.createElement('div');
       card.className = 'card';
       // Build dishes list for card
@@ -1195,6 +1234,7 @@
         <div class="card-img">
           ${r.photoUrl ? `<img src="${r.photoUrl}" alt="${r.name}" loading="lazy">` : (r.emoji || '🍽️')}
           ${r.isOwner ? '<span class="owner-badge">★ Owner Verified</span>' : ''}
+          ${promoActive ? '<span style="position:absolute;top:10px;left:10px;background:#e8402a;color:#fff;font-size:0.68rem;font-weight:700;padding:3px 8px;border-radius:4px;z-index:1;letter-spacing:0.05em">🏷️ PROMO</span>' : ''}
           <span class="price-tier-dot ${tier.cls}"></span>
         </div>
         <div class="card-body">
@@ -1216,7 +1256,10 @@
           </div>` : '<div style="margin-bottom:12px"></div>'}
           <div class="card-footer">
             <div class="card-location">📍 ${r.address ? r.address.split(',').slice(1).join(',').trim() : ''}</div>
-            <div class="stars">${'★'.repeat(r.stars || 4)}</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              ${r.distance ? `<span style="font-size:0.75rem;color:var(--muted)">${r.distance.toFixed(1)}km</span>` : ''}
+              <div class="stars">${'★'.repeat(r.stars || 4)}</div>
+            </div>
           </div>
         </div>
       `;
@@ -1226,14 +1269,32 @@
   }
 
   // ── FILTER LOGIC ──
+  function isPromoActive(r) {
+    if (!r.isPromo) return false;
+    const now = new Date();
+    const start = r.promoStart ? new Date(r.promoStart) : null;
+    const end = r.promoEnd ? new Date(r.promoEnd) : null;
+    if (start && now < start) return false;
+    if (end && now > end) return false;
+    return true;
+  }
+
+  function getEffectivePriceRange(r) {
+    if (isPromoActive(r) && r.promoTier) return r.promoTier;
+    return r.priceRange;
+  }
+
   function getFiltered() {
     const q = document.getElementById('searchInput').value.toLowerCase();
     return restaurants.filter(r => {
+      const promoActive = isPromoActive(r);
       const matchCuisine = activeCuisineFilter === 'all' ? true
         : activeCuisineFilter === 'owner' ? r.isOwner
+        : activeCuisineFilter === 'promo' ? promoActive
         : r.cuisine === activeCuisineFilter;
+      const effectiveTier = getEffectivePriceRange(r);
       const matchPrice = activePriceFilter === 'all' ? true
-        : r.priceRange === activePriceFilter;
+        : effectiveTier === activePriceFilter;
       const matchSearch = !q
         || (r.name || '').toLowerCase().includes(q)
         || (r.cuisineLabel || '').toLowerCase().includes(q)
@@ -1279,47 +1340,42 @@
     // Info window shared across all markers
     const infoWindow = new google.maps.InfoWindow();
 
-    // Add new markers for filtered results
+    // Add teardrop markers for filtered results
     withCoords.forEach(r => {
       const tier = getPriceTier(r.priceRange);
       const color = tier.cls === 't10' ? '#4caf7d' : tier.cls === 't15' ? '#f5c842' : '#e8402a';
+      const strokeColor = tier.cls === 't10' ? '#2e7d32' : tier.cls === 't15' ? '#b8942f' : '#b71c1c';
+
+      const pinSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="48" viewBox="0 0 36 48"><path d="M18 2 C9 2 2 9 2 18 C2 30 18 46 18 46 C18 46 34 30 34 18 C34 9 27 2 18 2Z" fill="${color}" stroke="${strokeColor}" stroke-width="1.5"/><circle cx="18" cy="18" r="9" fill="white" opacity="0.92"/></svg>`;
+
       const marker = new google.maps.Marker({
         position: { lat: r.lat, lng: r.lng },
         map,
         title: r.name,
         icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 12,
-          fillColor: color,
-          fillOpacity: 1,
-          strokeColor: '#0e0c09',
-          strokeWeight: 2
+          url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(pinSvg),
+          scaledSize: new google.maps.Size(36, 48),
+          anchor: new google.maps.Point(18, 46)
         }
       });
 
-      // Show info bubble on hover
       marker.addListener('mouseover', () => {
         const displayPrice = r.exactPrice || `Under $${r.priceRange}`;
+        const distText = r.distance ? `<div style="font-size:0.78rem;color:#888;margin-top:2px">📍 ${r.distance} away</div>` : '';
         infoWindow.setContent(`
           <div style="font-family:DM Sans,sans-serif;padding:4px 6px;min-width:160px">
             <div style="font-weight:700;font-size:0.95rem;margin-bottom:2px">${r.name}</div>
             <div style="font-size:0.82rem;color:#666;margin-bottom:2px">${r.cuisineLabel || r.cuisine}</div>
             <div style="font-size:0.82rem;color:${color};font-weight:600">${displayPrice}</div>
+            ${distText}
             <div style="font-size:0.78rem;color:#888;margin-top:2px">Click for details</div>
           </div>
         `);
         infoWindow.open(map, marker);
       });
 
-      // Hide info bubble when mouse leaves
-      marker.addListener('mouseout', () => {
-        infoWindow.close();
-      });
-
-      marker.addListener('click', () => {
-        infoWindow.close();
-        openModal(r);
-      });
+      marker.addListener('mouseout', () => infoWindow.close());
+      marker.addListener('click', () => { infoWindow.close(); openModal(r); });
       markers.push(marker);
     });
 
@@ -1343,7 +1399,9 @@
     activeCuisineFilter = f;
     document.querySelectorAll('.filter-row .filter-chip').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
-    renderCards(getFiltered());
+    const filtered = getFiltered();
+    renderCards(filtered);
+    updateMapPins(filtered);
   };
 
   window.setPriceFilter = (f, el) => {
@@ -1393,6 +1451,15 @@
         <div class="meta-row"><span class="meta-label">Phone</span><span class="meta-val">${r.phone || 'Not provided'}</span></div>
         <div class="meta-row"><span class="meta-label">Rating</span><span class="meta-val" style="color:var(--gold)">${'★'.repeat(r.stars || 4)}</span></div>
         ${r.notes ? `<div class="meta-row"><span class="meta-label">Notes</span><span class="meta-val">${r.notes}</span></div>` : ''}
+      ${isPromoActive(r) ? `
+        <div class="meta-row" style="margin-top:8px;background:rgba(232,64,42,0.1);border:1px solid rgba(232,64,42,0.3);border-radius:8px;padding:8px 12px">
+          <span class="meta-label" style="color:#e8402a">🏷️ PROMO</span>
+          <span class="meta-val">
+            <strong style="color:#e8402a">${r.promoPrice || ''}</strong>
+            ${r.promoDesc ? `<br><span style="font-size:0.82rem;color:var(--muted)">${r.promoDesc}</span>` : ''}
+            ${r.promoEnd ? `<br><span style="font-size:0.78rem;color:var(--muted)">Valid until ${new Date(r.promoEnd).toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'})}</span>` : ''}
+          </span>
+        </div>` : ''}
       </div>
       <a class="map-link" href="${mapsUrl}" target="_blank">📍 Open in Google Maps</a>
       ${r.website ? `<a class="map-link" href="${r.website}" target="_blank" style="margin-top:8px;background:var(--surface2);color:var(--cream);border:1px solid var(--border)">🌐 Visit Restaurant Website</a>` : ''}
@@ -1545,6 +1612,12 @@
         hours: document.getElementById('f_hours').value.trim() || null,
         notes: document.getElementById('f_notes').value.trim() || null,
         website: document.getElementById('f_website').value.trim() || null,
+        isPromo: document.getElementById('f_is_promo').checked,
+        promoPrice: document.getElementById('f_promo_price') ? document.getElementById('f_promo_price').value.trim() || null : null,
+        promoTier: document.getElementById('f_promo_tier') ? document.getElementById('f_promo_tier').value : null,
+        promoStart: document.getElementById('f_promo_start') ? document.getElementById('f_promo_start').value || null : null,
+        promoEnd: document.getElementById('f_promo_end') ? document.getElementById('f_promo_end').value || null : null,
+        promoDesc: document.getElementById('f_promo_desc') ? document.getElementById('f_promo_desc').value.trim() || null : null,
         photoUrl,
         isOwner,
         stars: isOwner ? 5 : 4,
@@ -1559,7 +1632,7 @@
       sendEmailNotification(newEntry);
 
       // Reset form
-      ['f_name', 'f_address', 'f_phone', 'f_hours', 'f_notes', 'f_website'].forEach(id => {
+      ['f_name', 'f_address', 'f_phone', 'f_hours', 'f_notes', 'f_website', 'f_promo_price', 'f_promo_desc', 'f_promo_start', 'f_promo_end'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
@@ -1579,6 +1652,9 @@
       document.getElementById('addDishBtn').style.display = 'inline-block';
       document.getElementById('f_cuisine').selectedIndex = 0;
       document.getElementById('f_owner').checked = false;
+      document.getElementById('f_is_promo').checked = false;
+      document.getElementById('promoFields').style.display = 'none';
+      if (document.getElementById('f_promo_tier')) document.getElementById('f_promo_tier').selectedIndex = 0;
       window.removePhoto();
 
       showToast('🎉 Listing submitted! We\'ll review it within 24 hours.');
@@ -1604,6 +1680,66 @@
   window.showToast = showToast;
 
   // ── SCROLL HELPERS ──
+  // ── PROMO TOGGLE ──
+  window.togglePromoFields = (show) => {
+    document.getElementById('promoFields').style.display = show ? 'block' : 'none';
+  };
+
+  // ── USE MY LOCATION ──
+  window.useMyLocation = () => {
+    const btn = document.getElementById('locationBtn');
+    if (!navigator.geolocation) {
+      showToast('Geolocation is not supported by your browser.', true);
+      return;
+    }
+    btn.textContent = '📍 Locating...';
+    btn.style.color = 'var(--gold)';
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+        btn.textContent = '📍 Location found ✓';
+        setTimeout(() => { btn.textContent = '📍 Use my location'; btn.style.color = 'var(--muted)'; }, 3000);
+
+        // Pan map to user location
+        if (map) {
+          map.setCenter({ lat: userLat, lng: userLng });
+          map.setZoom(13);
+          // Add user location marker
+          new google.maps.Marker({
+            position: { lat: userLat, lng: userLng },
+            map,
+            title: 'Your location',
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 10,
+              fillColor: '#4285F4',
+              fillOpacity: 1,
+              strokeColor: '#ffffff',
+              strokeWeight: 2
+            }
+          });
+        }
+
+        // Sort restaurants by distance and show nearest first
+        const withCoords = restaurants.filter(r => r.lat && r.lng);
+        withCoords.forEach(r => {
+          const dLat = r.lat - userLat;
+          const dLng = r.lng - userLng;
+          r.distance = Math.sqrt(dLat * dLat + dLng * dLng) * 111; // rough km
+        });
+        restaurants.sort((a, b) => (a.distance || 999) - (b.distance || 999));
+        renderCards(getFiltered());
+        showToast('📍 Showing nearest restaurants first!');
+      },
+      (error) => {
+        btn.textContent = '📍 Use my location';
+        btn.style.color = 'var(--muted)';
+        showToast('Could not get your location. Please check permissions.', true);
+      }
+    );
+  };
+
   // ── MULTIPLE DISHES ──
   let currentDishRow = 1;
   window.addDishRow = () => {
@@ -1614,6 +1750,80 @@
     if (currentDishRow >= 5) {
       document.getElementById('addDishBtn').style.display = 'none';
     }
+  };
+
+  // ── GEOLOCATION ──
+  let userLat = null, userLng = null;
+
+  function calcDistance(lat1, lng1, lat2, lng2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+      Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const d = R * c;
+    return d < 1 ? Math.round(d * 1000) + 'm' : d.toFixed(1) + 'km';
+  }
+
+  window.useMyLocation = () => {
+    const btn = document.getElementById('locationBtn');
+    if (!navigator.geolocation) {
+      showToast('Geolocation not supported by your browser.', true);
+      return;
+    }
+    btn.textContent = '⏳';
+    btn.disabled = true;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        userLat = pos.coords.latitude;
+        userLng = pos.coords.longitude;
+
+        // Add distance to each restaurant
+        restaurants.forEach(r => {
+          if (r.lat && r.lng) {
+            r.distance = calcDistance(userLat, userLng, r.lat, r.lng);
+            r.distanceNum = parseFloat(r.distance);
+          }
+        });
+
+        // Sort by distance
+        restaurants.sort((a, b) => (a.distanceNum || 999) - (b.distanceNum || 999));
+
+        // Pan map to user location
+        if (map) {
+          map.setCenter({ lat: userLat, lng: userLng });
+          map.setZoom(13);
+
+          // Add user location marker
+          new google.maps.Marker({
+            position: { lat: userLat, lng: userLng },
+            map,
+            title: 'Your location',
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 10,
+              fillColor: '#4285F4',
+              fillOpacity: 1,
+              strokeColor: '#ffffff',
+              strokeWeight: 3
+            }
+          });
+        }
+
+        filterCards();
+        btn.textContent = '📍';
+        btn.disabled = false;
+        showToast('📍 Showing nearest restaurants first!');
+        scrollToList();
+      },
+      (err) => {
+        btn.textContent = '📍';
+        btn.disabled = false;
+        showToast('Could not get your location. Please allow location access.', true);
+      }
+    );
   };
 
   window.scrollToForm = () => document.getElementById('submitSection').scrollIntoView({ behavior: 'smooth' });
@@ -1722,6 +1932,7 @@
           <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">📞 ${r.phone || '—'} &nbsp;·&nbsp; 🕐 ${r.hours || '—'}</p>
           ${r.isOwner ? '<p style="color:var(--gold);font-size:0.82rem;margin-bottom:8px">★ Claims to be owner</p>' : ''}
           ${r.website ? `<p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">🌐 <a href="${r.website}" target="_blank" style="color:var(--gold)">${r.website}</a></p>` : ''}
+          ${r.isPromo ? `<p style="color:#e8402a;font-size:0.82rem;margin-bottom:4px">🏷️ PROMO: ${r.promoPrice || ''} ${r.promoDesc ? '— ' + r.promoDesc : ''} ${r.promoEnd ? '(until ' + r.promoEnd + ')' : ''}</p>` : ''}
           ${r.notes ? `<p style="color:var(--muted);font-size:0.82rem;margin-bottom:8px">📝 ${r.notes}</p>` : ''}
           <div style="display:flex;gap:10px;margin-top:12px">
             <button onclick="approveRestaurant('${r.id}')" style="flex:1;padding:10px;background:#4caf7d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">✅ Approve</button>
