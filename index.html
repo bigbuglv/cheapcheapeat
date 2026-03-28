@@ -985,68 +985,128 @@
         
         <!-- Dish 1 - Required -->
         <div class="dish-row" id="dish-row-1">
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-            <span style="font-size:0.75rem;color:var(--gold);font-weight:600;min-width:60px">Dish 1 ★</span>
-            <input type="text" id="f_dish_1" placeholder="Dish name e.g. Pho Bo" style="flex:2">
-            <input type="text" id="f_price_1" placeholder="Price e.g. $9.50" style="flex:1">
-            <select id="f_tier_1" style="flex:1">
-              <option value="10">Under $10</option>
-              <option value="15">Under $15</option>
-              <option value="20">Under $20</option>
-            </select>
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
+            <span style="font-size:0.75rem;color:var(--gold);font-weight:600;min-width:60px;padding-top:10px">Dish 1 ★</span>
+            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_dish_1" placeholder="Dish name e.g. Pho Bo">
+              <div style="display:flex;gap:4px;align-items:center">
+                <input type="checkbox" id="f_promo_1" onchange="toggleDishPromo(1,this.checked)" style="width:14px;height:14px;accent-color:var(--red)">
+                <label for="f_promo_1" style="font-size:0.75rem;color:var(--muted);cursor:pointer">On promo?</label>
+              </div>
+              <div id="f_promo_fields_1" style="display:none;display:none;flex-direction:column;gap:4px">
+                <input type="text" id="f_promo_price_1" placeholder="Promo price e.g. $8">
+                <input type="date" id="f_promo_end_1" title="Promo valid until">
+              </div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_price_1" placeholder="Normal price">
+              <select id="f_tier_1">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
           </div>
         </div>
 
         <!-- Dish 2-5 - Optional -->
         <div id="dish-row-2" style="display:none" class="dish-row">
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-            <span style="font-size:0.75rem;color:var(--muted);min-width:60px">Dish 2</span>
-            <input type="text" id="f_dish_2" placeholder="Dish name (optional)" style="flex:2">
-            <input type="text" id="f_price_2" placeholder="Price" style="flex:1">
-            <select id="f_tier_2" style="flex:1">
-              <option value="10">Under $10</option>
-              <option value="15">Under $15</option>
-              <option value="20">Under $20</option>
-            </select>
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
+            <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 2</span>
+            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_dish_2" placeholder="Dish name (optional)">
+              <div style="display:flex;gap:4px;align-items:center">
+                <input type="checkbox" id="f_promo_2" onchange="toggleDishPromo(2,this.checked)" style="width:14px;height:14px;accent-color:var(--red)">
+                <label for="f_promo_2" style="font-size:0.75rem;color:var(--muted);cursor:pointer">On promo?</label>
+              </div>
+              <div id="f_promo_fields_2" style="display:none;flex-direction:column;gap:4px">
+                <input type="text" id="f_promo_price_2" placeholder="Promo price e.g. $8">
+                <input type="date" id="f_promo_end_2" title="Promo valid until">
+              </div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_price_2" placeholder="Normal price">
+              <select id="f_tier_2">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
           </div>
         </div>
 
         <div id="dish-row-3" style="display:none" class="dish-row">
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-            <span style="font-size:0.75rem;color:var(--muted);min-width:60px">Dish 3</span>
-            <input type="text" id="f_dish_3" placeholder="Dish name (optional)" style="flex:2">
-            <input type="text" id="f_price_3" placeholder="Price" style="flex:1">
-            <select id="f_tier_3" style="flex:1">
-              <option value="10">Under $10</option>
-              <option value="15">Under $15</option>
-              <option value="20">Under $20</option>
-            </select>
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
+            <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 3</span>
+            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_dish_3" placeholder="Dish name (optional)">
+              <div style="display:flex;gap:4px;align-items:center">
+                <input type="checkbox" id="f_promo_3" onchange="toggleDishPromo(3,this.checked)" style="width:14px;height:14px;accent-color:var(--red)">
+                <label for="f_promo_3" style="font-size:0.75rem;color:var(--muted);cursor:pointer">On promo?</label>
+              </div>
+              <div id="f_promo_fields_3" style="display:none;flex-direction:column;gap:4px">
+                <input type="text" id="f_promo_price_3" placeholder="Promo price e.g. $8">
+                <input type="date" id="f_promo_end_3" title="Promo valid until">
+              </div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_price_3" placeholder="Normal price">
+              <select id="f_tier_3">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
           </div>
         </div>
 
         <div id="dish-row-4" style="display:none" class="dish-row">
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-            <span style="font-size:0.75rem;color:var(--muted);min-width:60px">Dish 4</span>
-            <input type="text" id="f_dish_4" placeholder="Dish name (optional)" style="flex:2">
-            <input type="text" id="f_price_4" placeholder="Price" style="flex:1">
-            <select id="f_tier_4" style="flex:1">
-              <option value="10">Under $10</option>
-              <option value="15">Under $15</option>
-              <option value="20">Under $20</option>
-            </select>
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
+            <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 4</span>
+            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_dish_4" placeholder="Dish name (optional)">
+              <div style="display:flex;gap:4px;align-items:center">
+                <input type="checkbox" id="f_promo_4" onchange="toggleDishPromo(4,this.checked)" style="width:14px;height:14px;accent-color:var(--red)">
+                <label for="f_promo_4" style="font-size:0.75rem;color:var(--muted);cursor:pointer">On promo?</label>
+              </div>
+              <div id="f_promo_fields_4" style="display:none;flex-direction:column;gap:4px">
+                <input type="text" id="f_promo_price_4" placeholder="Promo price e.g. $8">
+                <input type="date" id="f_promo_end_4" title="Promo valid until">
+              </div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_price_4" placeholder="Normal price">
+              <select id="f_tier_4">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
           </div>
         </div>
 
         <div id="dish-row-5" style="display:none" class="dish-row">
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-            <span style="font-size:0.75rem;color:var(--muted);min-width:60px">Dish 5</span>
-            <input type="text" id="f_dish_5" placeholder="Dish name (optional)" style="flex:2">
-            <input type="text" id="f_price_5" placeholder="Price" style="flex:1">
-            <select id="f_tier_5" style="flex:1">
-              <option value="10">Under $10</option>
-              <option value="15">Under $15</option>
-              <option value="20">Under $20</option>
-            </select>
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
+            <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 5</span>
+            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_dish_5" placeholder="Dish name (optional)">
+              <div style="display:flex;gap:4px;align-items:center">
+                <input type="checkbox" id="f_promo_5" onchange="toggleDishPromo(5,this.checked)" style="width:14px;height:14px;accent-color:var(--red)">
+                <label for="f_promo_5" style="font-size:0.75rem;color:var(--muted);cursor:pointer">On promo?</label>
+              </div>
+              <div id="f_promo_fields_5" style="display:none;flex-direction:column;gap:4px">
+                <input type="text" id="f_promo_price_5" placeholder="Promo price e.g. $8">
+                <input type="date" id="f_promo_end_5" title="Promo valid until">
+              </div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_price_5" placeholder="Normal price">
+              <select id="f_tier_5">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -1244,13 +1304,17 @@
           </div>
           <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
           <div class="card-dish">${featuredDish.name || r.dish || ''}</div>
-          ${dishes.length > 1 ? `
+          ${dishes.length > 0 ? `
           <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
-            ${dishes.slice(1).map(d => {
+            ${dishes.map(d => {
               const dt = getPriceTier(d.tier || r.priceRange);
-              return `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--surface2);border-radius:6px;font-size:0.78rem">
+              const dc = dt.cls === 't10' ? '#4caf7d' : dt.cls === 't15' ? 'var(--gold)' : 'var(--red)';
+              const dishPromoActive = d.isPromo && (!d.promoEnd || new Date(d.promoEnd) >= new Date());
+              return `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:${dishPromoActive ? 'rgba(232,64,42,0.08)' : 'var(--surface2)'};border:${dishPromoActive ? '0.5px solid rgba(232,64,42,0.3)' : 'none'};border-radius:6px;font-size:0.78rem">
                 <span style="color:var(--cream);opacity:0.85">${d.name}</span>
-                <span style="color:${dt.cls === 't10' ? '#4caf7d' : dt.cls === 't15' ? 'var(--gold)' : 'var(--red)'};font-weight:600">${d.price}</span>
+                <div style="display:flex;align-items:center;gap:4px">
+                  ${dishPromoActive ? `<span style="color:var(--muted);text-decoration:line-through;font-size:0.72rem">${d.price}</span><span style="color:#e8402a;font-weight:700">${d.promoPrice}</span><span style="background:#e8402a;color:#fff;font-size:0.65rem;font-weight:700;padding:1px 4px;border-radius:3px">PROMO</span>` : `<span style="color:${dc};font-weight:600">${d.price}</span>`}
+                </div>
               </div>`;
             }).join('')}
           </div>` : '<div style="margin-bottom:12px"></div>'}
@@ -1269,7 +1333,18 @@
   }
 
   // ── FILTER LOGIC ──
+  function isDishPromoActive(d) {
+    if (!d.isPromo) return false;
+    if (!d.promoEnd) return true;
+    return new Date(d.promoEnd) >= new Date();
+  }
+
   function isPromoActive(r) {
+    // Check if any dish has an active promo
+    if (r.dishes && r.dishes.length > 0) {
+      return r.dishes.some(d => isDishPromoActive(d));
+    }
+    // Legacy single promo support
     if (!r.isPromo) return false;
     const now = new Date();
     const start = r.promoStart ? new Date(r.promoStart) : null;
@@ -1439,9 +1514,16 @@
           '<div style=\'display:flex;flex-direction:column;gap:6px\'>' +
           rest.map(d => {
             const dc = d.tier === '10' ? '#4caf7d' : d.tier === '20' ? 'var(--red)' : 'var(--gold)';
-            return '<div style=\'display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--border);border-radius:8px\'>' +
+            const dp = d.isPromo && (!d.promoEnd || new Date(d.promoEnd) >= new Date());
+            return '<div style=\'padding:8px 12px;border:1px solid ' + (dp ? 'rgba(232,64,42,0.4)' : 'var(--border)') + ';border-radius:8px;background:' + (dp ? 'rgba(232,64,42,0.06)' : 'transparent') + '\'>' +
+              '<div style=\'display:flex;justify-content:space-between;align-items:center\'>' +
               '<span style=\'font-size:0.88rem;color:var(--cream)\'>' + d.name + '</span>' +
-              '<span style=\'color:' + dc + ';font-weight:600;font-size:0.88rem\'>' + (d.price || '') + '</span>' +
+              (dp ?
+                '<div style=\'display:flex;align-items:center;gap:6px\'><span style=\'font-size:0.78rem;color:var(--muted);text-decoration:line-through\'>' + (d.price || '') + '</span><span style=\'color:#e8402a;font-weight:700;font-size:0.95rem\'>' + (d.promoPrice || '') + '</span><span style=\'background:#e8402a;color:#fff;font-size:0.65rem;font-weight:700;padding:2px 5px;border-radius:3px\'>PROMO</span></div>' :
+                '<span style=\'color:' + dc + ';font-weight:600;font-size:0.88rem\'>' + (d.price || '') + '</span>'
+              ) +
+              '</div>' +
+              (dp && d.promoEnd ? '<div style=\'font-size:0.75rem;color:#e8402a;margin-top:3px\'>Valid until ' + new Date(d.promoEnd).toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'}) + '</div>' : '') +
               '</div>';
           }).join('') + '</div></div>' : '');
       })()}
@@ -1531,17 +1613,25 @@
       return;
     }
 
-    // Collect all dishes
+    // Collect all dishes with per-dish promo
     const dishes = [];
+    const today = new Date().toISOString().split('T')[0];
     for (let i = 1; i <= 5; i++) {
       const dishEl = document.getElementById('f_dish_' + i);
       const priceEl = document.getElementById('f_price_' + i);
       const tierEl = document.getElementById('f_tier_' + i);
+      const promoEl = document.getElementById('f_promo_' + i);
+      const promoPriceEl = document.getElementById('f_promo_price_' + i);
+      const promoEndEl = document.getElementById('f_promo_end_' + i);
       if (dishEl && dishEl.value.trim()) {
+        const isOnPromo = promoEl && promoEl.checked;
         dishes.push({
           name: dishEl.value.trim(),
           price: priceEl ? priceEl.value.trim() : '',
-          tier: tierEl ? tierEl.value : '10'
+          tier: tierEl ? tierEl.value : '10',
+          isPromo: isOnPromo,
+          promoPrice: isOnPromo && promoPriceEl ? promoPriceEl.value.trim() : null,
+          promoEnd: isOnPromo && promoEndEl ? promoEndEl.value : null
         });
       }
     }
@@ -1640,9 +1730,17 @@
         const d = document.getElementById('f_dish_' + i);
         const p = document.getElementById('f_price_' + i);
         const t = document.getElementById('f_tier_' + i);
+        const promo = document.getElementById('f_promo_' + i);
+        const promoPrice = document.getElementById('f_promo_price_' + i);
+        const promoEnd = document.getElementById('f_promo_end_' + i);
+        const promoFields = document.getElementById('f_promo_fields_' + i);
         if (d) d.value = '';
         if (p) p.value = '';
         if (t) t.selectedIndex = 0;
+        if (promo) promo.checked = false;
+        if (promoPrice) promoPrice.value = '';
+        if (promoEnd) promoEnd.value = '';
+        if (promoFields) promoFields.style.display = 'none';
         if (i > 1) {
           const row = document.getElementById('dish-row-' + i);
           if (row) row.style.display = 'none';
@@ -1683,6 +1781,11 @@
   // ── PROMO TOGGLE ──
   window.togglePromoFields = (show) => {
     document.getElementById('promoFields').style.display = show ? 'block' : 'none';
+  };
+
+  window.toggleDishPromo = (i, show) => {
+    const el = document.getElementById('f_promo_fields_' + i);
+    if (el) el.style.display = show ? 'flex' : 'none';
   };
 
   // ── USE MY LOCATION ──
