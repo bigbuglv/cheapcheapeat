@@ -1664,12 +1664,10 @@
           const si = document.getElementById('searchInput');
           if (si) si.value = '';
           document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-          // Activate first chip in each filter row safely
           const cuisineFirst = document.querySelector('.filter-row .filter-chip');
           if (cuisineFirst) cuisineFirst.classList.add('active');
           const priceFirst = document.querySelector('.price-filter-row .filter-chip');
           if (priceFirst) priceFirst.classList.add('active');
-
           renderCards(getFiltered());
           updateMapPins(getFiltered());
         } catch(e) { console.warn('Location UI error:', e); }
@@ -1691,6 +1689,8 @@
               map.setCenter({lat, lng});
               map.setZoom(13);
             }
+            // Scroll map into view
+            document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         } catch(e) { console.warn('Location map error:', e); }
 
