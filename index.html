@@ -843,7 +843,7 @@
   <div class="header-actions">
     <button class="btn btn-ghost" onclick="scrollToList()">Browse</button>
     <button class="btn btn-ghost" onclick="document.getElementById('adminPanel').style.display='block';document.body.style.overflow='hidden'">🔐 Admin</button>
-    <button class="btn btn-primary" onclick="scrollToForm()">+ Add Restaurant</button>
+    <button class="btn btn-primary" onclick="showSubmitPage()">+ Add Restaurant</button>
   </div>
 </header>
 
@@ -948,8 +948,17 @@
   </div>
 </section>
 
-<!-- SUBMIT FORM -->
-<section class="submit-section" id="submitSection">
+<!-- SUBMIT PAGE -->
+<div id="submitPage" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:150;overflow-y:auto">
+  <div style="max-width:700px;margin:0 auto;padding:24px">
+    <!-- Back button -->
+    <div style="margin-bottom:24px">
+      <button onclick="hideSubmitPage()" style="background:transparent;border:none;color:var(--muted);font-family:DM Sans,sans-serif;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;transition:color 0.2s" onmouseover="this.style.color='var(--cream)'" onmouseout="this.style.color='var(--muted)'">
+        ← Back to listings
+      </button>
+    </div>
+
+<section class="submit-section" id="submitSection" style="margin:0;padding:0;max-width:100%">
   <div class="submit-card">
     <h2>Add a Restaurant</h2>
     <p>Know a spot with great affordable food? Share it with the community. Restaurant owners get priority listing — always free.</p>
@@ -1201,6 +1210,9 @@
     <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Listing →</button>
   </div>
 </section>
+
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer>
@@ -1764,7 +1776,7 @@
       window.removePhoto();
 
       showToast('🎉 Listing submitted! We\'ll review it within 24 hours.');
-      scrollToList();
+      hideSubmitPage();
 
     } catch (err) {
       console.error("Submit error:", err);
@@ -1937,7 +1949,18 @@
     );
   };
 
-  window.scrollToForm = () => document.getElementById('submitSection').scrollIntoView({ behavior: 'smooth' });
+  window.scrollToForm = () => showSubmitPage();
+
+  window.showSubmitPage = () => {
+    document.getElementById('submitPage').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
+  };
+
+  window.hideSubmitPage = () => {
+    document.getElementById('submitPage').style.display = 'none';
+    document.body.style.overflow = '';
+  };
   window.scrollToList = () => document.querySelector('.listings-section').scrollIntoView({ behavior: 'smooth' });
 
   // ── GOOGLE MAPS ──
