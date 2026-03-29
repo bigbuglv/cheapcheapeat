@@ -1682,14 +1682,20 @@
               title: 'You are here',
               icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#4285F4', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 }
             });
-            // Center on user and zoom to show ~10km radius
+            // Center on user — zoom 14 = ~3-5km radius
             map.setCenter({lat, lng});
-            map.setZoom(12);
+            map.setZoom(14);
           }
         } catch(e) { console.warn('Location map error:', e); }
 
-        // Restore scroll position then smoothly go to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Scroll to map after a short delay to let map update first
+        setTimeout(() => {
+          const mapEl = document.getElementById('map');
+          if (mapEl) {
+            const y = mapEl.getBoundingClientRect().top + window.pageYOffset - 70;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        }, 300);
 
         showToast('📍 Nearest restaurants shown!');
         btn.innerHTML = '📍';
