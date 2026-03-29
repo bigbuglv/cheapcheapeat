@@ -1419,6 +1419,7 @@
       </div>
       <a class="map-link" href="${mapsUrl}" target="_blank">📍 Open in Google Maps</a>
       ${r.website ? `<a class="map-link" href="${r.website}" target="_blank" style="margin-top:8px;background:var(--surface2);color:var(--cream);border:1px solid var(--border)">🌐 Visit Restaurant Website</a>` : ''}
+      <button onclick="openEditForm('${r.id}')" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">✏️ Suggest an Edit</button>
     `;
     document.getElementById('modal').classList.add('open');
   };
@@ -1740,6 +1741,108 @@
 
   ;
 
+  // ── EDIT FEATURE ──
+  window.openEditForm = (id) => {
+    const r = restaurants.find(r => r.id == id);
+    if (!r) return;
+
+    // Close the restaurant modal first
+    document.getElementById('modal').classList.remove('open');
+
+    // Pre-fill edit form with current data
+    document.getElementById('edit_id').value = r.id;
+    document.getElementById('edit_name').value = r.name || '';
+    document.getElementById('edit_dish').value = r.dish || (r.dishes && r.dishes[0] ? r.dishes[0].name : '') || '';
+    document.getElementById('edit_price').value = r.exactPrice || '';
+    document.getElementById('edit_address').value = r.address || '';
+    document.getElementById('edit_phone').value = r.phone || '';
+    document.getElementById('edit_hours').value = r.hours || '';
+    document.getElementById('edit_website').value = r.website || '';
+    document.getElementById('edit_reason').value = '';
+
+    // Set cuisine dropdown
+    const cuisineEl = document.getElementById('edit_cuisine');
+    for (let i = 0; i < cuisineEl.options.length; i++) {
+      if (cuisineEl.options[i].value === r.cuisine) {
+        cuisineEl.selectedIndex = i;
+        break;
+      }
+    }
+
+    // Set price range dropdown
+    const priceEl = document.getElementById('edit_priceRange');
+    for (let i = 0; i < priceEl.options.length; i++) {
+      if (priceEl.options[i].value === r.priceRange) {
+        priceEl.selectedIndex = i;
+        break;
+      }
+    }
+
+    document.getElementById('editPanel').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeEditForm = () => {
+    document.getElementById('editPanel').style.display = 'none';
+    document.body.style.overflow = '';
+  };
+
+  window.submitEdit = async () => {
+    const btn = document.getElementById('editSubmitBtn');
+    const id = document.getElementById('edit_id').value;
+    const r = restaurants.find(r => r.id == id);
+    if (!r) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    try {
+      const editData = {
+        originalId: id,
+        originalName: r.name,
+        name: document.getElementById('edit_name').value.trim(),
+        cuisine: document.getElementById('edit_cuisine').value,
+        dish: document.getElementById('edit_dish').value.trim(),
+        exactPrice: document.getElementById('edit_price').value.trim(),
+        priceRange: document.getElementById('edit_priceRange').value,
+        address: document.getElementById('edit_address').value.trim(),
+        phone: document.getElementById('edit_phone').value.trim(),
+        hours: document.getElementById('edit_hours').value.trim(),
+        website: document.getElementById('edit_website').value.trim(),
+        reason: document.getElementById('edit_reason').value.trim(),
+        status: 'pending_edit',
+        createdAt: serverTimestamp()
+      };
+
+      await addDoc(collection(db, "edits"), editData);
+
+      // Send email notification
+      try {
+        await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+          restaurant_name: editData.name + ' (EDIT SUGGESTION)',
+          cuisine: editData.cuisine,
+          dish: editData.dish,
+          price: editData.exactPrice,
+          address: editData.address,
+          is_owner: 'Edit suggestion — ' + (editData.reason || 'No reason given'),
+          phone: editData.phone,
+          hours: editData.hours,
+          notes: 'Original listing: ' + editData.originalName,
+          admin_url: window.location.origin + '?admin=true'
+        }, EMAILJS_PUBLIC_KEY);
+      } catch(e) { console.warn('Email failed:', e); }
+
+      closeEditForm();
+      showToast('✅ Edit submitted! We'll review it within 24 hours.');
+    } catch(err) {
+      console.error('Edit submit error:', err);
+      showToast('Something went wrong. Please try again.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit Edit →';
+    }
+  };
+
   window.scrollToForm = () => showSubmitPage();
 
   window.showSubmitPage = () => {
@@ -1912,6 +2015,98 @@
     document.body.style.overflow = 'hidden';
   }
 
+  // ── ADMIN TABS ──
+  window.switchAdminTab = (tab) => {
+    document.getElementById('pendingList').style.display = tab === 'submissions' ? 'block' : 'none';
+    document.getElementById('pendingEdits').style.display = tab === 'edits' ? 'block' : 'none';
+    document.getElementById('tab-submissions').style.background = tab === 'submissions' ? 'var(--gold)' : 'transparent';
+    document.getElementById('tab-submissions').style.color = tab === 'submissions' ? '#0e0c09' : 'var(--muted)';
+    document.getElementById('tab-edits').style.background = tab === 'edits' ? 'var(--gold)' : 'transparent';
+    document.getElementById('tab-edits').style.color = tab === 'edits' ? '#0e0c09' : 'var(--muted)';
+    if (tab === 'edits') loadPendingEdits();
+  };
+
+  async function loadPendingEdits() {
+    const list = document.getElementById('pendingEdits');
+    list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">Loading...</p>';
+    try {
+      const q = query(collection(db, "edits"), where("status", "==", "pending_edit"));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px">🎉 No pending edits!</p>';
+        return;
+      }
+      list.innerHTML = '';
+      snapshot.docs.forEach(docSnap => {
+        const e = { id: docSnap.id, ...docSnap.data() };
+        const card = document.createElement('div');
+        card.className = 'admin-card';
+        card.id = 'edit-card-' + e.id;
+        card.innerHTML = `
+          <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:0.8rem;color:var(--muted)">
+            Suggested edit for: <strong style="color:var(--cream)">${e.originalName || e.name}</strong>
+            ${e.reason ? `<br>Reason: "${e.reason}"` : ''}
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:0.82rem;margin-bottom:12px">
+            <div><span style="color:var(--muted)">Name:</span> <span style="color:var(--cream)">${e.name}</span></div>
+            <div><span style="color:var(--muted)">Price:</span> <span style="color:var(--gold)">${e.exactPrice || ''}</span></div>
+            <div><span style="color:var(--muted)">Dish:</span> <span style="color:var(--cream)">${e.dish}</span></div>
+            <div><span style="color:var(--muted)">Range:</span> <span style="color:var(--cream)">Under $${e.priceRange}</span></div>
+            <div style="grid-column:1/-1"><span style="color:var(--muted)">Address:</span> <span style="color:var(--cream)">${e.address}</span></div>
+            <div><span style="color:var(--muted)">Phone:</span> <span style="color:var(--cream)">${e.phone || '—'}</span></div>
+            <div><span style="color:var(--muted)">Hours:</span> <span style="color:var(--cream)">${e.hours || '—'}</span></div>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button onclick="approveEdit('${e.id}', '${e.originalId}')" style="flex:1;padding:10px;background:#4caf7d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">✅ Apply Edit</button>
+            <button onclick="rejectEdit('${e.id}')" style="flex:1;padding:10px;background:#e8402a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">❌ Reject</button>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    } catch(err) {
+      list.innerHTML = '<p style="color:var(--red)">Error loading edits.</p>';
+    }
+  }
+
+  window.approveEdit = async (editId, originalId) => {
+    try {
+      const { doc, updateDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      const editSnap = await getDoc(doc(db, "edits", editId));
+      const e = editSnap.data();
+      // Update original restaurant
+      await updateDoc(doc(db, "restaurants", originalId), {
+        name: e.name,
+        cuisine: e.cuisine,
+        dish: e.dish,
+        exactPrice: e.exactPrice,
+        priceRange: e.priceRange,
+        address: e.address,
+        phone: e.phone || null,
+        hours: e.hours || null,
+        website: e.website || null
+      });
+      // Mark edit as approved
+      await updateDoc(doc(db, "edits", editId), { status: 'approved' });
+      document.getElementById('edit-card-' + editId).remove();
+      showToast('✅ Edit applied to listing!');
+      loadRestaurants();
+    } catch(err) {
+      console.error(err);
+      showToast('Error applying edit.', true);
+    }
+  };
+
+  window.rejectEdit = async (editId) => {
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(doc(db, "edits", editId), { status: 'rejected' });
+      document.getElementById('edit-card-' + editId).remove();
+      showToast('❌ Edit rejected.');
+    } catch(err) {
+      showToast('Error rejecting edit.', true);
+    }
+  };
+
   window.closeAdmin = () => {
     document.getElementById('adminPanel').style.display = 'none';
     document.body.style.overflow = '';
@@ -1921,6 +2116,89 @@
   // ── INIT ──
   loadRestaurants();
 </script>
+
+<!-- EDIT FORM OVERLAY -->
+<div id="editPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:400;overflow-y:auto;backdrop-filter:blur(8px)">
+  <div style="max-width:600px;margin:40px auto;padding:24px">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;position:relative">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--red),var(--gold));border-radius:16px 16px 0 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div>
+          <h2 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.5rem;margin:0 0 4px">✏️ Suggest an Edit</h2>
+          <p style="color:var(--muted);font-size:0.82rem;margin:0">Help keep listings accurate — your edit will be reviewed before going live</p>
+        </div>
+        <button onclick="closeEditForm()" style="background:var(--surface2);border:none;color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem">✕</button>
+      </div>
+
+      <input type="hidden" id="edit_id">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Restaurant Name</label>
+          <input type="text" id="edit_name" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Cuisine</label>
+          <select id="edit_cuisine" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+            <option value="asian">Asian</option>
+            <option value="italian">Italian</option>
+            <option value="mexican">Mexican</option>
+            <option value="burgers">Burgers</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="indian">Indian</option>
+            <option value="middle-eastern">Middle Eastern</option>
+            <option value="greek">Greek</option>
+            <option value="vietnamese">Vietnamese</option>
+            <option value="thai">Thai</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Featured Dish</label>
+          <input type="text" id="edit_dish" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Price</label>
+          <input type="text" id="edit_price" placeholder="e.g. $9.50" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Price Range</label>
+          <select id="edit_priceRange" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+            <option value="10">Under $10</option>
+            <option value="15">Under $15</option>
+            <option value="20">Under $20</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Address</label>
+          <input type="text" id="edit_address" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Phone</label>
+          <input type="text" id="edit_phone" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Hours</label>
+          <input type="text" id="edit_hours" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Website</label>
+          <input type="text" id="edit_website" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">What did you change? (optional)</label>
+          <input type="text" id="edit_reason" placeholder="e.g. Price has changed to $12" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+      </div>
+
+      <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:0.8rem;color:var(--muted)">
+        🔍 Your edit will be reviewed before going live — usually within 24 hours.
+      </div>
+
+      <button onclick="submitEdit()" id="editSubmitBtn" style="width:100%;padding:13px;background:var(--gold);color:#0e0c09;font-family:Fraunces,serif;font-size:1rem;font-weight:900;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s">Submit Edit →</button>
+    </div>
+  </div>
+</div>
 
 <!-- EMAILJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -1946,11 +2224,17 @@
 
     <!-- Pending Listings -->
     <div id="adminContent" style="display:none">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-        <h2 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.8rem">Pending Submissions</h2>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.8rem">Admin Panel</h2>
         <button onclick="closeAdmin()" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">✕ Close</button>
       </div>
+      <!-- Tabs -->
+      <div style="display:flex;gap:8px;margin-bottom:20px">
+        <button id="tab-submissions" onclick="switchAdminTab('submissions')" style="padding:8px 16px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:600;font-size:0.85rem">New Submissions</button>
+        <button id="tab-edits" onclick="switchAdminTab('edits')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Edit Suggestions</button>
+      </div>
       <div id="pendingList"></div>
+      <div id="pendingEdits" style="display:none"></div>
     </div>
 
   </div>
