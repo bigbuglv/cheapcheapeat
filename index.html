@@ -1167,6 +1167,12 @@
       const snapshot = await getDocs(q);
       restaurants = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       renderCards(getFiltered());
+      // Update pins — if map already loaded, place now; otherwise wait
+      if (map) {
+        updateMapPins(getFiltered());
+      } else {
+        window._pendingPinUpdate = true;
+      }
     } catch (err) {
       console.error("Error loading restaurants:", err);
       restaurants = [];
@@ -1626,102 +1632,74 @@
   // ── USE MY LOCATION ──
   window.useMyLocation = () => {
     const btn = document.getElementById('locationBtn');
+
+    // Already loading — ignore
+    if (btn.disabled) return;
+
     if (!navigator.geolocation) {
-      showToast('Geolocation not supported by your browser.', true);
+      showToast('Geolocation not supported.', true);
       return;
     }
 
     btn.innerHTML = '⏳';
     btn.disabled = true;
 
-    const resetBtn = () => {
-      btn.innerHTML = '📍';
-      btn.disabled = false;
-    };
-
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        try {
-          const userLat = position.coords.latitude;
-          const userLng = position.coords.longitude;
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
 
-          // Calculate distances
-          restaurants.forEach(r => {
-            if (r.lat && r.lng) {
-              const dLat = r.lat - userLat;
-              const dLng = r.lng - userLng;
-              r.distance = Math.sqrt(dLat * dLat + dLng * dLng) * 111;
-            } else {
-              r.distance = 999;
-            }
+        // Sort by distance
+        restaurants.forEach(r => {
+          r.distance = (r.lat && r.lng)
+            ? Math.sqrt(Math.pow(r.lat-lat,2) + Math.pow(r.lng-lng,2)) * 111
+            : 999;
+        });
+        restaurants.sort((a,b) => a.distance - b.distance);
+
+        // Show all results
+        activeCuisineFilter = 'all';
+        activePriceFilter = 'all';
+        document.getElementById('searchInput').value = '';
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.filter-chip:first-child').forEach(c => c.classList.add('active'));
+
+        renderCards(getFiltered());
+        updateMapPins(getFiltered());
+
+        if (map) {
+          // Blue dot for user
+          new google.maps.Marker({
+            position: {lat, lng}, map,
+            title: 'You are here',
+            icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#4285F4', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 }
           });
-          restaurants.sort((a, b) => a.distance - b.distance);
-
-          // Reset filters
-          activeCuisineFilter = 'all';
-          activePriceFilter = 'all';
-          try {
-            document.querySelectorAll('.filter-row .filter-chip').forEach(c => c.classList.remove('active'));
-            document.querySelector('.filter-row .filter-chip').classList.add('active');
-            document.querySelectorAll('.price-filter-row .filter-chip').forEach(c => c.classList.remove('active'));
-            document.querySelector('.price-filter-row .filter-chip').classList.add('active');
-            document.getElementById('searchInput').value = '';
-          } catch(fe) { console.warn('Filter reset error:', fe); }
-
-          // Render cards
-          const filtered = getFiltered();
-          renderCards(filtered);
-
-          // Place pins
-          try { updateMapPins(filtered); } catch(pe) { console.warn('Pin error:', pe); }
-
-          // Pan map
-          try {
-            if (map) {
-              new google.maps.Marker({
-                position: { lat: userLat, lng: userLng },
-                map,
-                title: 'You are here',
-                icon: {
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 10,
-                  fillColor: '#4285F4',
-                  fillOpacity: 1,
-                  strokeColor: '#ffffff',
-                  strokeWeight: 2
-                }
-              });
-              const withCoords = restaurants.filter(r => r.lat && r.lng).slice(0, 5);
-              if (withCoords.length > 0) {
-                const bounds = new google.maps.LatLngBounds();
-                bounds.extend({ lat: userLat, lng: userLng });
-                withCoords.forEach(r => bounds.extend({ lat: r.lat, lng: r.lng }));
-                map.fitBounds(bounds);
-              } else {
-                map.setCenter({ lat: userLat, lng: userLng });
-                map.setZoom(13);
-              }
-            }
-          } catch(me) { console.warn('Map error:', me); }
-
-          showToast('📍 Showing ' + filtered.length + ' restaurants nearest to you!');
-        } catch(err) {
-          console.error('Location callback error:', err);
-        } finally {
-          resetBtn();
+          // Fit bounds to show user + restaurants
+          const near = restaurants.filter(r => r.lat && r.lng).slice(0, 5);
+          if (near.length > 0) {
+            const bounds = new google.maps.LatLngBounds();
+            bounds.extend({lat, lng});
+            near.forEach(r => bounds.extend({lat: r.lat, lng: r.lng}));
+            map.fitBounds(bounds);
+          } else {
+            map.setCenter({lat, lng});
+            map.setZoom(13);
+          }
         }
+
+        showToast('📍 ' + restaurants.filter(r=>r.lat&&r.lng).length + ' restaurants found near you!');
+        btn.innerHTML = '📍';
+        btn.disabled = false;
       },
-      (error) => {
-        resetBtn();
-        let msg = 'Could not get your location.';
-        if (error.code === 1) msg = 'Location access denied. Please allow location in your browser.';
-        if (error.code === 2) msg = 'Location unavailable. Please try again.';
-        if (error.code === 3) msg = 'Location request timed out. Please try again.';
-        showToast(msg, true);
+      (err) => {
+        btn.innerHTML = '📍';
+        btn.disabled = false;
+        const msgs = ['', 'Location access denied.', 'Location unavailable.', 'Location timed out.'];
+        showToast(msgs[err.code] || 'Could not get location.', true);
       },
-      { timeout: 10000, maximumAge: 60000, enableHighAccuracy: false }
+      {timeout: 8000, maximumAge: 30000, enableHighAccuracy: false}
     );
-  };
+  };;
 
   // ── MULTIPLE DISHES ──
   let currentDishRow = 1;
@@ -1842,8 +1820,15 @@
         { featureType: 'poi', stylers: [{ visibility: 'off' }] }
       ]
     });
-    // Use updateMapPins to place all markers
-    updateMapPins(restaurants);
+    // Place pins — use restaurants if already loaded, otherwise pending update will handle it
+    if (restaurants.length > 0) {
+      updateMapPins(getFiltered());
+    }
+    window._mapReady = true;
+    if (window._pendingPinUpdate) {
+      window._pendingPinUpdate = false;
+      updateMapPins(getFiltered());
+    }
   }
 
   window.loadGoogleMap = (apiKey) => {
