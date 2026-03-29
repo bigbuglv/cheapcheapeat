@@ -1658,6 +1658,9 @@
         restaurants.sort((a,b) => a.distance - b.distance);
 
         // Show all results — wrapped in try/catch so button always resets
+        // Save scroll position
+        const scrollPos = window.scrollY;
+
         try {
           activeCuisineFilter = 'all';
           activePriceFilter = 'all';
@@ -1689,10 +1692,11 @@
               map.setCenter({lat, lng});
               map.setZoom(13);
             }
-            // Scroll to top so map is visible
-            window.scrollTo({ top: 0, behavior: 'smooth' });
           }
         } catch(e) { console.warn('Location map error:', e); }
+
+        // Restore scroll position then smoothly go to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         showToast('📍 Nearest restaurants shown!');
         btn.innerHTML = '📍';
@@ -1735,64 +1739,7 @@
     return d < 1 ? Math.round(d * 1000) + 'm' : d.toFixed(1) + 'km';
   }
 
-  window.useMyLocation = () => {
-    const btn = document.getElementById('locationBtn');
-    if (!navigator.geolocation) {
-      showToast('Geolocation not supported by your browser.', true);
-      return;
-    }
-    btn.textContent = '⏳';
-    btn.disabled = true;
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        userLat = pos.coords.latitude;
-        userLng = pos.coords.longitude;
-
-        // Add distance to each restaurant
-        restaurants.forEach(r => {
-          if (r.lat && r.lng) {
-            r.distance = calcDistance(userLat, userLng, r.lat, r.lng);
-            r.distanceNum = parseFloat(r.distance);
-          }
-        });
-
-        // Sort by distance
-        restaurants.sort((a, b) => (a.distanceNum || 999) - (b.distanceNum || 999));
-
-        // Pan map to user location
-        if (map) {
-          map.setCenter({ lat: userLat, lng: userLng });
-          map.setZoom(13);
-
-          // Add user location marker
-          new google.maps.Marker({
-            position: { lat: userLat, lng: userLng },
-            map,
-            title: 'Your location',
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 10,
-              fillColor: '#4285F4',
-              fillOpacity: 1,
-              strokeColor: '#ffffff',
-              strokeWeight: 3
-            }
-          });
-        }
-
-        filterCards();
-        btn.textContent = '📍';
-        btn.disabled = false;
-        showToast('📍 Showing nearest restaurants first!');
-        scrollToList();
-      },
-      (err) => {
-        btn.textContent = '📍';
-        btn.disabled = false;
-        showToast('Could not get your location. Please allow location access.', true);
-      }
-    );
-  };
+  ;
 
   window.scrollToForm = () => showSubmitPage();
 
