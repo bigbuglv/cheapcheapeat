@@ -1237,7 +1237,7 @@
           <div class="card-footer">
             <div class="card-location">📍 ${r.address ? r.address.split(',').slice(1).join(',').trim() : ''}</div>
             <div style="display:flex;align-items:center;gap:6px">
-              ${r.distance ? `<span style="font-size:0.75rem;color:var(--muted)">${r.distance.toFixed(1)}km</span>` : ''}
+              ${(r.distance && r.distance < 900 && typeof r.distance === 'number') ? `<span style="font-size:0.75rem;color:var(--muted)">${r.distance.toFixed(1)}km</span>` : ''}
               <div class="stars">${'★'.repeat(r.stars || 4)}</div>
             </div>
           </div>
