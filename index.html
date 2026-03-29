@@ -374,13 +374,7 @@
     overflow: hidden;
   }
 
-  .card-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    inset: 0;
-  }
+
 
   .card-img::after {
     content: '';
@@ -547,73 +541,7 @@
   .form-group select option { background: #252118; }
   .form-group textarea { resize: vertical; min-height: 80px; }
 
-  /* Photo upload */
-  .photo-upload-area {
-    border: 2px dashed var(--border);
-    border-radius: 8px;
-    padding: 24px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    background: var(--surface2);
-  }
-  .photo-upload-area:hover { border-color: var(--gold-dim); }
-  .photo-upload-area input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    border: none;
-    background: none;
-  }
-  .photo-upload-area .upload-icon { font-size: 2rem; margin-bottom: 8px; }
-  .photo-upload-area p { font-size: 0.85rem; color: var(--muted); }
-  .photo-upload-area p span { color: var(--gold); }
 
-  .photo-preview {
-    display: none;
-    margin-top: 12px;
-    position: relative;
-  }
-  .photo-preview img {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-  }
-  .photo-preview .remove-photo {
-    position: absolute;
-    top: 8px; right: 8px;
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 28px; height: 28px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .upload-progress {
-    display: none;
-    margin-top: 8px;
-    height: 4px;
-    background: var(--surface2);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .upload-progress-bar {
-    height: 100%;
-    background: var(--gold);
-    border-radius: 2px;
-    transition: width 0.3s;
-    width: 0%;
-  }
 
   .owner-check {
     display: flex;
@@ -775,14 +703,7 @@
   }
   .modal-close:hover { color: var(--cream); }
 
-  .modal-photo {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 16px;
-    border: 1px solid var(--border);
-  }
+
 
   .modal h3 { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
   .modal .modal-cuisine { color: var(--muted); font-size: 0.85rem; margin-bottom: 16px; }
@@ -1071,21 +992,7 @@
         <label>Hours (optional)</label>
         <input type="text" id="f_hours" placeholder="e.g. Mon–Fri 11am–3pm">
       </div>
-      <div class="form-group full">
-        <label>Photo of the Dish / Restaurant (optional)</label>
-        <div class="photo-upload-area" id="uploadArea">
-          <input type="file" id="f_photo" accept="image/*" onchange="previewPhoto(event)">
-          <div class="upload-icon">📸</div>
-          <p>Click to upload a photo · <span>Max 5MB</span></p>
-        </div>
-        <div class="photo-preview" id="photoPreview">
-          <img id="photoPreviewImg" src="" alt="Preview">
-          <button class="remove-photo" onclick="removePhoto()">✕</button>
-        </div>
-        <div class="upload-progress" id="uploadProgress">
-          <div class="upload-progress-bar" id="uploadProgressBar"></div>
-        </div>
-      </div>
+
       <div class="form-group full">
         <label>Additional Notes</label>
         <textarea id="f_notes" placeholder="Any extra info — dine-in/takeaway, cash only, etc."></textarea>
@@ -1146,15 +1053,13 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // ── CLOUDINARY CONFIG ──
-  const CLOUDINARY_CLOUD = "dv9lmreir";
-  const CLOUDINARY_PRESET = "cheapcheapeat_upload";
+
 
   // ── STATE ──
   let restaurants = [];
   let activeCuisineFilter = 'all';
   let activePriceFilter = 'all';
-  let uploadedPhotoUrl = null;
+
   let map, markers = [];
 
   // ── LOAD RESTAURANTS FROM FIREBASE ──
@@ -1211,9 +1116,8 @@
 
       card.innerHTML = `
         <div class="card-img">
-          ${r.photoUrl ? `<img src="${r.photoUrl}" alt="${r.name}" loading="lazy">` : (r.emoji || '🍽️')}
+          ${r.emoji || '🍽️'}
           ${r.isOwner ? '<span class="owner-badge">★ Owner Verified</span>' : ''}
-
           <span class="price-tier-dot ${tier.cls}"></span>
         </div>
         <div class="card-body">
@@ -1381,7 +1285,7 @@
     const displayPrice = r.exactPrice || tier.label;
     const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((r.name || '') + ' ' + (r.address || ''))}`;
     document.getElementById('modalContent').innerHTML = `
-      ${r.photoUrl ? `<img class="modal-photo" src="${r.photoUrl}" alt="${r.name}">` : `<div style="font-size:3rem;margin-bottom:12px">${r.emoji || '🍽️'}</div>`}
+      <div style="font-size:3rem;margin-bottom:12px">${r.emoji || '🍽️'}</div>
       ${r.isOwner ? '<div style="display:inline-block;background:var(--gold);color:#0e0c09;font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:4px;margin-bottom:12px;letter-spacing:0.05em">★ OWNER VERIFIED</div>' : ''}
       <h3>${r.name}</h3>
       <div class="modal-cuisine">${r.cuisineLabel || r.cuisine}</div>
@@ -1430,49 +1334,7 @@
     }
   };
 
-  // ── PHOTO PREVIEW ──
-  window.previewPhoto = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      showToast('Photo must be under 5MB', true);
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      document.getElementById('photoPreviewImg').src = ev.target.result;
-      document.getElementById('photoPreview').style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-  };
 
-  window.removePhoto = () => {
-    document.getElementById('f_photo').value = '';
-    document.getElementById('photoPreview').style.display = 'none';
-    document.getElementById('photoPreviewImg').src = '';
-    uploadedPhotoUrl = null;
-  };
-
-  // ── UPLOAD PHOTO TO CLOUDINARY ──
-  async function uploadToCloudinary(file) {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', CLOUDINARY_PRESET);
-
-    document.getElementById('uploadProgress').style.display = 'block';
-    document.getElementById('uploadProgressBar').style.width = '30%';
-
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
-      method: 'POST',
-      body: formData
-    });
-
-    document.getElementById('uploadProgressBar').style.width = '100%';
-    setTimeout(() => { document.getElementById('uploadProgress').style.display = 'none'; }, 600);
-
-    const data = await res.json();
-    return data.secure_url;
-  }
 
   // ── SUBMIT FORM ──
   window.submitForm = async () => {
@@ -1512,13 +1374,7 @@
     btn.textContent = 'Submitting...';
 
     try {
-      // Upload photo if provided
       let photoUrl = null;
-      const photoFile = document.getElementById('f_photo').files[0];
-      if (photoFile) {
-        btn.textContent = 'Uploading photo...';
-        photoUrl = await uploadToCloudinary(photoFile);
-      }
 
       // Geocode address using Google Maps Geocoder (works with restricted keys)
       btn.textContent = 'Getting location...';
@@ -1569,7 +1425,6 @@
         hours: document.getElementById('f_hours').value.trim() || null,
         notes: document.getElementById('f_notes').value.trim() || null,
         website: document.getElementById('f_website').value.trim() || null,
-        photoUrl,
         isOwner,
         stars: isOwner ? 5 : 4,
         lat,
@@ -1603,7 +1458,7 @@
       document.getElementById('addDishBtn').style.display = 'inline-block';
       document.getElementById('f_cuisine').selectedIndex = 0;
       document.getElementById('f_owner').checked = false;
-      window.removePhoto();
+
 
       showToast('🎉 Listing submitted! We\'ll review it within 24 hours.');
       hideSubmitPage();
