@@ -1419,7 +1419,7 @@
       </div>
       <a class="map-link" href="${mapsUrl}" target="_blank">📍 Open in Google Maps</a>
       ${r.website ? `<a class="map-link" href="${r.website}" target="_blank" style="margin-top:8px;background:var(--surface2);color:var(--cream);border:1px solid var(--border)">🌐 Visit Restaurant Website</a>` : ''}
-      <button onclick="openEditForm('${r.id}')" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">✏️ Suggest an Edit</button>
+      <button onclick="openEditForm(this.dataset.id)" data-id="${r.id}" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">✏️ Suggest an Edit</button>
     `;
     document.getElementById('modal').classList.add('open');
   };
@@ -1742,7 +1742,8 @@
   ;
 
   // ── EDIT FEATURE ──
-  window.openEditForm = (id) => {
+  window.openEditForm = (el) => {
+    const id = typeof el === 'string' ? el : el.dataset.id;
     const r = restaurants.find(r => r.id == id);
     if (!r) return;
 
@@ -2057,8 +2058,8 @@
             <div><span style="color:var(--muted)">Hours:</span> <span style="color:var(--cream)">${e.hours || '—'}</span></div>
           </div>
           <div style="display:flex;gap:10px">
-            <button onclick="approveEdit('${e.id}', '${e.originalId}')" style="flex:1;padding:10px;background:#4caf7d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">✅ Apply Edit</button>
-            <button onclick="rejectEdit('${e.id}')" style="flex:1;padding:10px;background:#e8402a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">❌ Reject</button>
+            <button onclick="approveEdit(this.dataset.id, this.dataset.orig)" data-id="${e.id}" data-orig="${e.originalId}" style="flex:1;padding:10px;background:#4caf7d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">✅ Apply Edit</button>
+            <button onclick="rejectEdit(this.dataset.id)" data-id="${e.id}" style="flex:1;padding:10px;background:#e8402a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">❌ Reject</button>
           </div>
         `;
         list.appendChild(card);
