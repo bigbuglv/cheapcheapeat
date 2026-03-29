@@ -897,7 +897,7 @@
     <button class="filter-chip" onclick="setCuisineFilter('vegetarian', this)">Vegetarian</button>
     <button class="filter-chip" onclick="setCuisineFilter('indian', this)">Indian</button>
     <button class="filter-chip" onclick="setCuisineFilter('owner', this)">Owner Verified ★</button>
-    <button class="filter-chip" onclick="setCuisineFilter('promo', this)" style="border-color:rgba(245,200,66,0.4);color:var(--gold)">🏷️ Promotions</button>
+
   </div>
 
   <!-- Price filters -->
@@ -1006,14 +1006,6 @@
             <span style="display:none">Dish 1</span>
             <div style="flex:2;display:flex;flex-direction:column;gap:4px">
               <input type="text" id="f_dish_1" placeholder="Dish name e.g. Pho Bo">
-              <div style="display:flex;gap:4px;align-items:center">
-                <input type="checkbox" id="f_promo_1" onchange="toggleDishPromo(1,this.checked)" style="width:14px;height:14px;accent-color:var(--red)">
-                <label for="f_promo_1" style="font-size:0.75rem;color:var(--muted);cursor:pointer">On promo?</label>
-              </div>
-              <div id="f_promo_fields_1" style="display:none;display:none;flex-direction:column;gap:4px">
-                <input type="text" id="f_promo_price_1" placeholder="Promo price e.g. $8">
-                <input type="date" id="f_promo_end_1" title="Promo valid until">
-              </div>
             </div>
             <div style="flex:1;display:flex;flex-direction:column;gap:4px">
               <input type="text" id="f_price_1" placeholder="Normal price">
@@ -1032,14 +1024,7 @@
             <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 2</span>
             <div style="flex:2;display:flex;flex-direction:column;gap:4px">
               <input type="text" id="f_dish_2" placeholder="Dish name (optional)">
-              <div style="display:flex;gap:4px;align-items:center">
-                <input type="checkbox" id="f_promo_2" onchange="toggleDishPromo(2,this.checked)" style="width:14px;height:14px;accent-color:var(--red)">
-                <label for="f_promo_2" style="font-size:0.75rem;color:var(--muted);cursor:pointer">On promo?</label>
-              </div>
-              <div id="f_promo_fields_2" style="display:none;flex-direction:column;gap:4px">
-                <input type="text" id="f_promo_price_2" placeholder="Promo price e.g. $8">
-                <input type="date" id="f_promo_end_2" title="Promo valid until">
-              </div>
+
             </div>
             <div style="flex:1;display:flex;flex-direction:column;gap:4px">
               <input type="text" id="f_price_2" placeholder="Normal price">
@@ -1057,14 +1042,7 @@
             <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 3</span>
             <div style="flex:2;display:flex;flex-direction:column;gap:4px">
               <input type="text" id="f_dish_3" placeholder="Dish name (optional)">
-              <div style="display:flex;gap:4px;align-items:center">
-                <input type="checkbox" id="f_promo_3" onchange="toggleDishPromo(3,this.checked)" style="width:14px;height:14px;accent-color:var(--red)">
-                <label for="f_promo_3" style="font-size:0.75rem;color:var(--muted);cursor:pointer">On promo?</label>
-              </div>
-              <div id="f_promo_fields_3" style="display:none;flex-direction:column;gap:4px">
-                <input type="text" id="f_promo_price_3" placeholder="Promo price e.g. $8">
-                <input type="date" id="f_promo_end_3" title="Promo valid until">
-              </div>
+
             </div>
             <div style="flex:1;display:flex;flex-direction:column;gap:4px">
               <input type="text" id="f_price_3" placeholder="Normal price">
@@ -1077,57 +1055,9 @@
           </div>
         </div>
 
-        <div id="dish-row-4" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
-          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
-            <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 4</span>
-            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
-              <input type="text" id="f_dish_4" placeholder="Dish name (optional)">
-              <div style="display:flex;gap:4px;align-items:center">
-                <input type="checkbox" id="f_promo_4" onchange="toggleDishPromo(4,this.checked)" style="width:14px;height:14px;accent-color:var(--red)">
-                <label for="f_promo_4" style="font-size:0.75rem;color:var(--muted);cursor:pointer">On promo?</label>
-              </div>
-              <div id="f_promo_fields_4" style="display:none;flex-direction:column;gap:4px">
-                <input type="text" id="f_promo_price_4" placeholder="Promo price e.g. $8">
-                <input type="date" id="f_promo_end_4" title="Promo valid until">
-              </div>
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
-              <input type="text" id="f_price_4" placeholder="Normal price">
-              <select id="f_tier_4">
-                <option value="10">Under $10</option>
-                <option value="15">Under $15</option>
-                <option value="20">Under $20</option>
-              </select>
-            </div>
-          </div>
         </div>
 
-        <div id="dish-row-5" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
-          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
-            <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 5</span>
-            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
-              <input type="text" id="f_dish_5" placeholder="Dish name (optional)">
-              <div style="display:flex;gap:4px;align-items:center">
-                <input type="checkbox" id="f_promo_5" onchange="toggleDishPromo(5,this.checked)" style="width:14px;height:14px;accent-color:var(--red)">
-                <label for="f_promo_5" style="font-size:0.75rem;color:var(--muted);cursor:pointer">On promo?</label>
-              </div>
-              <div id="f_promo_fields_5" style="display:none;flex-direction:column;gap:4px">
-                <input type="text" id="f_promo_price_5" placeholder="Promo price e.g. $8">
-                <input type="date" id="f_promo_end_5" title="Promo valid until">
-              </div>
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
-              <input type="text" id="f_price_5" placeholder="Normal price">
-              <select id="f_tier_5">
-                <option value="10">Under $10</option>
-                <option value="15">Under $15</option>
-                <option value="20">Under $20</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <button type="button" id="addDishBtn" onclick="addDishRow()" style="background:transparent;border:1px dashed rgba(245,200,66,0.4);color:var(--gold);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.82rem;margin-top:4px;width:100%;transition:all 0.2s">+ Add another dish (up to 5)</button>
+        <button type="button" id="addDishBtn" onclick="addDishRow()" style="background:transparent;border:1px dashed rgba(245,200,66,0.4);color:var(--gold);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.82rem;margin-top:4px;width:100%;transition:all 0.2s">+ Add another dish (up to 3)</button>
       </div>
       <div class="form-group full">
         <label>Address / Suburb <span class="required">*</span></label>
@@ -1140,40 +1070,6 @@
       <div class="form-group">
         <label>Hours (optional)</label>
         <input type="text" id="f_hours" placeholder="e.g. Mon–Fri 11am–3pm">
-      </div>
-      <div class="form-group full">
-        <label style="display:flex;align-items:center;gap:8px">
-          <input type="checkbox" id="f_is_promo" onchange="togglePromoFields(this.checked)" style="width:16px;height:16px;accent-color:var(--gold)">
-          This listing has a <span style="color:var(--gold);font-weight:600">limited time promotion</span>
-        </label>
-      </div>
-      <div id="promoFields" style="display:none;grid-column:1/-1">
-        <div class="form-grid" style="margin-bottom:0">
-          <div class="form-group">
-            <label>Promo Price <span class="required">*</span></label>
-            <input type="text" id="f_promo_price" placeholder="e.g. $8">
-          </div>
-          <div class="form-group">
-            <label>Promo Tier</label>
-            <select id="f_promo_tier">
-              <option value="10">Under $10</option>
-              <option value="15">Under $15</option>
-              <option value="20">Under $20</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Valid From</label>
-            <input type="date" id="f_promo_start">
-          </div>
-          <div class="form-group">
-            <label>Valid Until <span class="required">*</span></label>
-            <input type="date" id="f_promo_end">
-          </div>
-          <div class="form-group full">
-            <label>Promo Description</label>
-            <input type="text" id="f_promo_desc" placeholder="e.g. Happy hour special — normally $15">
-          </div>
-        </div>
       </div>
       <div class="form-group full">
         <label>Photo of the Dish / Restaurant (optional)</label>
@@ -1297,11 +1193,8 @@
     }
 
     list.forEach(r => {
-      const promoActive = isPromoActive(r);
-      const effectiveTier = getEffectivePriceRange(r);
-      const tier = getPriceTier(effectiveTier);
-      const displayPrice = promoActive && r.promoPrice ? r.promoPrice 
-        : r.exactPrice || (r.priceRange === "10" ? "Under $10" : r.priceRange === "15" ? "Under $15" : "Under $20");
+      const tier = getPriceTier(r.priceRange);
+      const displayPrice = r.exactPrice || (r.priceRange === "10" ? "Under $10" : r.priceRange === "15" ? "Under $15" : "Under $20");
       const card = document.createElement('div');
       card.className = 'card';
       // Build dishes list for card
@@ -1314,7 +1207,7 @@
         <div class="card-img">
           ${r.photoUrl ? `<img src="${r.photoUrl}" alt="${r.name}" loading="lazy">` : (r.emoji || '🍽️')}
           ${r.isOwner ? '<span class="owner-badge">★ Owner Verified</span>' : ''}
-          ${promoActive ? '<span style="position:absolute;top:10px;left:10px;background:#e8402a;color:#fff;font-size:0.68rem;font-weight:700;padding:3px 8px;border-radius:4px;z-index:1;letter-spacing:0.05em">🏷️ PROMO</span>' : ''}
+
           <span class="price-tier-dot ${tier.cls}"></span>
         </div>
         <div class="card-body">
@@ -1329,12 +1222,9 @@
             ${dishes.map(d => {
               const dt = getPriceTier(d.tier || r.priceRange);
               const dc = dt.cls === 't10' ? '#4caf7d' : dt.cls === 't15' ? 'var(--gold)' : 'var(--red)';
-              const dishPromoActive = d.isPromo && (!d.promoEnd || new Date(d.promoEnd) >= new Date());
-              return `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:${dishPromoActive ? 'rgba(232,64,42,0.08)' : 'var(--surface2)'};border:${dishPromoActive ? '0.5px solid rgba(232,64,42,0.3)' : 'none'};border-radius:6px;font-size:0.78rem">
+              return `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--surface2);border-radius:6px;font-size:0.78rem">
                 <span style="color:var(--cream);opacity:0.85">${d.name}</span>
-                <div style="display:flex;align-items:center;gap:4px">
-                  ${dishPromoActive ? `<span style="color:var(--muted);text-decoration:line-through;font-size:0.72rem">${d.price}</span><span style="color:#e8402a;font-weight:700">${d.promoPrice}</span><span style="background:#e8402a;color:#fff;font-size:0.65rem;font-weight:700;padding:1px 4px;border-radius:3px">PROMO</span>` : `<span style="color:${dc};font-weight:600">${d.price}</span>`}
-                </div>
+                <span style="color:${dc};font-weight:600">${d.price}</span>
               </div>`;
             }).join('')}
           </div>` : '<div style="margin-bottom:12px"></div>'}
@@ -1353,43 +1243,16 @@
   }
 
   // ── FILTER LOGIC ──
-  function isDishPromoActive(d) {
-    if (!d.isPromo) return false;
-    if (!d.promoEnd) return true;
-    return new Date(d.promoEnd) >= new Date();
-  }
 
-  function isPromoActive(r) {
-    // Check if any dish has an active promo
-    if (r.dishes && r.dishes.length > 0) {
-      return r.dishes.some(d => isDishPromoActive(d));
-    }
-    // Legacy single promo support
-    if (!r.isPromo) return false;
-    const now = new Date();
-    const start = r.promoStart ? new Date(r.promoStart) : null;
-    const end = r.promoEnd ? new Date(r.promoEnd) : null;
-    if (start && now < start) return false;
-    if (end && now > end) return false;
-    return true;
-  }
-
-  function getEffectivePriceRange(r) {
-    if (isPromoActive(r) && r.promoTier) return r.promoTier;
-    return r.priceRange;
-  }
 
   function getFiltered() {
     const q = document.getElementById('searchInput').value.toLowerCase();
     return restaurants.filter(r => {
-      const promoActive = isPromoActive(r);
       const matchCuisine = activeCuisineFilter === 'all' ? true
         : activeCuisineFilter === 'owner' ? r.isOwner
-        : activeCuisineFilter === 'promo' ? promoActive
         : r.cuisine === activeCuisineFilter;
-      const effectiveTier = getEffectivePriceRange(r);
       const matchPrice = activePriceFilter === 'all' ? true
-        : effectiveTier === activePriceFilter;
+        : r.priceRange === activePriceFilter;
       const matchSearch = !q
         || (r.name || '').toLowerCase().includes(q)
         || (r.cuisineLabel || '').toLowerCase().includes(q)
@@ -1534,16 +1397,9 @@
           '<div style=\'display:flex;flex-direction:column;gap:6px\'>' +
           rest.map(d => {
             const dc = d.tier === '10' ? '#4caf7d' : d.tier === '20' ? 'var(--red)' : 'var(--gold)';
-            const dp = d.isPromo && (!d.promoEnd || new Date(d.promoEnd) >= new Date());
-            return '<div style=\'padding:8px 12px;border:1px solid ' + (dp ? 'rgba(232,64,42,0.4)' : 'var(--border)') + ';border-radius:8px;background:' + (dp ? 'rgba(232,64,42,0.06)' : 'transparent') + '\'>' +
-              '<div style=\'display:flex;justify-content:space-between;align-items:center\'>' +
+            return '<div style=\'display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--border);border-radius:8px\'>' +
               '<span style=\'font-size:0.88rem;color:var(--cream)\'>' + d.name + '</span>' +
-              (dp ?
-                '<div style=\'display:flex;align-items:center;gap:6px\'><span style=\'font-size:0.78rem;color:var(--muted);text-decoration:line-through\'>' + (d.price || '') + '</span><span style=\'color:#e8402a;font-weight:700;font-size:0.95rem\'>' + (d.promoPrice || '') + '</span><span style=\'background:#e8402a;color:#fff;font-size:0.65rem;font-weight:700;padding:2px 5px;border-radius:3px\'>PROMO</span></div>' :
-                '<span style=\'color:' + dc + ';font-weight:600;font-size:0.88rem\'>' + (d.price || '') + '</span>'
-              ) +
-              '</div>' +
-              (dp && d.promoEnd ? '<div style=\'font-size:0.75rem;color:#e8402a;margin-top:3px\'>Valid until ' + new Date(d.promoEnd).toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'}) + '</div>' : '') +
+              '<span style=\'color:' + dc + ';font-weight:600;font-size:0.88rem\'>' + (d.price || '') + '</span>' +
               '</div>';
           }).join('') + '</div></div>' : '');
       })()}
@@ -1553,15 +1409,7 @@
         <div class="meta-row"><span class="meta-label">Phone</span><span class="meta-val">${r.phone || 'Not provided'}</span></div>
         <div class="meta-row"><span class="meta-label">Rating</span><span class="meta-val" style="color:var(--gold)">${'★'.repeat(r.stars || 4)}</span></div>
         ${r.notes ? `<div class="meta-row"><span class="meta-label">Notes</span><span class="meta-val">${r.notes}</span></div>` : ''}
-      ${isPromoActive(r) ? `
-        <div class="meta-row" style="margin-top:8px;background:rgba(232,64,42,0.1);border:1px solid rgba(232,64,42,0.3);border-radius:8px;padding:8px 12px">
-          <span class="meta-label" style="color:#e8402a">🏷️ PROMO</span>
-          <span class="meta-val">
-            <strong style="color:#e8402a">${r.promoPrice || ''}</strong>
-            ${r.promoDesc ? `<br><span style="font-size:0.82rem;color:var(--muted)">${r.promoDesc}</span>` : ''}
-            ${r.promoEnd ? `<br><span style="font-size:0.78rem;color:var(--muted)">Valid until ${new Date(r.promoEnd).toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'})}</span>` : ''}
-          </span>
-        </div>` : ''}
+
       </div>
       <a class="map-link" href="${mapsUrl}" target="_blank">📍 Open in Google Maps</a>
       ${r.website ? `<a class="map-link" href="${r.website}" target="_blank" style="margin-top:8px;background:var(--surface2);color:var(--cream);border:1px solid var(--border)">🌐 Visit Restaurant Website</a>` : ''}
@@ -1633,25 +1481,17 @@
       return;
     }
 
-    // Collect all dishes with per-dish promo
+    // Collect all dishes (max 3)
     const dishes = [];
-    const today = new Date().toISOString().split('T')[0];
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 3; i++) {
       const dishEl = document.getElementById('f_dish_' + i);
       const priceEl = document.getElementById('f_price_' + i);
       const tierEl = document.getElementById('f_tier_' + i);
-      const promoEl = document.getElementById('f_promo_' + i);
-      const promoPriceEl = document.getElementById('f_promo_price_' + i);
-      const promoEndEl = document.getElementById('f_promo_end_' + i);
       if (dishEl && dishEl.value.trim()) {
-        const isOnPromo = promoEl && promoEl.checked;
         dishes.push({
           name: dishEl.value.trim(),
           price: priceEl ? priceEl.value.trim() : '',
-          tier: tierEl ? tierEl.value : '10',
-          isPromo: isOnPromo,
-          promoPrice: isOnPromo && promoPriceEl ? promoPriceEl.value.trim() : null,
-          promoEnd: isOnPromo && promoEndEl ? promoEndEl.value : null
+          tier: tierEl ? tierEl.value : '10'
         });
       }
     }
@@ -1722,18 +1562,12 @@
         hours: document.getElementById('f_hours').value.trim() || null,
         notes: document.getElementById('f_notes').value.trim() || null,
         website: document.getElementById('f_website').value.trim() || null,
-        isPromo: document.getElementById('f_is_promo').checked,
-        promoPrice: document.getElementById('f_promo_price') ? document.getElementById('f_promo_price').value.trim() || null : null,
-        promoTier: document.getElementById('f_promo_tier') ? document.getElementById('f_promo_tier').value : null,
-        promoStart: document.getElementById('f_promo_start') ? document.getElementById('f_promo_start').value || null : null,
-        promoEnd: document.getElementById('f_promo_end') ? document.getElementById('f_promo_end').value || null : null,
-        promoDesc: document.getElementById('f_promo_desc') ? document.getElementById('f_promo_desc').value.trim() || null : null,
         photoUrl,
         isOwner,
         stars: isOwner ? 5 : 4,
         lat,
         lng,
-        status: 'pending', // requires your approval before going live
+        status: 'pending',
         createdAt: serverTimestamp()
       };
 
@@ -1742,25 +1576,17 @@
       sendEmailNotification(newEntry);
 
       // Reset form
-      ['f_name', 'f_address', 'f_phone', 'f_hours', 'f_notes', 'f_website', 'f_promo_price', 'f_promo_desc', 'f_promo_start', 'f_promo_end'].forEach(id => {
+      ['f_name', 'f_address', 'f_phone', 'f_hours', 'f_notes', 'f_website'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
-      for (let i = 1; i <= 5; i++) {
+      for (let i = 1; i <= 3; i++) {
         const d = document.getElementById('f_dish_' + i);
         const p = document.getElementById('f_price_' + i);
         const t = document.getElementById('f_tier_' + i);
-        const promo = document.getElementById('f_promo_' + i);
-        const promoPrice = document.getElementById('f_promo_price_' + i);
-        const promoEnd = document.getElementById('f_promo_end_' + i);
-        const promoFields = document.getElementById('f_promo_fields_' + i);
         if (d) d.value = '';
         if (p) p.value = '';
         if (t) t.selectedIndex = 0;
-        if (promo) promo.checked = false;
-        if (promoPrice) promoPrice.value = '';
-        if (promoEnd) promoEnd.value = '';
-        if (promoFields) promoFields.style.display = 'none';
         if (i > 1) {
           const row = document.getElementById('dish-row-' + i);
           if (row) row.style.display = 'none';
@@ -1770,9 +1596,6 @@
       document.getElementById('addDishBtn').style.display = 'inline-block';
       document.getElementById('f_cuisine').selectedIndex = 0;
       document.getElementById('f_owner').checked = false;
-      document.getElementById('f_is_promo').checked = false;
-      document.getElementById('promoFields').style.display = 'none';
-      if (document.getElementById('f_promo_tier')) document.getElementById('f_promo_tier').selectedIndex = 0;
       window.removePhoto();
 
       showToast('🎉 Listing submitted! We\'ll review it within 24 hours.');
@@ -1798,15 +1621,7 @@
   window.showToast = showToast;
 
   // ── SCROLL HELPERS ──
-  // ── PROMO TOGGLE ──
-  window.togglePromoFields = (show) => {
-    document.getElementById('promoFields').style.display = show ? 'block' : 'none';
-  };
 
-  window.toggleDishPromo = (i, show) => {
-    const el = document.getElementById('f_promo_fields_' + i);
-    if (el) el.style.display = show ? 'flex' : 'none';
-  };
 
   // ── USE MY LOCATION ──
   window.useMyLocation = () => {
@@ -1866,11 +1681,11 @@
   // ── MULTIPLE DISHES ──
   let currentDishRow = 1;
   window.addDishRow = () => {
-    if (currentDishRow >= 5) return;
+    if (currentDishRow >= 3) return;
     currentDishRow++;
     const row = document.getElementById('dish-row-' + currentDishRow);
     if (row) row.style.display = 'block';
-    if (currentDishRow >= 5) {
+    if (currentDishRow >= 3) {
       document.getElementById('addDishBtn').style.display = 'none';
     }
   };
@@ -2066,7 +1881,7 @@
           <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">📞 ${r.phone || '—'} &nbsp;·&nbsp; 🕐 ${r.hours || '—'}</p>
           ${r.isOwner ? '<p style="color:var(--gold);font-size:0.82rem;margin-bottom:8px">★ Claims to be owner</p>' : ''}
           ${r.website ? `<p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">🌐 <a href="${r.website}" target="_blank" style="color:var(--gold)">${r.website}</a></p>` : ''}
-          ${r.isPromo ? `<p style="color:#e8402a;font-size:0.82rem;margin-bottom:4px">🏷️ PROMO: ${r.promoPrice || ''} ${r.promoDesc ? '— ' + r.promoDesc : ''} ${r.promoEnd ? '(until ' + r.promoEnd + ')' : ''}</p>` : ''}
+
           ${r.notes ? `<p style="color:var(--muted);font-size:0.82rem;margin-bottom:8px">📝 ${r.notes}</p>` : ''}
           <div style="display:flex;gap:10px;margin-top:12px">
             <button onclick="approveRestaurant('${r.id}')" style="flex:1;padding:10px;background:#4caf7d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">✅ Approve</button>
