@@ -994,7 +994,7 @@
         <label>Best Value Dishes <span class="required">*</span></label>
         <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start">
           <span style="font-size:1rem;flex-shrink:0">💡</span>
-          <p style="font-size:0.78rem;color:var(--muted);margin:0;line-height:1.6">List your <strong style="color:var(--cream)">top 5 best value dishes</strong> only — not your full menu. This helps budget diners quickly find your cheapest options. Add your website above so customers can explore everything else.</p>
+          <p style="font-size:0.78rem;color:var(--muted);margin:0;line-height:1.6">List your <strong style="color:var(--cream)">top 3 most popular budget dishes</strong> — not your full menu. This helps budget diners quickly find your best value options. Add your website above so customers can explore everything else.</p>
         </div>
         
         <!-- Dish 1 - Required -->
@@ -1693,10 +1693,28 @@
           }
         }
 
+        // Reset filters to show ALL restaurants sorted by distance
+        activeCuisineFilter = 'all';
+        activePriceFilter = 'all';
+        document.querySelectorAll('.filter-row .filter-chip').forEach(c => c.classList.remove('active'));
+        document.querySelector('.filter-row .filter-chip').classList.add('active');
+        document.querySelectorAll('.price-filter-row .filter-chip').forEach(c => c.classList.remove('active'));
+        document.querySelector('.price-filter-row .filter-chip').classList.add('active');
+        document.getElementById('searchInput').value = '';
+
         const filtered = getFiltered();
         renderCards(filtered);
-        updateMapPins(filtered);
-        showToast('📍 Showing nearest restaurants first!');
+
+        // Wait for map to finish moving then place pins
+        if (map) {
+          const pinListener = google.maps.event.addListener(map, 'idle', () => {
+            google.maps.event.removeListener(pinListener);
+            updateMapPins(filtered);
+          });
+        } else {
+          updateMapPins(filtered);
+        }
+        showToast('📍 Showing ' + filtered.length + ' restaurants nearest to you!');
       },
       (error) => {
         resetBtn();
