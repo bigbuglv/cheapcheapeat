@@ -1002,8 +1002,8 @@
       <label for="f_owner">I am the <span>restaurant owner</span> — give me priority placement 🏅</label>
     </div>
 
-    <div class="pending-note">
-      🔍 All submissions are reviewed before going live — usually within 24 hours.
+    <div class="pending-note" style="background:rgba(76,175,125,0.08);border:1px solid rgba(76,175,125,0.25);color:#4caf7d">
+      ✅ Listings go live immediately — help keep info accurate using the Edit button.
     </div>
 
     <div class="free-note">✦ <strong>100% free</strong> to list — no fees, no ads, no catches ✦</div>
@@ -1427,7 +1427,7 @@
         stars: isOwner ? 5 : 4,
         lat,
         lng,
-        status: 'pending',
+        status: 'approved',
         createdAt: serverTimestamp()
       };
 
@@ -1458,7 +1458,7 @@
       document.getElementById('f_owner').checked = false;
 
 
-      showToast('🎉 Listing submitted! We\'ll review it within 24 hours.');
+      showToast('🎉 Restaurant added! It is now live on the site.');
       hideSubmitPage();
 
     } catch (err) {
