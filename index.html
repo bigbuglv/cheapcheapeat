@@ -1136,7 +1136,7 @@
           <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
           ${dishes.length > 0 ? `
           <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
-            ${dishes.map(d => {
+            ${dishes.filter(d => activePriceFilter === 'all' || parseInt(d.tier) <= parseInt(activePriceFilter)).map(d => {
               const dt = getPriceTier(d.tier || r.priceRange);
               const dc = dt.cls === 't10' ? '#4caf7d' : dt.cls === 't15' ? 'var(--gold)' : 'var(--red)';
               const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
