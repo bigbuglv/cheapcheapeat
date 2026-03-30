@@ -1563,7 +1563,9 @@
         restaurants.sort((a,b) => a.distance - b.distance);
         searchActive = true;
 
-        // Show all results — wrapped in try/catch so button always resets
+        // Only show restaurants within 10km of user
+        const nearbyRestaurants = restaurants.filter(r => r.distance !== undefined && r.distance <= 10);
+
         // Save scroll position
         const scrollPos = window.scrollY;
 
@@ -1577,8 +1579,8 @@
           if (cuisineFirst) cuisineFirst.classList.add('active');
           const priceFirst = document.querySelector('.price-filter-row .filter-chip');
           if (priceFirst) priceFirst.classList.add('active');
-          renderCards(getFiltered());
-          updateMapPins(getFiltered());
+          renderCards(nearbyRestaurants);
+          updateMapPins(nearbyRestaurants);
         } catch(e) { console.warn('Location UI error:', e); }
 
         try {
@@ -1603,7 +1605,7 @@
           }
         }, 300);
 
-        showToast('📍 Nearest restaurants shown!');
+        showToast('📍 Found ' + nearbyRestaurants.length + ' restaurants within 10km!');
         btn.innerHTML = '📍';
         btn.disabled = false;
       },
