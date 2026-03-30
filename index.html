@@ -400,14 +400,12 @@
 
   /* Price tier indicator on card */
   .price-tier-dot {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+    display: inline-block;
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    z-index: 1;
-    border: 2px solid rgba(0,0,0,0.3);
+    border: 2px solid rgba(0,0,0,0.2);
+    flex-shrink: 0;
   }
   .price-tier-dot.t10 { background: #4caf7d; }
   .price-tier-dot.t15 { background: var(--gold); }
@@ -1116,13 +1114,15 @@
       const extraCount = dishes.length - 1;
 
       card.innerHTML = `
-        <div class="card-body" style="position:relative">
-          <span class="price-tier-dot ${tier.cls}" style="position:absolute;top:6px;left:6px"></span>
-          <div class="card-top" style="padding-left:16px">
-            <div class="card-name">${r.name}</div>
+        <div class="card-body">
+          <div class="card-top">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="price-tier-dot ${tier.cls}" style="flex-shrink:0;position:relative;top:0"></span>
+              <div class="card-name">${r.name}</div>
+            </div>
             <div class="price-tag ${tier.cls}">${displayPrice}</div>
           </div>
-          ${r.isOwner ? '<div style="margin-bottom:4px;padding-left:16px"><span style="background:var(--gold);color:#0e0c09;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Owner Verified</span></div>' : ''}
+          ${r.isOwner ? '<div style="margin-bottom:4px"><span style="background:var(--gold);color:#0e0c09;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Owner Verified</span></div>' : ''}
           <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
           ${dishes.length > 0 ? `
           <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
