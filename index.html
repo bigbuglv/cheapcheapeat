@@ -907,141 +907,152 @@
 <section class="submit-section" id="submitSection" style="margin:0;padding:0;max-width:100%">
   <div class="submit-card">
     <h2>Add a Restaurant</h2>
-    <p>Know a spot with great affordable food? Share it with the community. Restaurant owners get priority listing — always free.</p>
+    <p style="color:var(--muted);font-size:0.88rem;margin-bottom:24px">Know a spot with great affordable food? Takes less than a minute!</p>
 
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Restaurant Name <span class="required">*</span></label>
-        <input type="text" id="f_name" placeholder="e.g. Mum's Noodle House">
-      </div>
-      <div class="form-group full" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px">
-        <label style="margin-bottom:4px">Restaurant Website (optional)</label>
-        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Add your website so customers can see your full menu &amp; more dishes →</p>
-        <input type="text" id="f_website" placeholder="e.g. https://www.myrestaurant.com.au">
-      </div>
-      <div class="form-group">
-        <label>Cuisine Type <span class="required">*</span></label>
-        <select id="f_cuisine">
-          <option value="">Select cuisine...</option>
-          <option value="malaysian">Malaysian</option>
-          <option value="vietnamese">Vietnamese</option>
-          <option value="thai">Thai</option>
-          <option value="chinese">Chinese</option>
-          <option value="japanese">Japanese</option>
-          <option value="korean">Korean</option>
-          <option value="indonesian">Indonesian</option>
-          <option value="asian">Asian (Other)</option>
-          <option value="indian">Indian</option>
-          <option value="italian">Italian</option>
-          <option value="french">French</option>
-          <option value="mexican">Mexican</option>
-          <option value="burgers">Burgers</option>
-          <option value="vegetarian">Vegetarian</option>
-          <option value="bakery">Bakery</option>
-          <option value="dessert">Dessert</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-      <div class="form-group full">
-        <label>Best Value Dishes <span class="required">*</span></label>
-        <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:1rem;flex-shrink:0">💡</span>
-          <p style="font-size:0.78rem;color:var(--muted);margin:0;line-height:1.6">List your <strong style="color:var(--cream)">top 3 most popular budget dishes</strong> — not your full menu. This helps budget diners quickly find your best value options. Add your website above so customers can explore everything else.</p>
-        </div>
-        
-        <!-- Dish 1 - Required -->
-        <div class="dish-row" id="dish-row-1" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
-            <span style="font-size:0.72rem;color:var(--gold);font-weight:700;background:rgba(245,200,66,0.12);padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Featured dish</span>
-          </div>
-          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
-            <span style="display:none">Dish 1</span>
-            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
-              <input type="text" id="f_dish_1" placeholder="Dish name e.g. Pho Bo">
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
-              <input type="text" id="f_price_1" placeholder="Normal price">
-              <select id="f_tier_1">
-                <option value="10">Under $10</option>
-                <option value="15">Under $15</option>
-                <option value="20">Under $20</option>
-              </select>
-            </div>
-          </div>
+    <!-- REQUIRED INFO -->
+    <div style="margin-bottom:4px">
+      <p style="font-size:0.72rem;color:#4caf7d;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px">Required info</p>
+
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Restaurant Name <span class="required">*</span></label>
+          <input type="text" id="f_name" placeholder="e.g. Jalan Alor">
         </div>
 
-        <!-- Dish 2-5 - Optional -->
-        <div id="dish-row-2" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
-          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
-            <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 2</span>
-            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
-              <input type="text" id="f_dish_2" placeholder="Dish name (optional)">
+        <div class="form-group full">
+          <label>Address <span class="required">*</span></label>
+          <input type="text" id="f_address" placeholder="e.g. 26 Britannia Mall, Mitcham VIC 3132">
+        </div>
 
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
-              <input type="text" id="f_price_2" placeholder="Normal price">
-              <select id="f_tier_2">
-                <option value="10">Under $10</option>
-                <option value="15">Under $15</option>
-                <option value="20">Under $20</option>
-              </select>
-            </div>
+        <div class="form-group">
+          <label>Cuisine <span class="required">*</span></label>
+          <select id="f_cuisine">
+            <option value="">Select cuisine...</option>
+            <option value="malaysian">Malaysian</option>
+            <option value="vietnamese">Vietnamese</option>
+            <option value="thai">Thai</option>
+            <option value="chinese">Chinese</option>
+            <option value="japanese">Japanese</option>
+            <option value="korean">Korean</option>
+            <option value="indonesian">Indonesian</option>
+            <option value="asian">Asian (Other)</option>
+            <option value="indian">Indian</option>
+            <option value="italian">Italian</option>
+            <option value="french">French</option>
+            <option value="mexican">Mexican</option>
+            <option value="burgers">Burgers</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="bakery">Bakery</option>
+            <option value="dessert">Dessert</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Are you the owner?</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer">
+            <input type="checkbox" id="f_owner" style="width:16px;height:16px;accent-color:var(--gold)">
+            <span style="font-size:0.88rem;color:var(--muted)">Yes, I own this restaurant</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Dish tip -->
+      <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start">
+        <span style="font-size:1rem;flex-shrink:0">💡</span>
+        <p style="font-size:0.78rem;color:var(--muted);margin:0;line-height:1.6">List your <strong style="color:var(--cream)">top 3 most popular budget dishes</strong> — not your full menu. Add your website below so customers can explore everything else.</p>
+      </div>
+
+      <!-- Dish 1 - Required -->
+      <div class="dish-row" id="dish-row-1" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+          <span style="font-size:0.72rem;color:var(--gold);font-weight:700;background:rgba(245,200,66,0.12);padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Featured dish</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
+          <div style="flex:2;display:flex;flex-direction:column;gap:4px">
+            <input type="text" id="f_dish_1" placeholder="Dish name e.g. Pho Bo">
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+            <input type="text" id="f_price_1" placeholder="Price e.g. $9.50">
+            <select id="f_tier_1">
+              <option value="10">Under $10</option>
+              <option value="15">Under $15</option>
+              <option value="20">Under $20</option>
+            </select>
           </div>
         </div>
+      </div>
 
-        <div id="dish-row-3" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
-          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
-            <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 3</span>
-            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
-              <input type="text" id="f_dish_3" placeholder="Dish name (optional)">
+      <button type="button" id="addDishBtn" onclick="addDishRow()" style="background:transparent;border:1px dashed rgba(245,200,66,0.4);color:var(--gold);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.82rem;margin-bottom:16px;width:100%;transition:all 0.2s">+ Add another dish (up to 3)</button>
 
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
-              <input type="text" id="f_price_3" placeholder="Normal price">
-              <select id="f_tier_3">
-                <option value="10">Under $10</option>
-                <option value="15">Under $15</option>
-                <option value="20">Under $20</option>
-              </select>
-            </div>
+      <!-- Dish 2 -->
+      <div id="dish-row-2" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+        <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
+          <div style="flex:2"><input type="text" id="f_dish_2" placeholder="Dish 2 (optional)"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+            <input type="text" id="f_price_2" placeholder="Price">
+            <select id="f_tier_2">
+              <option value="10">Under $10</option>
+              <option value="15">Under $15</option>
+              <option value="20">Under $20</option>
+            </select>
           </div>
         </div>
+      </div>
 
+      <!-- Dish 3 -->
+      <div id="dish-row-3" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+        <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
+          <div style="flex:2"><input type="text" id="f_dish_3" placeholder="Dish 3 (optional)"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+            <input type="text" id="f_price_3" placeholder="Price">
+            <select id="f_tier_3">
+              <option value="10">Under $10</option>
+              <option value="15">Under $15</option>
+              <option value="20">Under $20</option>
+            </select>
+          </div>
         </div>
-
-        <button type="button" id="addDishBtn" onclick="addDishRow()" style="background:transparent;border:1px dashed rgba(245,200,66,0.4);color:var(--gold);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.82rem;margin-top:4px;width:100%;transition:all 0.2s">+ Add another dish (up to 3)</button>
-      </div>
-      <div class="form-group full">
-        <label>Address / Suburb <span class="required">*</span></label>
-        <input type="text" id="f_address" placeholder="e.g. 12 Smith St, Collingwood VIC">
-      </div>
-      <div class="form-group">
-        <label>Phone (optional)</label>
-        <input type="text" id="f_phone" placeholder="e.g. (03) 9123 4567">
-      </div>
-      <div class="form-group">
-        <label>Hours (optional)</label>
-        <input type="text" id="f_hours" placeholder="e.g. Mon–Fri 11am–3pm">
-      </div>
-
-      <div class="form-group full">
-        <label>Additional Notes</label>
-        <textarea id="f_notes" placeholder="Any extra info — dine-in/takeaway, cash only, etc."></textarea>
       </div>
     </div>
 
-    <div class="owner-check">
-      <input type="checkbox" id="f_owner">
-      <label for="f_owner">I am the <span>restaurant owner</span> — give me priority placement 🏅</label>
+    <!-- MORE DETAILS TOGGLE -->
+    <div style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:16px">
+      <button type="button" onclick="toggleMoreDetails()" style="width:100%;background:transparent;border:none;color:var(--muted);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 0;transition:color 0.2s" id="moreDetailsBtn">
+        <span id="moreDetailsIcon">+</span>
+        <span id="moreDetailsLabel">Add more details — phone, hours, website, notes</span>
+      </button>
+    </div>
+
+    <!-- MORE DETAILS SECTION (hidden by default) -->
+    <div id="moreDetailsSection" style="display:none;margin-bottom:16px">
+      <p style="font-size:0.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px">Optional details</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" id="f_phone" placeholder="e.g. 03 9123 4567">
+        </div>
+        <div class="form-group">
+          <label>Hours</label>
+          <input type="text" id="f_hours" placeholder="e.g. Mon–Fri 11am–3pm">
+        </div>
+        <div class="form-group full" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px">
+          <label style="margin-bottom:4px">Restaurant Website</label>
+          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Add your website so customers can see your full menu &amp; more dishes →</p>
+          <input type="text" id="f_website" placeholder="e.g. https://www.myrestaurant.com.au">
+        </div>
+        <div class="form-group full">
+          <label>Notes</label>
+          <input type="text" id="f_notes" placeholder="e.g. Cash only, BYO allowed, Lunch special Mon–Fri">
+        </div>
+      </div>
     </div>
 
     <div class="pending-note" style="background:rgba(76,175,125,0.08);border:1px solid rgba(76,175,125,0.25);color:#4caf7d">
       ✅ Listings go live immediately — help keep info accurate using the Edit button.
     </div>
 
-    <div class="free-note">✦ <strong>100% free</strong> to list — no fees, no ads, no catches ✦</div>
-
-    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Listing →</button>
+    <button type="button" id="submitBtn" onclick="submitForm()" class="submit-btn">Submit Listing →</button>
   </div>
 </section>
 
@@ -1347,7 +1358,8 @@
   // ── MODAL ──
   window.openModal = (r) => {
     const tier = getPriceTier(r.priceRange);
-    const displayPrice = r.exactPrice || tier.label;
+    const rawPrice = r.exactPrice || tier.label;
+    const displayPrice = rawPrice && !rawPrice.toString().startsWith('$') && !rawPrice.toString().startsWith('Under') ? '$' + rawPrice : rawPrice;
     const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((r.name || '') + ' ' + (r.address || ''))}`;
     document.getElementById('modalContent').innerHTML = `
 
@@ -1365,16 +1377,17 @@
           '<div style=\'font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px\'>Featured dish</div>' +
           '<div style=\'display:flex;justify-content:space-between;align-items:center\'>' +
           '<span style=\'font-weight:600;color:var(--cream)\'>' + featured.name + '</span>' +
-          '<span style=\'color:#4caf7d;font-weight:700\'>' + (featured.price || '') + '</span>' +
+          '<span style=\'color:#4caf7d;font-weight:700\'>' + (featured.price ? (featured.price.toString().startsWith('$') ? featured.price : '$' + featured.price) : '') + '</span>' +
           '</div></div>' +
           (rest.length > 0 ? '<div style=\'margin-bottom:12px\'>' +
           '<div style=\'font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px\'>More dishes</div>' +
           '<div style=\'display:flex;flex-direction:column;gap:6px\'>' +
           rest.map(d => {
             const dc = d.tier === '10' ? '#4caf7d' : d.tier === '20' ? 'var(--red)' : 'var(--gold)';
+            const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
             return '<div style=\'display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--border);border-radius:8px\'>' +
               '<span style=\'font-size:0.88rem;color:var(--cream)\'>' + d.name + '</span>' +
-              '<span style=\'color:' + dc + ';font-weight:600;font-size:0.88rem\'>' + (d.price || '') + '</span>' +
+              '<span style=\'color:' + dc + ';font-weight:600;font-size:0.88rem\'>' + dp + '</span>' +
               '</div>';
           }).join('') + '</div></div>' : '');
       })()}
@@ -1526,6 +1539,13 @@
       document.getElementById('addDishBtn').style.display = 'inline-block';
       document.getElementById('f_cuisine').selectedIndex = 0;
       document.getElementById('f_owner').checked = false;
+      // Reset more details section
+      const mds = document.getElementById('moreDetailsSection');
+      if (mds) mds.style.display = 'none';
+      const mdi = document.getElementById('moreDetailsIcon');
+      if (mdi) mdi.textContent = '+';
+      const mdl = document.getElementById('moreDetailsLabel');
+      if (mdl) mdl.textContent = 'Add more details — phone, hours, website, notes';
 
 
       showToast('🎉 Restaurant added! It is now live on the site.');
@@ -1762,6 +1782,16 @@
       btn.disabled = false;
       btn.textContent = 'Submit Edit →';
     }
+  };
+
+  window.toggleMoreDetails = () => {
+    const section = document.getElementById('moreDetailsSection');
+    const icon = document.getElementById('moreDetailsIcon');
+    const label = document.getElementById('moreDetailsLabel');
+    const open = section.style.display === 'none';
+    section.style.display = open ? 'block' : 'none';
+    icon.textContent = open ? '−' : '+';
+    label.textContent = open ? 'Hide extra details' : 'Add more details — phone, hours, website, notes';
   };
 
   window.quickSearch = (suburb) => {
