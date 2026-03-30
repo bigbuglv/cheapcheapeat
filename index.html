@@ -813,11 +813,15 @@
   <div class="filter-row">
     <button class="filter-chip active" onclick="setCuisineFilter('all', this)">All Cuisines</button>
     <button class="filter-chip" onclick="setCuisineFilter('asian', this)">Asian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('japanese', this)">Japanese</button>
+    <button class="filter-chip" onclick="setCuisineFilter('korean', this)">Korean</button>
     <button class="filter-chip" onclick="setCuisineFilter('italian', this)">Italian</button>
     <button class="filter-chip" onclick="setCuisineFilter('mexican', this)">Mexican</button>
     <button class="filter-chip" onclick="setCuisineFilter('burgers', this)">Burgers</button>
-    <button class="filter-chip" onclick="setCuisineFilter('vegetarian', this)">Vegetarian</button>
     <button class="filter-chip" onclick="setCuisineFilter('indian', this)">Indian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('vegetarian', this)">Vegetarian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('bakery', this)">Bakery</button>
+    <button class="filter-chip" onclick="setCuisineFilter('dessert', this)">Dessert</button>
     <button class="filter-chip" onclick="setCuisineFilter('owner', this)">Owner Verified ★</button>
 
   </div>
@@ -914,15 +918,15 @@
         <select id="f_cuisine">
           <option value="">Select cuisine...</option>
           <option value="asian">Asian</option>
+          <option value="japanese">Japanese</option>
+          <option value="korean">Korean</option>
           <option value="italian">Italian</option>
           <option value="mexican">Mexican</option>
           <option value="burgers">Burgers</option>
-          <option value="vegetarian">Vegetarian</option>
           <option value="indian">Indian</option>
-          <option value="middle-eastern">Middle Eastern</option>
-          <option value="greek">Greek</option>
-          <option value="vietnamese">Vietnamese</option>
-          <option value="thai">Thai</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="bakery">Bakery</option>
+          <option value="dessert">Dessert</option>
           <option value="other">Other</option>
         </select>
       </div>
@@ -1456,8 +1460,10 @@
 
       const isOwner = document.getElementById('f_owner').checked;
       const cuisineLabels = {
-        asian: 'Asian', italian: 'Italian', mexican: 'Mexican', burgers: 'Burgers',
-        vegetarian: 'Vegetarian', indian: 'Indian', 'middle-eastern': 'Middle Eastern',
+        asian: 'Asian', japanese: 'Japanese', korean: 'Korean',
+        italian: 'Italian', mexican: 'Mexican', burgers: 'Burgers',
+        indian: 'Indian', vegetarian: 'Vegetarian', bakery: 'Bakery',
+        dessert: 'Dessert', 'middle-eastern': 'Middle Eastern',
         greek: 'Greek', vietnamese: 'Vietnamese', thai: 'Thai', other: 'Other'
       };
 
@@ -1708,8 +1714,10 @@
       const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
 
       const cuisineLabels = {
-        asian: 'Asian', italian: 'Italian', mexican: 'Mexican', burgers: 'Burgers',
-        vegetarian: 'Vegetarian', indian: 'Indian', 'middle-eastern': 'Middle Eastern',
+        asian: 'Asian', japanese: 'Japanese', korean: 'Korean',
+        italian: 'Italian', mexican: 'Mexican', burgers: 'Burgers',
+        indian: 'Indian', vegetarian: 'Vegetarian', bakery: 'Bakery',
+        dessert: 'Dessert', 'middle-eastern': 'Middle Eastern',
         greek: 'Greek', vietnamese: 'Vietnamese', thai: 'Thai', other: 'Other'
       };
       const cuisine = document.getElementById('edit_cuisine').value;
@@ -2046,11 +2054,15 @@
           <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Cuisine</label>
           <select id="edit_cuisine" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
             <option value="asian">Asian</option>
+            <option value="japanese">Japanese</option>
+            <option value="korean">Korean</option>
             <option value="italian">Italian</option>
             <option value="mexican">Mexican</option>
             <option value="burgers">Burgers</option>
-            <option value="vegetarian">Vegetarian</option>
             <option value="indian">Indian</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="bakery">Bakery</option>
+            <option value="dessert">Dessert</option>
             <option value="middle-eastern">Middle Eastern</option>
             <option value="greek">Greek</option>
             <option value="vietnamese">Vietnamese</option>
