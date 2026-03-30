@@ -1116,17 +1116,14 @@
       const extraCount = dishes.length - 1;
 
       card.innerHTML = `
-        <div class="card-body">
-          <div class="card-top">
-            <div style="display:flex;align-items:center;gap:6px">
-              <span class="price-tier-dot ${tier.cls}" style="position:relative;display:inline-block;width:10px;height:10px;flex-shrink:0"></span>
-              <div class="card-name">${r.name}</div>
-            </div>
+        <div class="card-body" style="position:relative">
+          <span class="price-tier-dot ${tier.cls}" style="position:absolute;top:6px;left:6px"></span>
+          <div class="card-top" style="padding-left:16px">
+            <div class="card-name">${r.name}</div>
             <div class="price-tag ${tier.cls}">${displayPrice}</div>
           </div>
-          ${r.isOwner ? '<div style="margin-bottom:4px"><span style="background:var(--gold);color:#0e0c09;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Owner Verified</span></div>' : ''}
+          ${r.isOwner ? '<div style="margin-bottom:4px;padding-left:16px"><span style="background:var(--gold);color:#0e0c09;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Owner Verified</span></div>' : ''}
           <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
-          <div class="card-dish">${featuredDish.name || r.dish || ''}</div>
           ${dishes.length > 0 ? `
           <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
             ${dishes.map(d => {
