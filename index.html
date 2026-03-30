@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CheapCheapEat — Affordable Eats Near You</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0c09;
+    --surface: #1a1710;
+    --surface2: #252118;
+    --gold: #f5c842;
+    --gold-dim: #b8942f;
+    --red: #e8402a;
+    --cream: #f0ead8;
+    --muted: #7a7060;
+    --border: rgba(245, 200, 66, 0.15);
+    --radius: 12px;
+    --green: #4caf7d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(14, 12, 9, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--cream); }
+
+  .header-actions { display: flex; gap: 12px; align-items: center; }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+  .btn-primary {
+    background: var(--gold);
+    color: #0e0c09;
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #ffd740; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 72px 24px 48px;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(245,200,66,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(245,200,66,0.12);
+    border: 1px solid rgba(245,200,66,0.3);
+    color: var(--gold);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--cream);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .hero p {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+  }
+
+  /* ── PRICE TIER BADGES ── */
+  .price-tiers {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .tier-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  .tier-badge.t10 { background: rgba(76,175,125,0.12); border-color: rgba(76,175,125,0.4); color: #4caf7d; }
+  .tier-badge.t15 { background: rgba(245,200,66,0.12); border-color: rgba(245,200,66,0.4); color: var(--gold); }
+  .tier-badge.t20 { background: rgba(232,64,42,0.12); border-color: rgba(232,64,42,0.4); color: var(--red); }
+
+  /* ── SEARCH BAR ── */
+  .search-bar {
+    max-width: 680px;
+    margin: 0 auto 48px;
+    padding: 0 24px;
+    display: flex;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .search-bar:focus-within { border-color: var(--gold-dim); }
+
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 14px 16px;
+  }
+  .search-bar input::placeholder { color: var(--muted); }
+
+  .search-bar button {
+    background: var(--gold);
+    color: #0e0c09;
+    border: none;
+    padding: 14px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .search-bar button:hover { background: #ffd740; }
+  .search-bar button:active { background: #e6b800; transform: scale(0.97); }
+  .search-bar button.searching { background: #e6b800; transform: scale(0.97); }
+
+  /* ── MAP AREA ── */
+  .map-section {
+    padding: 0 24px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .map-wrapper {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  #map {
+    width: 100%;
+    height: 480px;
+  }
+
+  .map-overlay-msg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    gap: 12px;
+  }
+
+  .map-icon { font-size: 3rem; }
+
+  .map-overlay-msg h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    color: var(--cream);
+  }
+
+  .map-overlay-msg p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-align: center;
+    max-width: 320px;
+  }
+
+  .map-overlay-msg .btn-primary { margin-top: 8px; font-size: 0.9rem; }
+
+  /* ── LISTINGS ── */
+  .listings-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 64px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .section-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--cream);
+  }
+
+  .section-header .count { font-size: 0.85rem; color: var(--muted); }
+
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Price filter row */
+  .price-filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .price-filter-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-right: 4px;
+  }
+
+  .filter-chip {
+    padding: 6px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-chip:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .filter-chip.active { background: var(--gold); border-color: var(--gold); color: #0e0c09; font-weight: 600; }
+
+  .filter-chip.p10.active { background: #4caf7d; border-color: #4caf7d; color: #fff; }
+  .filter-chip.p15.active { background: var(--gold); border-color: var(--gold); color: #0e0c09; }
+  .filter-chip.p20.active { background: var(--red); border-color: var(--red); color: #fff; }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  /* Loading state */
+  .loading-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .loading-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.25s;
+    cursor: pointer;
+    position: relative;
+  }
+  .card:hover {
+    border-color: var(--gold-dim);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  }
+
+  .card-img {
+    height: 120px;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+
+
+  .card-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, rgba(26,23,16,0.8));
+  }
+
+  .owner-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 1;
+  }
+
+  /* Price tier indicator on card */
+  .price-tier-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.2);
+    flex-shrink: 0;
+  }
+  .price-tier-dot.t10 { background: #4caf7d; }
+  .price-tier-dot.t15 { background: var(--gold); }
+  .price-tier-dot.t20 { background: var(--red); }
+
+  .card-body { padding: 16px; }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+
+  .card-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+
+  .price-tag {
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 3px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .price-tag.t10 { background: rgba(76,175,125,0.15); border: 1px solid rgba(76,175,125,0.3); color: #4caf7d; }
+  .price-tag.t15 { background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.3); color: var(--gold); }
+  .price-tag.t20 { background: rgba(232,64,42,0.15); border: 1px solid rgba(232,64,42,0.3); color: var(--red); }
+
+  .card-cuisine { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+
+  .card-dish {
+    font-size: 0.88rem;
+    color: var(--cream);
+    opacity: 0.85;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-location { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--muted); }
+
+  .stars { font-size: 0.78rem; color: var(--gold); letter-spacing: 1px; }
+
+  /* ── SUBMIT FORM ── */
+  .submit-section {
+    max-width: 700px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+  }
+
+  .submit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--red), var(--gold));
+  }
+
+  .submit-card h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    margin-bottom: 8px;
+    color: var(--cream);
+  }
+
+  .submit-card > p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  .form-group label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .form-group label .required { color: var(--gold); }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--gold-dim); }
+
+  .form-group select option { background: #252118; }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+
+
+  .owner-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(245,200,66,0.07);
+    border: 1px solid rgba(245,200,66,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+
+  .owner-check input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; }
+
+  .owner-check label { font-size: 0.88rem; color: var(--cream); cursor: pointer; }
+  .owner-check label span { color: var(--gold); font-weight: 600; }
+
+  .free-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+    text-align: center;
+    justify-content: center;
+  }
+  .free-note strong { color: var(--gold); }
+
+  .pending-note {
+    background: rgba(76,175,125,0.08);
+    border: 1px solid rgba(76,175,125,0.25);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    color: #4caf7d;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .submit-btn:hover { background: #ffd740; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,200,66,0.25); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+  }
+
+  .how-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--cream);
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+  }
+
+  .step {
+    text-align: center;
+    padding: 28px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s;
+  }
+  .step:hover { border-color: var(--gold-dim); }
+
+  .step-num {
+    font-family: 'Fraunces', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgba(245,200,66,0.25);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .step-icon { font-size: 1.8rem; margin-bottom: 10px; }
+
+  .step h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .step p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  footer strong { color: var(--gold); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    animation: modalIn 0.25s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: var(--surface2);
+    border: none;
+    color: var(--muted);
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { color: var(--cream); }
+
+
+
+  .modal h3 { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+  .modal .modal-cuisine { color: var(--muted); font-size: 0.85rem; margin-bottom: 16px; }
+  .modal .modal-price { font-size: 2rem; font-family: 'Fraunces', serif; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
+  .modal .modal-dish { color: var(--cream); font-size: 0.95rem; margin-bottom: 16px; line-height: 1.5; }
+  .modal .modal-meta { display: flex; flex-direction: column; gap: 8px; }
+  .modal .meta-row { display: flex; gap: 10px; font-size: 0.85rem; }
+  .modal .meta-label { color: var(--muted); min-width: 80px; }
+  .modal .meta-val { color: var(--cream); }
+  .modal .map-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 20px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+    width: 100%;
+    justify-content: center;
+  }
+  .modal .map-link:hover { background: #ffd740; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 14px 22px;
+    border-radius: 10px;
+    z-index: 300;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    max-width: 320px;
+  }
+  .toast.show { transform: none; opacity: 1; }
+  .toast.error { background: var(--red); color: #fff; }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .header-actions .btn-ghost { display: none; }
+    .submit-card { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">CheapCheap<span>Eat</span></div>
+  <div class="header-actions">
+    <button class="btn btn-ghost" onclick="scrollToList()">Browse</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('adminPanel').style.display='block';document.body.style.overflow='hidden'">🔐 Admin</button>
+    <button class="btn btn-primary" onclick="showSubmitPage()">+ Add Restaurant</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">100% Free · Community Powered</div>
+  <h1>Real meals.<br><em>Cheap eats.</em><br>Near you.</h1>
+  <p>A crowd-sourced directory of restaurants serving delicious food for $20 or less. Restaurant owners list for free — always.</p>
+
+  <div class="price-tiers">
+    <div class="tier-badge t10">🟢 Under $10</div>
+    <div class="tier-badge t15">🟡 Under $15</div>
+    <div class="tier-badge t20">🔴 Under $20</div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search by suburb, cuisine, or dish..." oninput="filterCards()" onkeydown="if(event.key==='Enter') triggerSearch()">
+  <button id="locationBtn" onclick="useMyLocation()" title="Use my location" style="background:var(--surface2);color:var(--cream);border:none;padding:14px 16px;font-size:1.1rem;cursor:pointer;transition:background 0.2s;border-right:1px solid var(--border)">📍</button>
+  <button id="searchBtn" onclick="triggerSearch()">Search</button>
+</div>
+
+<!-- MAP -->
+<section class="map-section">
+  <div class="map-wrapper">
+    <div id="map"></div>
+    <div class="map-overlay-msg" id="mapOverlay">
+      <div class="map-icon">📍</div>
+      <h3>Interactive Map</h3>
+      <p>Enter your Google Maps API key to show restaurant locations near you.</p>
+      <button class="btn btn-primary" onclick="promptApiKey()">Enable Map</button>
+    </div>
+  </div>
+</section>
+
+<!-- LISTINGS -->
+<section class="listings-section">
+  <div class="section-header">
+    <h2>All Listings</h2>
+    <span class="count" id="listCount">Loading...</span>
+  </div>
+
+  <!-- Cuisine filters -->
+  <div class="filter-row">
+    <button class="filter-chip active" onclick="setCuisineFilter('all', this)">All Cuisines</button>
+    <button class="filter-chip" onclick="setCuisineFilter('asian', this)">Asian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('italian', this)">Italian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('mexican', this)">Mexican</button>
+    <button class="filter-chip" onclick="setCuisineFilter('burgers', this)">Burgers</button>
+    <button class="filter-chip" onclick="setCuisineFilter('vegetarian', this)">Vegetarian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('indian', this)">Indian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('owner', this)">Owner Verified ★</button>
+
+  </div>
+
+  <!-- Price filters -->
+  <div class="price-filter-row">
+    <span class="price-filter-label">Budget:</span>
+    <button class="filter-chip active" onclick="setPriceFilter('all', this)">All Prices</button>
+    <button class="filter-chip p10" onclick="setPriceFilter('10', this)">Under $10</button>
+    <button class="filter-chip p15" onclick="setPriceFilter('15', this)">Under $15</button>
+    <button class="filter-chip p20" onclick="setPriceFilter('20', this)">Under $20</button>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid">
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Loading restaurants...</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-icon">🍽️</div>
+      <h3>Find a cheap meal</h3>
+      <p>Browse the map or search by cuisine, suburb, or dish to find affordable eats near you.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-icon">📝</div>
+      <h3>Anyone can submit</h3>
+      <p>Community members submit places they love. Restaurant owners get priority placement — for free.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-icon">✅</div>
+      <h3>We review & verify</h3>
+      <p>Every submission is reviewed before going live. Owner-verified spots get a gold badge.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-icon">🗺️</div>
+      <h3>Get directions</h3>
+      <p>Each listing links directly to Google Maps so you can navigate there instantly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SUBMIT PAGE -->
+<div id="submitPage" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:150;overflow-y:auto">
+  <div style="max-width:700px;margin:0 auto;padding:24px">
+    <!-- Back button -->
+    <div style="margin-bottom:24px">
+      <button onclick="hideSubmitPage()" style="background:transparent;border:none;color:var(--muted);font-family:DM Sans,sans-serif;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;transition:color 0.2s" onmouseover="this.style.color='var(--cream)'" onmouseout="this.style.color='var(--muted)'">
+        ← Back to listings
+      </button>
+    </div>
+
+<section class="submit-section" id="submitSection" style="margin:0;padding:0;max-width:100%">
+  <div class="submit-card">
+    <h2>Add a Restaurant</h2>
+    <p>Know a spot with great affordable food? Share it with the community. Restaurant owners get priority listing — always free.</p>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Restaurant Name <span class="required">*</span></label>
+        <input type="text" id="f_name" placeholder="e.g. Mum's Noodle House">
+      </div>
+      <div class="form-group full" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px">
+        <label style="margin-bottom:4px">Restaurant Website (optional)</label>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Add your website so customers can see your full menu &amp; more dishes →</p>
+        <input type="text" id="f_website" placeholder="e.g. https://www.myrestaurant.com.au">
+      </div>
+      <div class="form-group">
+        <label>Cuisine Type <span class="required">*</span></label>
+        <select id="f_cuisine">
+          <option value="">Select cuisine...</option>
+          <option value="asian">Asian</option>
+          <option value="italian">Italian</option>
+          <option value="mexican">Mexican</option>
+          <option value="burgers">Burgers</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="indian">Indian</option>
+          <option value="middle-eastern">Middle Eastern</option>
+          <option value="greek">Greek</option>
+          <option value="vietnamese">Vietnamese</option>
+          <option value="thai">Thai</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Best Value Dishes <span class="required">*</span></label>
+        <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:1rem;flex-shrink:0">💡</span>
+          <p style="font-size:0.78rem;color:var(--muted);margin:0;line-height:1.6">List your <strong style="color:var(--cream)">top 3 most popular budget dishes</strong> — not your full menu. This helps budget diners quickly find your best value options. Add your website above so customers can explore everything else.</p>
+        </div>
+        
+        <!-- Dish 1 - Required -->
+        <div class="dish-row" id="dish-row-1" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+            <span style="font-size:0.72rem;color:var(--gold);font-weight:700;background:rgba(245,200,66,0.12);padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Featured dish</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
+            <span style="display:none">Dish 1</span>
+            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_dish_1" placeholder="Dish name e.g. Pho Bo">
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_price_1" placeholder="Normal price">
+              <select id="f_tier_1">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dish 2-5 - Optional -->
+        <div id="dish-row-2" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
+            <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 2</span>
+            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_dish_2" placeholder="Dish name (optional)">
+
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_price_2" placeholder="Normal price">
+              <select id="f_tier_2">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="dish-row-3" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:4px">
+            <span style="font-size:0.75rem;color:var(--muted);min-width:60px;padding-top:10px">Dish 3</span>
+            <div style="flex:2;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_dish_3" placeholder="Dish name (optional)">
+
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <input type="text" id="f_price_3" placeholder="Normal price">
+              <select id="f_tier_3">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        </div>
+
+        <button type="button" id="addDishBtn" onclick="addDishRow()" style="background:transparent;border:1px dashed rgba(245,200,66,0.4);color:var(--gold);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.82rem;margin-top:4px;width:100%;transition:all 0.2s">+ Add another dish (up to 3)</button>
+      </div>
+      <div class="form-group full">
+        <label>Address / Suburb <span class="required">*</span></label>
+        <input type="text" id="f_address" placeholder="e.g. 12 Smith St, Collingwood VIC">
+      </div>
+      <div class="form-group">
+        <label>Phone (optional)</label>
+        <input type="text" id="f_phone" placeholder="e.g. (03) 9123 4567">
+      </div>
+      <div class="form-group">
+        <label>Hours (optional)</label>
+        <input type="text" id="f_hours" placeholder="e.g. Mon–Fri 11am–3pm">
+      </div>
+
+      <div class="form-group full">
+        <label>Additional Notes</label>
+        <textarea id="f_notes" placeholder="Any extra info — dine-in/takeaway, cash only, etc."></textarea>
+      </div>
+    </div>
+
+    <div class="owner-check">
+      <input type="checkbox" id="f_owner">
+      <label for="f_owner">I am the <span>restaurant owner</span> — give me priority placement 🏅</label>
+    </div>
+
+    <div class="pending-note" style="background:rgba(76,175,125,0.08);border:1px solid rgba(76,175,125,0.25);color:#4caf7d">
+      ✅ Listings go live immediately — help keep info accurate using the Edit button.
+    </div>
+
+    <div class="free-note">✦ <strong>100% free</strong> to list — no fees, no ads, no catches ✦</div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Listing →</button>
+  </div>
+</section>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>CheapCheapEat</strong> — Community powered. Always free. &nbsp;·&nbsp; Built with ❤️ for budget food lovers in Australia.
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ── FIREBASE CONFIG ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyDoLc_QJsdT2Eiz4u5JAVIAgQXjhxbSn-o",
+    authDomain: "cheapcheapeats.firebaseapp.com",
+    projectId: "cheapcheapeats",
+    storageBucket: "cheapcheapeats.firebasestorage.app",
+    messagingSenderId: "47196090968",
+    appId: "1:47196090968:web:205e242bdf064e6bf9102d",
+    measurementId: "G-4VMBV1306Q"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+
+
+  // ── STATE ──
+  let restaurants = [];
+  let activeCuisineFilter = 'all';
+  let activePriceFilter = 'all';
+
+  let map, markers = [];
+
+  // ── LOAD RESTAURANTS FROM FIREBASE ──
+  async function loadRestaurants() {
+    try {
+      const q = query(
+        collection(db, "restaurants"),
+        where("status", "==", "approved")
+      );
+      const snapshot = await getDocs(q);
+      restaurants = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderCards(getFiltered());
+      // Update pins — if map already loaded, place now; otherwise wait
+      if (map) {
+        updateMapPins(getFiltered());
+      } else {
+        window._pendingPinUpdate = true;
+      }
+    } catch (err) {
+      console.error("Error loading restaurants:", err);
+      restaurants = [];
+      renderCards(getFiltered());
+    }
+  }
+
+  // ── PRICE TIER HELPER ──
+  function getPriceTier(priceRange) {
+    if (priceRange === "10") return { cls: "t10", label: "Under $10" };
+    if (priceRange === "15") return { cls: "t15", label: "Under $15" };
+    return { cls: "t20", label: "Under $20" };
+  }
+
+  // ── RENDER CARDS ──
+  function renderCards(list) {
+    const grid = document.getElementById('cardsGrid');
+    document.getElementById('listCount').textContent = `${list.length} restaurant${list.length !== 1 ? 's' : ''}`;
+    grid.innerHTML = '';
+
+    if (list.length === 0) {
+      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🍽️</div><p>No restaurants found. Try a different filter!</p></div>`;
+      return;
+    }
+
+    list.forEach(r => {
+      const tier = getPriceTier(r.priceRange);
+      const displayPrice = r.exactPrice ? (r.exactPrice.startsWith('$') ? r.exactPrice : '$' + r.exactPrice) 
+        : (r.priceRange === "10" ? "Under $10" : r.priceRange === "15" ? "Under $15" : "Under $20");
+      const card = document.createElement('div');
+      card.className = 'card';
+      // Build dishes list for card
+      const dishes = r.dishes && r.dishes.length > 0 ? r.dishes : 
+        (r.dish ? [{ name: r.dish, price: r.exactPrice || displayPrice, tier: r.priceRange || '10' }] : []);
+      const featuredDish = dishes[0] || {};
+      const extraCount = dishes.length - 1;
+
+      card.innerHTML = `
+        <div class="card-body">
+          <div class="card-top">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="price-tier-dot ${tier.cls}" style="flex-shrink:0;position:relative;top:0"></span>
+              <div class="card-name">${r.name}</div>
+            </div>
+            <div class="price-tag ${tier.cls}">${displayPrice}</div>
+          </div>
+          ${r.isOwner ? '<div style="margin-bottom:4px"><span style="background:var(--gold);color:#0e0c09;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Owner Verified</span></div>' : ''}
+          <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
+          ${dishes.length > 0 ? `
+          <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
+            ${dishes.map(d => {
+              const dt = getPriceTier(d.tier || r.priceRange);
+              const dc = dt.cls === 't10' ? '#4caf7d' : dt.cls === 't15' ? 'var(--gold)' : 'var(--red)';
+              const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
+              return `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--surface2);border-radius:6px;font-size:0.78rem">
+                <span style="color:var(--cream);opacity:0.85">${d.name}</span>
+                <span style="color:${dc};font-weight:600">${dp}</span>
+              </div>`;
+            }).join('')}
+          </div>` : '<div style="margin-bottom:12px"></div>'}
+          <div class="card-footer">
+            <div class="card-location">📍 ${r.address ? r.address.split(',').slice(1).join(',').trim() : ''}</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              ${(r.distance && r.distance < 900 && typeof r.distance === 'number') ? `<span style="font-size:0.75rem;color:var(--muted)">${r.distance.toFixed(1)}km</span>` : ''}
+              <div class="stars">${'★'.repeat(r.stars || 4)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+      card.onclick = () => openModal(r);
+      grid.appendChild(card);
+    });
+  }
+
+  // ── FILTER LOGIC ──
+
+
+  function getFiltered() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    return restaurants.filter(r => {
+      const matchCuisine = activeCuisineFilter === 'all' ? true
+        : activeCuisineFilter === 'owner' ? r.isOwner
+        : r.cuisine === activeCuisineFilter;
+      // Check if restaurant OR any of its dishes match the price filter
+      const matchPrice = activePriceFilter === 'all' ? true
+        : r.priceRange === activePriceFilter
+        || (r.dishes && r.dishes.some(d => d.tier === activePriceFilter));
+      const matchSearch = !q
+        || (r.name || '').toLowerCase().includes(q)
+        || (r.cuisineLabel || '').toLowerCase().includes(q)
+        || (r.dish || '').toLowerCase().includes(q)
+        || (r.address || '').toLowerCase().includes(q);
+      return matchCuisine && matchPrice && matchSearch;
+    });
+  }
+
+  window.triggerSearch = () => {
+    const btn = document.getElementById('searchBtn');
+    btn.textContent = 'Searching...';
+    btn.classList.add('searching');
+    setTimeout(() => {
+      const filtered = getFiltered();
+      renderCards(filtered);
+      updateMapPins(filtered);
+      btn.textContent = filtered.length > 0 ? `${filtered.length} found ✓` : 'No results';
+      setTimeout(() => {
+        btn.textContent = 'Search';
+        btn.classList.remove('searching');
+      }, 2000);
+    }, 300);
+  };
+
+  window.filterCards = () => {
+    const filtered = getFiltered();
+    renderCards(filtered);
+    updateMapPins(filtered);
+  };
+
+  function updateMapPins(filtered) {
+    if (!map) return;
+
+    // Clear all existing markers
+    markers.forEach(m => m.setMap(null));
+    markers = [];
+
+    if (filtered.length === 0) return;
+
+    const withCoords = filtered.filter(r => r.lat && r.lng);
+
+    // Info window shared across all markers
+    const infoWindow = new google.maps.InfoWindow();
+
+    // Add teardrop markers for filtered results
+    withCoords.forEach(r => {
+      const tier = getPriceTier(r.priceRange);
+      const color = tier.cls === 't10' ? '#4caf7d' : tier.cls === 't15' ? '#f5c842' : '#e8402a';
+      const strokeColor = tier.cls === 't10' ? '#2e7d32' : tier.cls === 't15' ? '#b8942f' : '#b71c1c';
+
+      const pinSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="48" viewBox="0 0 36 48"><path d="M18 2 C9 2 2 9 2 18 C2 30 18 46 18 46 C18 46 34 30 34 18 C34 9 27 2 18 2Z" fill="${color}" stroke="${strokeColor}" stroke-width="1.5"/><circle cx="18" cy="18" r="9" fill="white" opacity="0.92"/></svg>`;
+
+      const marker = new google.maps.Marker({
+        position: { lat: r.lat, lng: r.lng },
+        map,
+        title: r.name,
+        icon: {
+          url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(pinSvg),
+          scaledSize: new google.maps.Size(36, 48),
+          anchor: new google.maps.Point(18, 46)
+        }
+      });
+
+      marker.addListener('mouseover', () => {
+        const displayPrice = r.exactPrice || `Under $${r.priceRange}`;
+        const distText = r.distance ? `<div style="font-size:0.78rem;color:#888;margin-top:2px">📍 ${r.distance} away</div>` : '';
+        infoWindow.setContent(`
+          <div style="font-family:DM Sans,sans-serif;padding:4px 6px;min-width:160px">
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:2px">${r.name}</div>
+            <div style="font-size:0.82rem;color:#666;margin-bottom:2px">${r.cuisineLabel || r.cuisine}</div>
+            <div style="font-size:0.82rem;color:${color};font-weight:600">${displayPrice}</div>
+            ${distText}
+            <div style="font-size:0.78rem;color:#888;margin-top:2px">Click for details</div>
+          </div>
+        `);
+        infoWindow.open(map, marker);
+      });
+
+      marker.addListener('mouseout', () => infoWindow.close());
+      marker.addListener('click', () => { infoWindow.close(); openModal(r); });
+      markers.push(marker);
+    });
+
+    // Pan and zoom map to show results
+    if (withCoords.length === 1) {
+      map.setCenter({ lat: withCoords[0].lat, lng: withCoords[0].lng });
+      map.setZoom(15);
+    } else if (withCoords.length > 1) {
+      const bounds = new google.maps.LatLngBounds();
+      withCoords.forEach(r => bounds.extend({ lat: r.lat, lng: r.lng }));
+      map.fitBounds(bounds);
+      // Prevent zooming in too close
+      const listener = google.maps.event.addListener(map, 'idle', () => {
+        if (map.getZoom() > 15) map.setZoom(15);
+        google.maps.event.removeListener(listener);
+      });
+    }
+  }
+
+  window.setCuisineFilter = (f, el) => {
+    activeCuisineFilter = f;
+    document.querySelectorAll('.filter-row .filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    const filtered = getFiltered();
+    renderCards(filtered);
+    updateMapPins(filtered);
+  };
+
+  window.setPriceFilter = (f, el) => {
+    activePriceFilter = f;
+    document.querySelectorAll('.price-filter-row .filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    renderCards(getFiltered());
+  };
+
+  // ── MODAL ──
+  window.openModal = (r) => {
+    const tier = getPriceTier(r.priceRange);
+    const displayPrice = r.exactPrice || tier.label;
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((r.name || '') + ' ' + (r.address || ''))}`;
+    document.getElementById('modalContent').innerHTML = `
+
+      ${r.isOwner ? '<div style="display:inline-block;background:var(--gold);color:#0e0c09;font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:4px;margin-bottom:12px;letter-spacing:0.05em">★ OWNER VERIFIED</div>' : ''}
+      <h3>${r.name}</h3>
+      <div class="modal-cuisine">${r.cuisineLabel || r.cuisine}</div>
+      <div class="modal-price" style="color:${tier.cls === 't10' ? '#4caf7d' : tier.cls === 't20' ? 'var(--red)' : 'var(--gold)'}">${displayPrice}</div>
+      ${(() => {
+        const dishes = r.dishes && r.dishes.length > 0 ? r.dishes :
+          (r.dish ? [{ name: r.dish, price: r.exactPrice || displayPrice, tier: r.priceRange || '10' }] : []);
+        if (dishes.length === 0) return '<div class=\'modal-dish\'>—</div>';
+        const featured = dishes[0];
+        const rest = dishes.slice(1);
+        return '<div style=\'background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:12px\'>' +
+          '<div style=\'font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px\'>Featured dish</div>' +
+          '<div style=\'display:flex;justify-content:space-between;align-items:center\'>' +
+          '<span style=\'font-weight:600;color:var(--cream)\'>' + featured.name + '</span>' +
+          '<span style=\'color:#4caf7d;font-weight:700\'>' + (featured.price || '') + '</span>' +
+          '</div></div>' +
+          (rest.length > 0 ? '<div style=\'margin-bottom:12px\'>' +
+          '<div style=\'font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px\'>More dishes</div>' +
+          '<div style=\'display:flex;flex-direction:column;gap:6px\'>' +
+          rest.map(d => {
+            const dc = d.tier === '10' ? '#4caf7d' : d.tier === '20' ? 'var(--red)' : 'var(--gold)';
+            return '<div style=\'display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--border);border-radius:8px\'>' +
+              '<span style=\'font-size:0.88rem;color:var(--cream)\'>' + d.name + '</span>' +
+              '<span style=\'color:' + dc + ';font-weight:600;font-size:0.88rem\'>' + (d.price || '') + '</span>' +
+              '</div>';
+          }).join('') + '</div></div>' : '');
+      })()}
+      <div class="modal-meta">
+        <div class="meta-row"><span class="meta-label">Address</span><span class="meta-val">${r.address || '—'}</span></div>
+        <div class="meta-row"><span class="meta-label">Hours</span><span class="meta-val">${r.hours || 'Not listed'}</span></div>
+        <div class="meta-row"><span class="meta-label">Phone</span><span class="meta-val">${r.phone || 'Not provided'}</span></div>
+        <div class="meta-row"><span class="meta-label">Rating</span><span class="meta-val" style="color:var(--gold)">${'★'.repeat(r.stars || 4)}</span></div>
+        ${r.notes ? `<div class="meta-row"><span class="meta-label">Notes</span><span class="meta-val">${r.notes}</span></div>` : ''}
+
+      </div>
+      <a class="map-link" href="${mapsUrl}" target="_blank">📍 Open in Google Maps</a>
+      ${r.website ? `<a class="map-link" href="${r.website}" target="_blank" style="margin-top:8px;background:var(--surface2);color:var(--cream);border:1px solid var(--border)">🌐 Visit Restaurant Website</a>` : ''}
+      <button onclick="openEditForm(this.dataset.id)" data-id="${r.id}" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">✏️ Suggest an Edit</button>
+    `;
+    document.getElementById('modal').classList.add('open');
+  };
+
+  window.closeModal = (e) => {
+    if (e.target === document.getElementById('modal')) {
+      document.getElementById('modal').classList.remove('open');
+    }
+  };
+
+
+
+  // ── SUBMIT FORM ──
+  window.submitForm = async () => {
+    const name = document.getElementById('f_name').value.trim();
+    const cuisine = document.getElementById('f_cuisine').value;
+    const address = document.getElementById('f_address').value.trim();
+    const dish1 = document.getElementById('f_dish_1').value.trim();
+    const price1 = document.getElementById('f_price_1').value.trim();
+    const tier1 = document.getElementById('f_tier_1').value;
+
+    if (!name || !cuisine || !address || !dish1) {
+      showToast('Please fill in all required fields including at least one dish.', true);
+      return;
+    }
+
+    // Collect all dishes (max 3)
+    const dishes = [];
+    for (let i = 1; i <= 3; i++) {
+      const dishEl = document.getElementById('f_dish_' + i);
+      const priceEl = document.getElementById('f_price_' + i);
+      const tierEl = document.getElementById('f_tier_' + i);
+      if (dishEl && dishEl.value.trim()) {
+        dishes.push({
+          name: dishEl.value.trim(),
+          price: priceEl ? priceEl.value.trim() : '',
+          tier: tierEl ? tierEl.value : '10'
+        });
+      }
+    }
+
+    // Use first dish tier as the main price range
+    const priceRange = dishes.length > 0 ? dishes[0].tier : '10';
+    const dish = dishes.length > 0 ? dishes[0].name : '';
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    try {
+      let photoUrl = null;
+
+      // Geocode address using Google Maps Geocoder (works with restricted keys)
+      btn.textContent = 'Getting location...';
+      let lat = null, lng = null;
+      try {
+        await new Promise((resolve) => {
+          const waitForGoogle = setInterval(() => {
+            if (window.google && window.google.maps) {
+              clearInterval(waitForGoogle);
+              const geocoder = new google.maps.Geocoder();
+              geocoder.geocode({ address: address + ', Australia' }, (results, status) => {
+                console.log('Geocode status:', status);
+                if (status === 'OK' && results.length > 0) {
+                  lat = results[0].geometry.location.lat();
+                  lng = results[0].geometry.location.lng();
+                  console.log('Coordinates found:', lat, lng);
+                } else {
+                  console.warn('Geocode failed:', status);
+                }
+                resolve();
+              });
+            }
+          }, 100);
+          // Timeout after 5 seconds
+          setTimeout(() => { clearInterval(waitForGoogle); resolve(); }, 5000);
+        });
+      } catch (geoErr) {
+        console.warn('Geocoding error:', geoErr);
+      }
+
+      const isOwner = document.getElementById('f_owner').checked;
+      const cuisineLabels = {
+        asian: 'Asian', italian: 'Italian', mexican: 'Mexican', burgers: 'Burgers',
+        vegetarian: 'Vegetarian', indian: 'Indian', 'middle-eastern': 'Middle Eastern',
+        greek: 'Greek', vietnamese: 'Vietnamese', thai: 'Thai', other: 'Other'
+      };
+
+      const newEntry = {
+        name,
+        cuisine,
+        cuisineLabel: cuisineLabels[cuisine] || cuisine,
+        dish,
+        dishes,
+        priceRange,
+        exactPrice: dishes.length > 0 ? dishes[0].price : null,
+        address,
+        phone: document.getElementById('f_phone').value.trim() || null,
+        hours: document.getElementById('f_hours').value.trim() || null,
+        notes: document.getElementById('f_notes').value.trim() || null,
+        website: document.getElementById('f_website').value.trim() || null,
+        isOwner,
+        stars: isOwner ? 5 : 4,
+        lat,
+        lng,
+        status: 'approved',
+        createdAt: serverTimestamp()
+      };
+
+      const docRef = await addDoc(collection(db, "restaurants"), newEntry);
+      // Send email notification
+      sendEmailNotification(newEntry);
+
+      // Reset form
+      ['f_name', 'f_address', 'f_phone', 'f_hours', 'f_notes', 'f_website'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      for (let i = 1; i <= 3; i++) {
+        const d = document.getElementById('f_dish_' + i);
+        const p = document.getElementById('f_price_' + i);
+        const t = document.getElementById('f_tier_' + i);
+        if (d) d.value = '';
+        if (p) p.value = '';
+        if (t) t.selectedIndex = 0;
+        if (i > 1) {
+          const row = document.getElementById('dish-row-' + i);
+          if (row) row.style.display = 'none';
+        }
+      }
+      currentDishRow = 1;
+      document.getElementById('addDishBtn').style.display = 'inline-block';
+      document.getElementById('f_cuisine').selectedIndex = 0;
+      document.getElementById('f_owner').checked = false;
+
+
+      showToast('🎉 Restaurant added! It is now live on the site.');
+      hideSubmitPage();
+
+    } catch (err) {
+      console.error("Submit error:", err);
+      showToast('Something went wrong. Please try again.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit Listing →';
+    }
+  };
+
+  // ── TOAST ──
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'toast' + (isError ? ' error' : '');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+  window.showToast = showToast;
+
+  // ── SCROLL HELPERS ──
+
+
+  // ── USE MY LOCATION ──
+  window.useMyLocation = () => {
+    const btn = document.getElementById('locationBtn');
+
+    // Already loading — ignore
+    if (btn.disabled) return;
+
+    if (!navigator.geolocation) {
+      showToast('Geolocation not supported.', true);
+      return;
+    }
+
+    btn.innerHTML = '⏳';
+    btn.disabled = true;
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        // Sort by distance
+        restaurants.forEach(r => {
+          r.distance = (r.lat && r.lng)
+            ? Math.sqrt(Math.pow(r.lat-lat,2) + Math.pow(r.lng-lng,2)) * 111
+            : 999;
+        });
+        restaurants.sort((a,b) => a.distance - b.distance);
+
+        // Show all results — wrapped in try/catch so button always resets
+        // Save scroll position
+        const scrollPos = window.scrollY;
+
+        try {
+          activeCuisineFilter = 'all';
+          activePriceFilter = 'all';
+          const si = document.getElementById('searchInput');
+          if (si) si.value = '';
+          document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+          const cuisineFirst = document.querySelector('.filter-row .filter-chip');
+          if (cuisineFirst) cuisineFirst.classList.add('active');
+          const priceFirst = document.querySelector('.price-filter-row .filter-chip');
+          if (priceFirst) priceFirst.classList.add('active');
+          renderCards(getFiltered());
+          updateMapPins(getFiltered());
+        } catch(e) { console.warn('Location UI error:', e); }
+
+        try {
+          if (map) {
+            new google.maps.Marker({
+              position: {lat, lng}, map,
+              title: 'You are here',
+              icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#4285F4', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 }
+            });
+            // Center on user — zoom 14 = ~3-5km radius
+            map.setCenter({lat, lng});
+            map.setZoom(14);
+          }
+        } catch(e) { console.warn('Location map error:', e); }
+
+        // Scroll to map after a short delay to let map update first
+        setTimeout(() => {
+          const mapEl = document.getElementById('map');
+          if (mapEl) {
+            const y = mapEl.getBoundingClientRect().top + window.pageYOffset - 70;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        }, 300);
+
+        showToast('📍 Nearest restaurants shown!');
+        btn.innerHTML = '📍';
+        btn.disabled = false;
+      },
+      (err) => {
+        btn.innerHTML = '📍';
+        btn.disabled = false;
+        const msgs = ['', 'Location access denied.', 'Location unavailable.', 'Location timed out.'];
+        showToast(msgs[err.code] || 'Could not get location.', true);
+      },
+      {timeout: 8000, maximumAge: 30000, enableHighAccuracy: false}
+    );
+  };;
+
+  // ── MULTIPLE DISHES ──
+  let currentDishRow = 1;
+  window.addDishRow = () => {
+    if (currentDishRow >= 3) return;
+    currentDishRow++;
+    const row = document.getElementById('dish-row-' + currentDishRow);
+    if (row) row.style.display = 'block';
+    if (currentDishRow >= 3) {
+      document.getElementById('addDishBtn').style.display = 'none';
+    }
+  };
+
+  // ── GEOLOCATION ──
+  let userLat = null, userLng = null;
+
+  function calcDistance(lat1, lng1, lat2, lng2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+      Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const d = R * c;
+    return d < 1 ? Math.round(d * 1000) + 'm' : d.toFixed(1) + 'km';
+  }
+
+  ;
+
+  // ── EDIT FEATURE ──
+  window.openEditForm = (el) => {
+    const id = typeof el === 'string' ? el : el.dataset.id;
+    const r = restaurants.find(r => r.id == id);
+    if (!r) return;
+
+    // Close the restaurant modal first
+    document.getElementById('modal').classList.remove('open');
+
+    // Pre-fill edit form with current data
+    document.getElementById('edit_id').value = r.id;
+    document.getElementById('edit_name').value = r.name || '';
+    document.getElementById('edit_dish').value = r.dish || (r.dishes && r.dishes[0] ? r.dishes[0].name : '') || '';
+    document.getElementById('edit_price').value = r.exactPrice || '';
+    document.getElementById('edit_address').value = r.address || '';
+    document.getElementById('edit_phone').value = r.phone || '';
+    document.getElementById('edit_hours').value = r.hours || '';
+    document.getElementById('edit_website').value = r.website || '';
+    document.getElementById('edit_reason').value = '';
+
+    // Set cuisine dropdown
+    const cuisineEl = document.getElementById('edit_cuisine');
+    for (let i = 0; i < cuisineEl.options.length; i++) {
+      if (cuisineEl.options[i].value === r.cuisine) {
+        cuisineEl.selectedIndex = i;
+        break;
+      }
+    }
+
+    // Set price range dropdown
+    const priceEl = document.getElementById('edit_priceRange');
+    for (let i = 0; i < priceEl.options.length; i++) {
+      if (priceEl.options[i].value === r.priceRange) {
+        priceEl.selectedIndex = i;
+        break;
+      }
+    }
+
+    document.getElementById('editPanel').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeEditForm = () => {
+    document.getElementById('editPanel').style.display = 'none';
+    document.body.style.overflow = '';
+  };
+
+  window.submitEdit = async () => {
+    const btn = document.getElementById('editSubmitBtn');
+    const id = document.getElementById('edit_id').value;
+    const r = restaurants.find(r => r.id == id);
+    if (!r) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+
+      const cuisineLabels = {
+        asian: 'Asian', italian: 'Italian', mexican: 'Mexican', burgers: 'Burgers',
+        vegetarian: 'Vegetarian', indian: 'Indian', 'middle-eastern': 'Middle Eastern',
+        greek: 'Greek', vietnamese: 'Vietnamese', thai: 'Thai', other: 'Other'
+      };
+      const cuisine = document.getElementById('edit_cuisine').value;
+
+      // Apply edit directly to the restaurant
+      await updateDoc(doc(db, "restaurants", id), {
+        name: document.getElementById('edit_name').value.trim(),
+        cuisine: cuisine,
+        cuisineLabel: cuisineLabels[cuisine] || cuisine,
+        dish: document.getElementById('edit_dish').value.trim(),
+        exactPrice: document.getElementById('edit_price').value.trim() || null,
+        priceRange: document.getElementById('edit_priceRange').value,
+        address: document.getElementById('edit_address').value.trim(),
+        phone: document.getElementById('edit_phone').value.trim() || null,
+        hours: document.getElementById('edit_hours').value.trim() || null,
+        website: document.getElementById('edit_website').value.trim() || null
+      });
+
+      // Reload restaurants to show updated data
+      await loadRestaurants();
+
+      closeEditForm();
+      showToast('✅ Listing updated successfully!');
+    } catch(err) {
+      console.error('Edit submit error:', err);
+      showToast('Something went wrong. Please try again.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit Edit →';
+    }
+  };
+
+  window.scrollToForm = () => showSubmitPage();
+
+  window.showSubmitPage = () => {
+    document.getElementById('submitPage').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
+  };
+
+  window.hideSubmitPage = () => {
+    document.getElementById('submitPage').style.display = 'none';
+    document.body.style.overflow = '';
+  };
+  window.scrollToList = () => document.querySelector('.listings-section').scrollIntoView({ behavior: 'smooth' });
+
+  // ── GOOGLE MAPS ──
+  const MAPS_API_KEY = "AIzaSyCf8M1WGFzW8kAzy-k2fXHIE-AcgxjRshU";
+
+  window.promptApiKey = () => loadGoogleMap(MAPS_API_KEY);
+
+  function initMapWithRestaurants() {
+    document.getElementById('mapOverlay').style.display = 'none';
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: -37.840, lng: 145.060 },
+      zoom: 11,
+      styles: [
+        { elementType: 'geometry', stylers: [{ color: '#1a1710' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#a09070' }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: '#0e0c09' }] },
+        { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#252118' }] },
+        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0a0807' }] },
+        { featureType: 'poi', stylers: [{ visibility: 'off' }] }
+      ]
+    });
+    // Place pins — use restaurants if already loaded, otherwise pending update will handle it
+    if (restaurants.length > 0) {
+      updateMapPins(getFiltered());
+    }
+    window._mapReady = true;
+    if (window._pendingPinUpdate) {
+      window._pendingPinUpdate = false;
+      updateMapPins(getFiltered());
+    }
+  }
+
+  window.loadGoogleMap = (apiKey) => {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+    script.async = true;
+    window.initMap = initMapWithRestaurants;
+    document.head.appendChild(script);
+  };
+
+  // Auto-load map on page load
+  loadGoogleMap(MAPS_API_KEY);
+
+  // ── EMAILJS CONFIG ──
+  const EMAILJS_SERVICE = "cheapcheapeat_service";
+  const EMAILJS_TEMPLATE = "template_r4op13m";
+  const EMAILJS_PUBLIC_KEY = "UjfzMQjMAfzpbEnOB";
+  const ADMIN_URL = window.location.origin + "?admin=true";
+
+  async function sendEmailNotification(entry) {
+    try {
+      await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+        restaurant_name: entry.name,
+        cuisine: entry.cuisineLabel || entry.cuisine,
+        dish: entry.dish,
+        price: entry.priceRange,
+        address: entry.address || '—',
+        is_owner: entry.isOwner ? 'Yes — Owner Verified' : 'No',
+        phone: entry.phone || '—',
+        hours: entry.hours || '—',
+        notes: entry.notes || '—',
+        admin_url: ADMIN_URL
+      }, EMAILJS_PUBLIC_KEY);
+      console.log("Email notification sent!");
+    } catch (err) {
+      console.error("Email notification failed:", err);
+    }
+  }
+  window.sendEmailNotification = sendEmailNotification;
+
+  // ── ADMIN PANEL ──
+  const ADMIN_PASSWORD = "CheapCheapEat2024!";
+
+  window.checkAdminPassword = () => {
+    const input = document.getElementById('adminPasswordInput').value;
+    if (input === ADMIN_PASSWORD) {
+      document.getElementById('adminLogin').style.display = 'none';
+      document.getElementById('adminContent').style.display = 'block';
+      loadPendingRestaurants();
+    } else {
+      document.getElementById('adminLoginError').style.display = 'block';
+    }
+  };
+
+  async function loadPendingRestaurants() {
+    const list = document.getElementById('pendingList');
+    list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">Loading...</p>';
+    try {
+      const q = query(collection(db, "restaurants"), where("status", "==", "pending"));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px">🎉 No pending submissions!</p>';
+        return;
+      }
+      list.innerHTML = '';
+      snapshot.docs.forEach(docSnap => {
+        const r = { id: docSnap.id, ...docSnap.data() };
+        const card = document.createElement('div');
+        card.className = 'admin-card';
+        card.id = 'admin-card-' + r.id;
+        card.innerHTML = `
+          ${r.photoUrl ? `<img src="${r.photoUrl}" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px;border:1px solid var(--border)">` : ''}
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <strong style="font-family:Fraunces,serif;font-size:1.1rem;color:var(--cream)">${r.name}</strong>
+            <span style="background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);color:var(--gold);padding:2px 8px;border-radius:4px;font-size:0.8rem">Under $${r.priceRange}</span>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">🍽️ ${r.cuisineLabel || r.cuisine}</p>
+          <p style="color:var(--cream);font-size:0.88rem;margin-bottom:4px">${r.dish}</p>
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">📍 ${r.address || '—'}</p>
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">📞 ${r.phone || '—'} &nbsp;·&nbsp; 🕐 ${r.hours || '—'}</p>
+          ${r.isOwner ? '<p style="color:var(--gold);font-size:0.82rem;margin-bottom:8px">★ Claims to be owner</p>' : ''}
+          ${r.website ? `<p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">🌐 <a href="${r.website}" target="_blank" style="color:var(--gold)">${r.website}</a></p>` : ''}
+
+          ${r.notes ? `<p style="color:var(--muted);font-size:0.82rem;margin-bottom:8px">📝 ${r.notes}</p>` : ''}
+          <div style="display:flex;gap:10px;margin-top:12px">
+            <button onclick="approveRestaurant('${r.id}')" style="flex:1;padding:10px;background:#4caf7d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">✅ Approve</button>
+            <button onclick="rejectRestaurant('${r.id}')" style="flex:1;padding:10px;background:#e8402a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">❌ Reject</button>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    } catch (err) {
+      list.innerHTML = '<p style="color:var(--red)">Error loading submissions. Please try again.</p>';
+      console.error(err);
+    }
+  }
+
+  window.approveRestaurant = async (id) => {
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(doc(db, "restaurants", id), { status: "approved" });
+      const card = document.getElementById('admin-card-' + id);
+      if (card) card.remove();
+      showToast('✅ Restaurant approved and now live!');
+      loadRestaurants();
+    } catch (err) {
+      console.error(err);
+      showToast('Error approving. Try again.', true);
+    }
+  };
+
+  window.rejectRestaurant = async (id) => {
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(doc(db, "restaurants", id), { status: "rejected" });
+      const card = document.getElementById('admin-card-' + id);
+      if (card) card.remove();
+      showToast('❌ Restaurant rejected.');
+    } catch (err) {
+      console.error(err);
+      showToast('Error rejecting. Try again.', true);
+    }
+  };
+
+  // Show admin panel if ?admin=true in URL
+  if (window.location.search.includes('admin=true')) {
+    document.getElementById('adminPanel').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  // ── ADMIN TABS ──
+  window.switchAdminTab = (tab) => {
+    document.getElementById('pendingList').style.display = tab === 'submissions' ? 'block' : 'none';
+    document.getElementById('pendingEdits').style.display = tab === 'edits' ? 'block' : 'none';
+    document.getElementById('tab-submissions').style.background = tab === 'submissions' ? 'var(--gold)' : 'transparent';
+    document.getElementById('tab-submissions').style.color = tab === 'submissions' ? '#0e0c09' : 'var(--muted)';
+    document.getElementById('tab-edits').style.background = tab === 'edits' ? 'var(--gold)' : 'transparent';
+    document.getElementById('tab-edits').style.color = tab === 'edits' ? '#0e0c09' : 'var(--muted)';
+    if (tab === 'edits') loadPendingEdits();
+  };
+
+  async function loadPendingEdits() {
+    const list = document.getElementById('pendingEdits');
+    list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">Loading...</p>';
+    try {
+      const q = query(collection(db, "edits"), where("status", "==", "pending_edit"));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px">🎉 No pending edits!</p>';
+        return;
+      }
+      list.innerHTML = '';
+      snapshot.docs.forEach(docSnap => {
+        const e = { id: docSnap.id, ...docSnap.data() };
+        const card = document.createElement('div');
+        card.className = 'admin-card';
+        card.id = 'edit-card-' + e.id;
+        card.innerHTML = `
+          <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:0.8rem;color:var(--muted)">
+            Suggested edit for: <strong style="color:var(--cream)">${e.originalName || e.name}</strong>
+            ${e.reason ? `<br>Reason: "${e.reason}"` : ''}
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:0.82rem;margin-bottom:12px">
+            <div><span style="color:var(--muted)">Name:</span> <span style="color:var(--cream)">${e.name}</span></div>
+            <div><span style="color:var(--muted)">Price:</span> <span style="color:var(--gold)">${e.exactPrice || ''}</span></div>
+            <div><span style="color:var(--muted)">Dish:</span> <span style="color:var(--cream)">${e.dish}</span></div>
+            <div><span style="color:var(--muted)">Range:</span> <span style="color:var(--cream)">Under $${e.priceRange}</span></div>
+            <div style="grid-column:1/-1"><span style="color:var(--muted)">Address:</span> <span style="color:var(--cream)">${e.address}</span></div>
+            <div><span style="color:var(--muted)">Phone:</span> <span style="color:var(--cream)">${e.phone || '—'}</span></div>
+            <div><span style="color:var(--muted)">Hours:</span> <span style="color:var(--cream)">${e.hours || '—'}</span></div>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button onclick="approveEdit(this.dataset.id, this.dataset.orig)" data-id="${e.id}" data-orig="${e.originalId}" style="flex:1;padding:10px;background:#4caf7d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">✅ Apply Edit</button>
+            <button onclick="rejectEdit(this.dataset.id)" data-id="${e.id}" style="flex:1;padding:10px;background:#e8402a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">❌ Reject</button>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    } catch(err) {
+      list.innerHTML = '<p style="color:var(--red)">Error loading edits.</p>';
+    }
+  }
+
+  window.approveEdit = async (editId, originalId) => {
+    try {
+      const { doc, updateDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      const editSnap = await getDoc(doc(db, "edits", editId));
+      const e = editSnap.data();
+      // Update original restaurant
+      await updateDoc(doc(db, "restaurants", originalId), {
+        name: e.name,
+        cuisine: e.cuisine,
+        dish: e.dish,
+        exactPrice: e.exactPrice,
+        priceRange: e.priceRange,
+        address: e.address,
+        phone: e.phone || null,
+        hours: e.hours || null,
+        website: e.website || null
+      });
+      // Mark edit as approved
+      await updateDoc(doc(db, "edits", editId), { status: 'approved' });
+      document.getElementById('edit-card-' + editId).remove();
+      showToast('✅ Edit applied to listing!');
+      loadRestaurants();
+    } catch(err) {
+      console.error(err);
+      showToast('Error applying edit.', true);
+    }
+  };
+
+  window.rejectEdit = async (editId) => {
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(doc(db, "edits", editId), { status: 'rejected' });
+      document.getElementById('edit-card-' + editId).remove();
+      showToast('❌ Edit rejected.');
+    } catch(err) {
+      showToast('Error rejecting edit.', true);
+    }
+  };
+
+  window.closeAdmin = () => {
+    document.getElementById('adminPanel').style.display = 'none';
+    document.body.style.overflow = '';
+    window.history.replaceState({}, '', window.location.pathname);
+  };
+
+  // ── INIT ──
+  loadRestaurants();
+</script>
+
+<!-- EDIT FORM OVERLAY -->
+<div id="editPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:400;overflow-y:auto;backdrop-filter:blur(8px)">
+  <div style="max-width:600px;margin:40px auto;padding:24px">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;position:relative">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--red),var(--gold));border-radius:16px 16px 0 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div>
+          <h2 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.5rem;margin:0 0 4px">✏️ Suggest an Edit</h2>
+          <p style="color:var(--muted);font-size:0.82rem;margin:0">Help keep listings accurate — your edit will be reviewed before going live</p>
+        </div>
+        <button onclick="closeEditForm()" style="background:var(--surface2);border:none;color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem">✕</button>
+      </div>
+
+      <input type="hidden" id="edit_id">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Restaurant Name</label>
+          <input type="text" id="edit_name" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Cuisine</label>
+          <select id="edit_cuisine" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+            <option value="asian">Asian</option>
+            <option value="italian">Italian</option>
+            <option value="mexican">Mexican</option>
+            <option value="burgers">Burgers</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="indian">Indian</option>
+            <option value="middle-eastern">Middle Eastern</option>
+            <option value="greek">Greek</option>
+            <option value="vietnamese">Vietnamese</option>
+            <option value="thai">Thai</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Featured Dish</label>
+          <input type="text" id="edit_dish" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Price</label>
+          <input type="text" id="edit_price" placeholder="e.g. $9.50" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Price Range</label>
+          <select id="edit_priceRange" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+            <option value="10">Under $10</option>
+            <option value="15">Under $15</option>
+            <option value="20">Under $20</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Address</label>
+          <input type="text" id="edit_address" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Phone</label>
+          <input type="text" id="edit_phone" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Hours</label>
+          <input type="text" id="edit_hours" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Website</label>
+          <input type="text" id="edit_website" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">What did you change? (optional)</label>
+          <input type="text" id="edit_reason" placeholder="e.g. Price has changed to $12" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+      </div>
+
+      <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:0.8rem;color:var(--muted)">
+        🔍 Your edit will be reviewed before going live — usually within 24 hours.
+      </div>
+
+      <button onclick="submitEdit()" id="editSubmitBtn" style="width:100%;padding:13px;background:var(--gold);color:#0e0c09;font-family:Fraunces,serif;font-size:1rem;font-weight:900;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s">Submit Edit →</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMAILJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<!-- ADMIN PANEL OVERLAY -->
+<div id="adminPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:500;overflow-y:auto;backdrop-filter:blur(8px)">
+  <div style="max-width:700px;margin:40px auto;padding:24px">
+
+    <!-- Login Screen -->
+    <div id="adminLogin" style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:12px">🔐</div>
+      <h2 style="font-family:Fraunces,serif;color:var(--cream);margin-bottom:8px">Admin Panel</h2>
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:24px">Enter your password to review pending submissions</p>
+      <input id="adminPasswordInput" type="password" placeholder="Enter admin password"
+        style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.95rem;padding:12px 16px;outline:none;margin-bottom:12px;transition:border-color 0.2s"
+        onkeydown="if(event.key==='Enter') checkAdminPassword()">
+      <p id="adminLoginError" style="display:none;color:#e8402a;font-size:0.85rem;margin-bottom:12px">❌ Incorrect password. Please try again.</p>
+      <div style="display:flex;gap:10px">
+        <button onclick="checkAdminPassword()" style="flex:1;padding:12px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif;font-size:0.95rem">Enter Admin</button>
+        <button onclick="closeAdmin()" style="padding:12px 20px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Pending Listings -->
+    <div id="adminContent" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.8rem">Admin Panel</h2>
+        <button onclick="closeAdmin()" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">✕ Close</button>
+      </div>
+      <!-- Tabs -->
+      <div style="display:flex;gap:8px;margin-bottom:20px">
+        <button id="tab-submissions" onclick="switchAdminTab('submissions')" style="padding:8px 16px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:600;font-size:0.85rem">New Submissions</button>
+        <button id="tab-edits" onclick="switchAdminTab('edits')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Edit Suggestions</button>
+      </div>
+      <div id="pendingList"></div>
+      <div id="pendingEdits" style="display:none"></div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .admin-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .admin-card:hover { border-color: var(--gold-dim); }
+</style>
+</body>
+</html>
