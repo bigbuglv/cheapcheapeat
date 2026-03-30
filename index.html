@@ -1102,9 +1102,19 @@
     }
 
     list.forEach(r => {
-      const tier = getPriceTier(r.priceRange);
-      const displayPrice = r.exactPrice ? (r.exactPrice.startsWith('$') ? r.exactPrice : '$' + r.exactPrice) 
-        : (r.priceRange === "10" ? "Under $10" : r.priceRange === "15" ? "Under $15" : "Under $20");
+      // Find best matching dish for active price filter
+      let matchingDish = null;
+      if (activePriceFilter !== 'all' && r.dishes && r.dishes.length > 0) {
+        matchingDish = r.dishes.find(d => d.tier === activePriceFilter)
+          || r.dishes.filter(d => parseInt(d.tier) <= parseInt(activePriceFilter))
+                     .sort((a,b) => parseInt(a.tier) - parseInt(b.tier))[0];
+      }
+      const effectivePriceRange = matchingDish ? matchingDish.tier : r.priceRange;
+      const tier = getPriceTier(effectivePriceRange);
+      const rawPrice = matchingDish ? matchingDish.price 
+        : (r.exactPrice || null);
+      const displayPrice = rawPrice ? (rawPrice.toString().startsWith('$') ? rawPrice : '$' + rawPrice)
+        : (effectivePriceRange === "10" ? "Under $10" : effectivePriceRange === "15" ? "Under $15" : "Under $20");
       const card = document.createElement('div');
       card.className = 'card';
       // Build dishes list for card
@@ -1159,10 +1169,16 @@
       const matchCuisine = activeCuisineFilter === 'all' ? true
         : activeCuisineFilter === 'owner' ? r.isOwner
         : r.cuisine === activeCuisineFilter;
-      // Check if restaurant OR any of its dishes match the price filter
+      // Find the lowest price tier across all dishes
+      const lowestTier = (() => {
+        if (r.dishes && r.dishes.length > 0) {
+          const tiers = r.dishes.map(d => parseInt(d.tier || r.priceRange || '20'));
+          return Math.min(...tiers).toString();
+        }
+        return r.priceRange || '20';
+      })();
       const matchPrice = activePriceFilter === 'all' ? true
-        : r.priceRange === activePriceFilter
-        || (r.dishes && r.dishes.some(d => d.tier === activePriceFilter));
+        : lowestTier <= activePriceFilter;
       const matchSearch = !q
         || (r.name || '').toLowerCase().includes(q)
         || (r.cuisineLabel || '').toLowerCase().includes(q)
