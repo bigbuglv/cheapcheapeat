@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>CheapCheapEat — Affordable Eats Near You</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -802,8 +805,8 @@
 <!-- LISTINGS -->
 <section class="listings-section">
   <div class="section-header">
-    <h2>All Listings</h2>
-    <span class="count" id="listCount">Loading...</span>
+    <h2 id="listingsTitle">Find Cheap Eats</h2>
+    <span class="count" id="listCount"></span>
   </div>
 
   <!-- Cuisine filters -->
@@ -828,12 +831,26 @@
     <button class="filter-chip p20" onclick="setPriceFilter('20', this)">Under $20</button>
   </div>
 
-  <div class="cards-grid" id="cardsGrid">
-    <div class="loading-state">
-      <div class="loading-spinner"></div>
-      <p>Loading restaurants...</p>
+  <!-- Empty state shown before search -->
+  <div id="emptyState" style="text-align:center;padding:48px 24px">
+    <div style="font-size:2.5rem;margin-bottom:16px">🍜</div>
+    <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.4rem;margin:0 0 8px">Where are you eating today?</h3>
+    <p style="color:var(--muted);font-size:0.9rem;margin:0 0 24px">Search a suburb or use your location to find cheap eats near you</p>
+    <button onclick="useMyLocation()" style="background:var(--gold);color:#0e0c09;border:none;padding:12px 24px;border-radius:10px;font-family:Fraunces,serif;font-size:1rem;font-weight:900;cursor:pointer;margin-bottom:24px;display:inline-flex;align-items:center;gap:8px">📍 Use my location</button>
+    <div>
+      <p style="color:var(--muted);font-size:0.8rem;margin:0 0 12px">Or try a popular suburb:</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+        <button onclick="quickSearch('Melbourne CBD')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Melbourne CBD</button>
+        <button onclick="quickSearch('Box Hill')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Box Hill</button>
+        <button onclick="quickSearch('Springvale')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Springvale</button>
+        <button onclick="quickSearch('Footscray')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Footscray</button>
+        <button onclick="quickSearch('Mitcham')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Mitcham</button>
+        <button onclick="quickSearch('Richmond')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Richmond</button>
+      </div>
     </div>
   </div>
+
+  <div class="cards-grid" id="cardsGrid" style="display:none"></div>
 </section>
 
 <!-- HOW IT WORKS -->
@@ -1091,9 +1108,24 @@
   }
 
   // ── RENDER CARDS ──
+  let searchActive = false;
+
   function renderCards(list) {
     const grid = document.getElementById('cardsGrid');
+    const emptyState = document.getElementById('emptyState');
+    const title = document.getElementById('listingsTitle');
+
+    if (!searchActive) {
+      emptyState.style.display = 'block';
+      grid.style.display = 'none';
+      document.getElementById('listCount').textContent = '';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    grid.style.display = 'grid';
     document.getElementById('listCount').textContent = `${list.length} restaurant${list.length !== 1 ? 's' : ''}`;
+    if (title) title.textContent = 'Results';
     grid.innerHTML = '';
 
     if (list.length === 0) {
@@ -1189,6 +1221,7 @@
   }
 
   window.triggerSearch = () => {
+    searchActive = true;
     const btn = document.getElementById('searchBtn');
     btn.textContent = 'Searching...';
     btn.classList.add('searching');
@@ -1528,6 +1561,7 @@
             : 999;
         });
         restaurants.sort((a,b) => a.distance - b.distance);
+        searchActive = true;
 
         // Show all results — wrapped in try/catch so button always resets
         // Save scroll position
@@ -1704,6 +1738,12 @@
       btn.disabled = false;
       btn.textContent = 'Submit Edit →';
     }
+  };
+
+  window.quickSearch = (suburb) => {
+    document.getElementById('searchInput').value = suburb;
+    searchActive = true;
+    triggerSearch();
   };
 
   window.scrollToForm = () => showSubmitPage();
