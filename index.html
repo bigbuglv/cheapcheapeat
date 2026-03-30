@@ -813,12 +813,18 @@
   <div class="filter-row">
     <button class="filter-chip active" onclick="setCuisineFilter('all', this)">All Cuisines</button>
     <button class="filter-chip" onclick="setCuisineFilter('asian', this)">Asian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('malaysian', this)">Malaysian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('vietnamese', this)">Vietnamese</button>
+    <button class="filter-chip" onclick="setCuisineFilter('thai', this)">Thai</button>
+    <button class="filter-chip" onclick="setCuisineFilter('chinese', this)">Chinese</button>
     <button class="filter-chip" onclick="setCuisineFilter('japanese', this)">Japanese</button>
     <button class="filter-chip" onclick="setCuisineFilter('korean', this)">Korean</button>
+    <button class="filter-chip" onclick="setCuisineFilter('indonesian', this)">Indonesian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('indian', this)">Indian</button>
     <button class="filter-chip" onclick="setCuisineFilter('italian', this)">Italian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('french', this)">French</button>
     <button class="filter-chip" onclick="setCuisineFilter('mexican', this)">Mexican</button>
     <button class="filter-chip" onclick="setCuisineFilter('burgers', this)">Burgers</button>
-    <button class="filter-chip" onclick="setCuisineFilter('indian', this)">Indian</button>
     <button class="filter-chip" onclick="setCuisineFilter('vegetarian', this)">Vegetarian</button>
     <button class="filter-chip" onclick="setCuisineFilter('bakery', this)">Bakery</button>
     <button class="filter-chip" onclick="setCuisineFilter('dessert', this)">Dessert</button>
@@ -917,13 +923,19 @@
         <label>Cuisine Type <span class="required">*</span></label>
         <select id="f_cuisine">
           <option value="">Select cuisine...</option>
-          <option value="asian">Asian</option>
+          <option value="malaysian">Malaysian</option>
+          <option value="vietnamese">Vietnamese</option>
+          <option value="thai">Thai</option>
+          <option value="chinese">Chinese</option>
           <option value="japanese">Japanese</option>
           <option value="korean">Korean</option>
+          <option value="indonesian">Indonesian</option>
+          <option value="asian">Asian (Other)</option>
+          <option value="indian">Indian</option>
           <option value="italian">Italian</option>
+          <option value="french">French</option>
           <option value="mexican">Mexican</option>
           <option value="burgers">Burgers</option>
-          <option value="indian">Indian</option>
           <option value="vegetarian">Vegetarian</option>
           <option value="bakery">Bakery</option>
           <option value="dessert">Dessert</option>
@@ -1460,11 +1472,12 @@
 
       const isOwner = document.getElementById('f_owner').checked;
       const cuisineLabels = {
-        asian: 'Asian', japanese: 'Japanese', korean: 'Korean',
-        italian: 'Italian', mexican: 'Mexican', burgers: 'Burgers',
-        indian: 'Indian', vegetarian: 'Vegetarian', bakery: 'Bakery',
-        dessert: 'Dessert', 'middle-eastern': 'Middle Eastern',
-        greek: 'Greek', vietnamese: 'Vietnamese', thai: 'Thai', other: 'Other'
+        malaysian: 'Malaysian', vietnamese: 'Vietnamese', thai: 'Thai',
+        chinese: 'Chinese', japanese: 'Japanese', korean: 'Korean',
+        indonesian: 'Indonesian', asian: 'Asian', indian: 'Indian',
+        italian: 'Italian', french: 'French', mexican: 'Mexican', burgers: 'Burgers',
+        vegetarian: 'Vegetarian', bakery: 'Bakery', dessert: 'Dessert',
+        'middle-eastern': 'Middle Eastern', greek: 'Greek', other: 'Other'
       };
 
       const newEntry = {
@@ -1714,11 +1727,12 @@
       const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
 
       const cuisineLabels = {
-        asian: 'Asian', japanese: 'Japanese', korean: 'Korean',
-        italian: 'Italian', mexican: 'Mexican', burgers: 'Burgers',
-        indian: 'Indian', vegetarian: 'Vegetarian', bakery: 'Bakery',
-        dessert: 'Dessert', 'middle-eastern': 'Middle Eastern',
-        greek: 'Greek', vietnamese: 'Vietnamese', thai: 'Thai', other: 'Other'
+        malaysian: 'Malaysian', vietnamese: 'Vietnamese', thai: 'Thai',
+        chinese: 'Chinese', japanese: 'Japanese', korean: 'Korean',
+        indonesian: 'Indonesian', asian: 'Asian', indian: 'Indian',
+        italian: 'Italian', french: 'French', mexican: 'Mexican', burgers: 'Burgers',
+        vegetarian: 'Vegetarian', bakery: 'Bakery', dessert: 'Dessert',
+        'middle-eastern': 'Middle Eastern', greek: 'Greek', other: 'Other'
       };
       const cuisine = document.getElementById('edit_cuisine').value;
 
@@ -2053,20 +2067,23 @@
         <div style="display:flex;flex-direction:column;gap:6px">
           <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Cuisine</label>
           <select id="edit_cuisine" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
-            <option value="asian">Asian</option>
+            <option value="">Select cuisine...</option>
+            <option value="malaysian">Malaysian</option>
+            <option value="vietnamese">Vietnamese</option>
+            <option value="thai">Thai</option>
+            <option value="chinese">Chinese</option>
             <option value="japanese">Japanese</option>
             <option value="korean">Korean</option>
+            <option value="indonesian">Indonesian</option>
+            <option value="asian">Asian (Other)</option>
+            <option value="indian">Indian</option>
             <option value="italian">Italian</option>
+          <option value="french">French</option>
             <option value="mexican">Mexican</option>
             <option value="burgers">Burgers</option>
-            <option value="indian">Indian</option>
             <option value="vegetarian">Vegetarian</option>
             <option value="bakery">Bakery</option>
             <option value="dessert">Dessert</option>
-            <option value="middle-eastern">Middle Eastern</option>
-            <option value="greek">Greek</option>
-            <option value="vietnamese">Vietnamese</option>
-            <option value="thai">Thai</option>
             <option value="other">Other</option>
           </select>
         </div>
