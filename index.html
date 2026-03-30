@@ -1648,46 +1648,37 @@
     if (!r) return;
 
     btn.disabled = true;
-    btn.textContent = 'Submitting...';
+    btn.textContent = 'Saving...';
 
     try {
-      const editData = {
-        originalId: id,
-        originalName: r.name,
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+
+      const cuisineLabels = {
+        asian: 'Asian', italian: 'Italian', mexican: 'Mexican', burgers: 'Burgers',
+        vegetarian: 'Vegetarian', indian: 'Indian', 'middle-eastern': 'Middle Eastern',
+        greek: 'Greek', vietnamese: 'Vietnamese', thai: 'Thai', other: 'Other'
+      };
+      const cuisine = document.getElementById('edit_cuisine').value;
+
+      // Apply edit directly to the restaurant
+      await updateDoc(doc(db, "restaurants", id), {
         name: document.getElementById('edit_name').value.trim(),
-        cuisine: document.getElementById('edit_cuisine').value,
+        cuisine: cuisine,
+        cuisineLabel: cuisineLabels[cuisine] || cuisine,
         dish: document.getElementById('edit_dish').value.trim(),
-        exactPrice: document.getElementById('edit_price').value.trim(),
+        exactPrice: document.getElementById('edit_price').value.trim() || null,
         priceRange: document.getElementById('edit_priceRange').value,
         address: document.getElementById('edit_address').value.trim(),
-        phone: document.getElementById('edit_phone').value.trim(),
-        hours: document.getElementById('edit_hours').value.trim(),
-        website: document.getElementById('edit_website').value.trim(),
-        reason: document.getElementById('edit_reason').value.trim(),
-        status: 'pending_edit',
-        createdAt: serverTimestamp()
-      };
+        phone: document.getElementById('edit_phone').value.trim() || null,
+        hours: document.getElementById('edit_hours').value.trim() || null,
+        website: document.getElementById('edit_website').value.trim() || null
+      });
 
-      await addDoc(collection(db, "edits"), editData);
-
-      // Send email notification
-      try {
-        await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
-          restaurant_name: editData.name + ' (EDIT SUGGESTION)',
-          cuisine: editData.cuisine,
-          dish: editData.dish,
-          price: editData.exactPrice,
-          address: editData.address,
-          is_owner: 'Edit suggestion — ' + (editData.reason || 'No reason given'),
-          phone: editData.phone,
-          hours: editData.hours,
-          notes: 'Original listing: ' + editData.originalName,
-          admin_url: window.location.origin + '?admin=true'
-        }, EMAILJS_PUBLIC_KEY);
-      } catch(e) { console.warn('Email failed:', e); }
+      // Reload restaurants to show updated data
+      await loadRestaurants();
 
       closeEditForm();
-      showToast('✅ Edit submitted! We will review it within 24 hours.');
+      showToast('✅ Listing updated successfully!');
     } catch(err) {
       console.error('Edit submit error:', err);
       showToast('Something went wrong. Please try again.', true);
