@@ -1116,15 +1116,15 @@
       const extraCount = dishes.length - 1;
 
       card.innerHTML = `
-        <div class="card-img">
-          ${r.isOwner ? '<span class="owner-badge">★ Owner Verified</span>' : ''}
-          <span class="price-tier-dot ${tier.cls}"></span>
-        </div>
         <div class="card-body">
           <div class="card-top">
-            <div class="card-name">${r.name}</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="price-tier-dot ${tier.cls}" style="position:relative;display:inline-block;width:10px;height:10px;flex-shrink:0"></span>
+              <div class="card-name">${r.name}</div>
+            </div>
             <div class="price-tag ${tier.cls}">${displayPrice}</div>
           </div>
+          ${r.isOwner ? '<div style="margin-bottom:4px"><span style="background:var(--gold);color:#0e0c09;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Owner Verified</span></div>' : ''}
           <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
           <div class="card-dish">${featuredDish.name || r.dish || ''}</div>
           ${dishes.length > 0 ? `
