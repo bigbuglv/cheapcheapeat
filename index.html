@@ -1159,8 +1159,10 @@
       const matchCuisine = activeCuisineFilter === 'all' ? true
         : activeCuisineFilter === 'owner' ? r.isOwner
         : r.cuisine === activeCuisineFilter;
+      // Check if restaurant OR any of its dishes match the price filter
       const matchPrice = activePriceFilter === 'all' ? true
-        : r.priceRange === activePriceFilter;
+        : r.priceRange === activePriceFilter
+        || (r.dishes && r.dishes.some(d => d.tier === activePriceFilter));
       const matchSearch = !q
         || (r.name || '').toLowerCase().includes(q)
         || (r.cuisineLabel || '').toLowerCase().includes(q)
