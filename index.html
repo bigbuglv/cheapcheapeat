@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>CheapCheapEat — Affordable Eats Near You</title>
+<title>CheapEats — Cheap Meals Near You in Melbourne</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -761,7 +761,7 @@
 
 <!-- HEADER -->
 <header>
-  <div class="logo">CheapCheap<span>Eat</span></div>
+  <div class="logo">Cheap<span>Eats</span></div>
   <div class="header-actions">
     <button class="btn btn-ghost" onclick="scrollToList()">Browse</button>
     <button class="btn btn-ghost" onclick="document.getElementById('adminPanel').style.display='block';document.body.style.overflow='hidden'">🔐 Admin</button>
@@ -773,7 +773,7 @@
 <section class="hero">
   <div class="badge">100% Free · Community Powered</div>
   <h1>Real meals.<br><em>Cheap eats.</em><br>Near you.</h1>
-  <p>A crowd-sourced directory of restaurants serving delicious food for $20 or less. Restaurant owners list for free — always.</p>
+  <p>A crowd-sourced directory of budget meals across Melbourne. Find cheap eats near you — and list your favourite spot for free.</p>
 
   <div class="price-tiers">
     <div class="tier-badge t10">🟢 Under $10</div>
@@ -882,8 +882,8 @@
     <div class="step">
       <div class="step-num">03</div>
       <div class="step-icon">✅</div>
-      <h3>We review & verify</h3>
-      <p>Every submission is reviewed before going live. Owner-verified spots get a gold badge.</p>
+      <h3>Goes live instantly</h3>
+      <p>Listings go live immediately — no waiting. Owner-verified spots get a gold badge.</p>
     </div>
     <div class="step">
       <div class="step-num">04</div>
@@ -1061,7 +1061,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <strong>CheapCheapEat</strong> — Community powered. Always free. &nbsp;·&nbsp; Built with ❤️ for budget food lovers in Australia.
+  <strong>CheapEats</strong> — Community powered. Always free. &nbsp;·&nbsp; Built with ❤️ for budget food lovers in Australia.
 </footer>
 
 <!-- MODAL -->
@@ -1084,9 +1084,9 @@
   // ── FIREBASE CONFIG ──
   const firebaseConfig = {
     apiKey: "AIzaSyDoLc_QJsdT2Eiz4u5JAVIAgQXjhxbSn-o",
-    authDomain: "cheapcheapeats.firebaseapp.com",
-    projectId: "cheapcheapeats",
-    storageBucket: "cheapcheapeats.firebasestorage.app",
+    authDomain: "cheapeatss.firebaseapp.com",
+    projectId: "cheapeatss",
+    storageBucket: "cheapeatss.firebasestorage.app",
     messagingSenderId: "47196090968",
     appId: "1:47196090968:web:205e242bdf064e6bf9102d",
     measurementId: "G-4VMBV1306Q"
@@ -1856,7 +1856,7 @@
   loadGoogleMap(MAPS_API_KEY);
 
   // ── EMAILJS CONFIG ──
-  const EMAILJS_SERVICE = "cheapcheapeat_service";
+  const EMAILJS_SERVICE = "cheapeats_service";
   const EMAILJS_TEMPLATE = "template_r4op13m";
   const EMAILJS_PUBLIC_KEY = "UjfzMQjMAfzpbEnOB";
   const ADMIN_URL = window.location.origin + "?admin=true";
@@ -1883,7 +1883,7 @@
   window.sendEmailNotification = sendEmailNotification;
 
   // ── ADMIN PANEL ──
-  const ADMIN_PASSWORD = "CheapCheapEat2024!";
+  const ADMIN_PASSWORD = "CheapEats2024!";
 
   window.checkAdminPassword = () => {
     const input = document.getElementById('adminPasswordInput').value;
