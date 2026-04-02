@@ -767,10 +767,7 @@
 <!-- HEADER -->
 <header>
   <div class="logo">Cheap<span>Eats</span></div>
-  <div id="liveCounter" style="display:inline-flex;align-items:center;gap:6px;background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.25);border-radius:20px;padding:5px 12px">
-    <span style="width:7px;height:7px;border-radius:50%;background:#4caf7d;display:inline-block;flex-shrink:0"></span>
-    <span id="counterText" style="font-size:0.78rem;color:#4caf7d;font-weight:500">Loading...</span>
-  </div>
+
   <div class="header-actions">
     <button class="btn btn-ghost" onclick="scrollToList()">Browse</button>
     <button class="btn btn-ghost" onclick="document.getElementById('adminPanel').style.display='block';document.body.style.overflow='hidden'">🔐 Admin</button>
@@ -783,6 +780,22 @@
   <div class="badge">100% Free · Community Powered</div>
   <h1>Real meals.<br><em>Cheap eats.</em><br>Near you.</h1>
   <p>A crowd-sourced directory of budget meals across Australia. Find cheap eats near you — and list your favourite spot for free.</p>
+
+  <!-- Stats bar -->
+  <div id="statsBar" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(245,200,66,0.1);border-radius:12px;overflow:hidden;margin-bottom:24px;max-width:400px;margin-left:auto;margin-right:auto">
+    <div style="background:rgba(14,12,9,0.8);padding:14px;text-align:center">
+      <div id="statRestaurants" style="font-family:Fraunces,serif;font-size:24px;color:var(--gold);font-weight:900;line-height:1">—</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.08em">restaurants</div>
+    </div>
+    <div style="background:rgba(14,12,9,0.8);padding:14px;text-align:center;border-left:1px solid rgba(245,200,66,0.08);border-right:1px solid rgba(245,200,66,0.08)">
+      <div id="statSuburbs" style="font-family:Fraunces,serif;font-size:24px;color:var(--gold);font-weight:900;line-height:1">—</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.08em">suburbs</div>
+    </div>
+    <div style="background:rgba(14,12,9,0.8);padding:14px;text-align:center">
+      <div id="statCuisines" style="font-family:Fraunces,serif;font-size:24px;color:var(--gold);font-weight:900;line-height:1">—</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.08em">cuisines</div>
+    </div>
+  </div>
 
   <div class="price-tiers">
     <div class="tier-badge t10">🟢 Under $10</div>
@@ -1832,20 +1845,35 @@
 
   function updateLiveCounter() {
     const total = restaurants.length;
+
+    // Count unique suburbs
     const suburbs = new Set(restaurants.map(r => {
       if (!r.address) return null;
       const parts = r.address.split(',');
       if (parts.length >= 2) {
         return parts[parts.length - 2].trim()
           .replace(/\s*(VIC|NSW|QLD|SA|WA|TAS|ACT|NT)\s*/gi, '')
-          .replace(/\d+/g, '')
-          .trim();
+          .replace(/\d+/g, '').trim();
       }
       return null;
     }).filter(s => s && s.length > 1));
-    const suburbCount = suburbs.size;
+
+    // Count unique cuisines
+    const cuisines = new Set(restaurants
+      .map(r => r.cuisine)
+      .filter(Boolean));
+
+    // Update stats bar
+    const rEl = document.getElementById('statRestaurants');
+    const sEl = document.getElementById('statSuburbs');
+    const cEl = document.getElementById('statCuisines');
+    if (rEl) rEl.textContent = total;
+    if (sEl) sEl.textContent = suburbs.size;
+    if (cEl) cEl.textContent = cuisines.size;
+
+    // Also update old counterText if it exists
     const el = document.getElementById('counterText');
-    if (el) el.textContent = total + ' restaurant' + (total !== 1 ? 's' : '') + ' across ' + suburbCount + ' suburb' + (suburbCount !== 1 ? 's' : '') + ' — and growing!';
+    if (el) el.textContent = total + ' restaurants · ' + suburbs.size + ' suburbs · ' + cuisines.size + ' cuisines';
   }
 
   window.quickSearch = (suburb) => {
