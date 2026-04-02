@@ -780,12 +780,6 @@
   <h1>Real meals.<br><em>Cheap eats.</em><br>Near you.</h1>
   <p>A crowd-sourced directory of budget meals across Australia. Find cheap eats near you — and list your favourite spot for free.</p>
 
-  <!-- Live stats counter -->
-  <div id="heroStats" style="display:inline-flex;align-items:center;gap:6px;background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.25);border-radius:20px;padding:7px 18px;margin-bottom:16px">
-    <span style="width:8px;height:8px;border-radius:50%;background:#4caf7d;display:inline-block;flex-shrink:0"></span>
-    <span id="statsText" style="font-size:0.85rem;color:#4caf7d;font-weight:500">Loading...</span>
-  </div>
-
   <div class="price-tiers">
     <div class="tier-badge t10">🟢 Under $10</div>
     <div class="tier-badge t15">🟡 Under $15</div>
@@ -1122,24 +1116,6 @@
   let map, markers = [];
 
   // ── LOAD RESTAURANTS FROM FIREBASE ──
-  function updateHeroStats() {
-    const statsEl = document.getElementById('statsText');
-    if (!statsEl || restaurants.length === 0) return;
-    const suburbs = new Set();
-    restaurants.forEach(r => {
-      if (r.address) {
-        const parts = r.address.split(',');
-        if (parts.length >= 2) {
-          const suburbPart = parts[parts.length - 2].trim().replace(/VIC|NSW|QLD|SA|WA|TAS|ACT|NT|\d/g, '').trim();
-          if (suburbPart) suburbs.add(suburbPart);
-        }
-      }
-    });
-    const count = restaurants.length;
-    const suburbCount = suburbs.size || Math.max(1, Math.ceil(count * 0.5));
-    statsEl.textContent = count + ' restaurant' + (count !== 1 ? 's' : '') + ' across ' + suburbCount + ' suburb' + (suburbCount !== 1 ? 's' : '') + ' — and growing!';
-  }
-
   async function loadRestaurants() {
     try {
       const q = query(
@@ -1151,7 +1127,6 @@
       renderCards(getFiltered());
       // Update live counter
       updateLiveCounter();
-      updateHeroStats();
       // Update pins — if map already loaded, place now; otherwise wait
       if (map) {
         updateMapPins(getFiltered());
@@ -1858,16 +1833,18 @@
     const total = restaurants.length;
     const suburbs = new Set(restaurants.map(r => {
       if (!r.address) return null;
-      // Extract suburb from address e.g. "123 Main St, Mitcham VIC 3132" -> "Mitcham"
       const parts = r.address.split(',');
       if (parts.length >= 2) {
-        return parts[parts.length - 2].trim().replace(/\s+VIC.*/, '').replace(/\s+\d+.*/, '').trim();
+        return parts[parts.length - 2].trim()
+          .replace(/\s*(VIC|NSW|QLD|SA|WA|TAS|ACT|NT)\s*/gi, '')
+          .replace(/\d+/g, '')
+          .trim();
       }
       return null;
-    }).filter(Boolean));
+    }).filter(s => s && s.length > 1));
     const suburbCount = suburbs.size;
     const el = document.getElementById('counterText');
-    if (el) el.textContent = `${total} restaurant${total !== 1 ? 's' : ''} across ${suburbCount} suburb${suburbCount !== 1 ? 's' : ''} — and growing!`;
+    if (el) el.textContent = total + ' restaurant' + (total !== 1 ? 's' : '') + ' across ' + suburbCount + ' suburb' + (suburbCount !== 1 ? 's' : '') + ' — and growing!';
   }
 
   window.quickSearch = (suburb) => {
