@@ -1657,9 +1657,22 @@
               title: 'You are here',
               icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#4285F4', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 }
             });
-            // Center on user — zoom 14 = ~3-5km radius
-            map.setCenter({lat, lng});
-            map.setZoom(14);
+            // Fit map to show user + all nearby restaurants
+            const nearbyWithCoords = nearbyRestaurants.filter(r => r.lat && r.lng);
+            if (nearbyWithCoords.length > 0) {
+              const bounds = new google.maps.LatLngBounds();
+              bounds.extend({lat, lng});
+              nearbyWithCoords.forEach(r => bounds.extend({lat: r.lat, lng: r.lng}));
+              map.fitBounds(bounds);
+              // Don't zoom in too close
+              const listener = google.maps.event.addListener(map, 'idle', () => {
+                if (map.getZoom() > 13) map.setZoom(13);
+                google.maps.event.removeListener(listener);
+              });
+            } else {
+              map.setCenter({lat, lng});
+              map.setZoom(13);
+            }
           }
         } catch(e) { console.warn('Location map error:', e); }
 
