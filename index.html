@@ -1699,8 +1699,15 @@
     // Pre-fill edit form with current data
     document.getElementById('edit_id').value = r.id;
     document.getElementById('edit_name').value = r.name || '';
-    document.getElementById('edit_dish').value = r.dish || (r.dishes && r.dishes[0] ? r.dishes[0].name : '') || '';
-    document.getElementById('edit_price').value = r.exactPrice || '';
+    const d0 = r.dishes && r.dishes[0] ? r.dishes[0] : null;
+    const d1 = r.dishes && r.dishes[1] ? r.dishes[1] : null;
+    const d2 = r.dishes && r.dishes[2] ? r.dishes[2] : null;
+    document.getElementById('edit_dish').value = r.dish || (d0 ? d0.name : '') || '';
+    document.getElementById('edit_price').value = r.exactPrice || (d0 ? d0.price : '') || '';
+    document.getElementById('edit_dish_2').value = d1 ? d1.name : '';
+    document.getElementById('edit_price_2').value = d1 ? d1.price : '';
+    document.getElementById('edit_dish_3').value = d2 ? d2.name : '';
+    document.getElementById('edit_price_3').value = d2 ? d2.price : '';
     document.getElementById('edit_address').value = r.address || '';
     document.getElementById('edit_phone').value = r.phone || '';
     document.getElementById('edit_hours').value = r.hours || '';
@@ -1716,13 +1723,18 @@
       }
     }
 
-    // Set price range dropdown
+    // Set price range dropdowns
     const priceEl = document.getElementById('edit_priceRange');
     for (let i = 0; i < priceEl.options.length; i++) {
-      if (priceEl.options[i].value === r.priceRange) {
-        priceEl.selectedIndex = i;
-        break;
-      }
+      if (priceEl.options[i].value === r.priceRange) { priceEl.selectedIndex = i; break; }
+    }
+    const tier2El = document.getElementById('edit_tier_2');
+    if (d1) for (let i = 0; i < tier2El.options.length; i++) {
+      if (tier2El.options[i].value === d1.tier) { tier2El.selectedIndex = i; break; }
+    }
+    const tier3El = document.getElementById('edit_tier_3');
+    if (d2) for (let i = 0; i < tier3El.options.length; i++) {
+      if (tier3El.options[i].value === d2.tier) { tier3El.selectedIndex = i; break; }
     }
 
     document.getElementById('editPanel').style.display = 'block';
@@ -1756,12 +1768,22 @@
       };
       const cuisine = document.getElementById('edit_cuisine').value;
 
+      // Build dishes array from edit form
+      const editDishes = [];
+      const d1n = document.getElementById('edit_dish').value.trim();
+      if (d1n) editDishes.push({ name: d1n, price: document.getElementById('edit_price').value.trim(), tier: document.getElementById('edit_priceRange').value });
+      const d2n = document.getElementById('edit_dish_2').value.trim();
+      if (d2n) editDishes.push({ name: d2n, price: document.getElementById('edit_price_2').value.trim(), tier: document.getElementById('edit_tier_2').value });
+      const d3n = document.getElementById('edit_dish_3').value.trim();
+      if (d3n) editDishes.push({ name: d3n, price: document.getElementById('edit_price_3').value.trim(), tier: document.getElementById('edit_tier_3').value });
+
       // Apply edit directly to the restaurant
       await updateDoc(doc(db, "restaurants", id), {
         name: document.getElementById('edit_name').value.trim(),
         cuisine: cuisine,
         cuisineLabel: cuisineLabels[cuisine] || cuisine,
-        dish: document.getElementById('edit_dish').value.trim(),
+        dish: d1n,
+        dishes: editDishes,
         exactPrice: document.getElementById('edit_price').value.trim() || null,
         priceRange: document.getElementById('edit_priceRange').value,
         address: document.getElementById('edit_address').value.trim(),
@@ -2118,20 +2140,46 @@
           </select>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
-          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Featured Dish</label>
-          <input type="text" id="edit_dish" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Price</label>
-          <input type="text" id="edit_price" placeholder="e.g. $9.50" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Price Range</label>
-          <select id="edit_priceRange" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
-            <option value="10">Under $10</option>
-            <option value="15">Under $15</option>
-            <option value="20">Under $20</option>
-          </select>
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Dishes</label>
+          <!-- Dish 1 -->
+          <div style="background:rgba(245,200,66,0.06);border:1px solid rgba(245,200,66,0.2);border-radius:8px;padding:10px;margin-bottom:6px">
+            <p style="font-size:0.72rem;color:var(--gold);margin:0 0 6px;font-weight:600">★ Featured dish</p>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
+              <input type="text" id="edit_dish" placeholder="Dish name" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <input type="text" id="edit_price" placeholder="e.g. $9.50" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <select id="edit_priceRange" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
+          </div>
+          <!-- Dish 2 -->
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px">
+            <p style="font-size:0.72rem;color:var(--muted);margin:0 0 6px">Dish 2 (optional)</p>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
+              <input type="text" id="edit_dish_2" placeholder="Dish name" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <input type="text" id="edit_price_2" placeholder="e.g. $12" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <select id="edit_tier_2" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
+          </div>
+          <!-- Dish 3 -->
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px">
+            <p style="font-size:0.72rem;color:var(--muted);margin:0 0 6px">Dish 3 (optional)</p>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
+              <input type="text" id="edit_dish_3" placeholder="Dish name" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <input type="text" id="edit_price_3" placeholder="e.g. $15" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <select id="edit_tier_3" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
+          </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
           <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Address</label>
@@ -2155,8 +2203,8 @@
         </div>
       </div>
 
-      <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:0.8rem;color:var(--muted)">
-        🔍 Your edit will be reviewed before going live — usually within 24 hours.
+      <div style="background:rgba(76,175,125,0.08);border:1px solid rgba(76,175,125,0.25);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:0.8rem;color:#4caf7d">
+        ✅ Your edit will go live immediately — thank you for keeping listings accurate!
       </div>
 
       <button onclick="submitEdit()" id="editSubmitBtn" style="width:100%;padding:13px;background:var(--gold);color:#0e0c09;font-family:Fraunces,serif;font-size:1rem;font-weight:900;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s">Submit Edit →</button>
