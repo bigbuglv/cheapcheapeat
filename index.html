@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>CheapEats — Cheap Meals Near You in Melbourne</title>
+<title>CheapEats — Budget Meals Near You Across Australia</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -402,6 +402,11 @@
   }
 
   /* Price tier indicator on card */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
   .price-tier-dot {
     display: inline-block;
     width: 10px;
@@ -773,12 +778,24 @@
 <section class="hero">
   <div class="badge">100% Free · Community Powered</div>
   <h1>Real meals.<br><em>Cheap eats.</em><br>Near you.</h1>
-  <p>A crowd-sourced directory of budget meals across Melbourne. Find cheap eats near you — and list your favourite spot for free.</p>
+  <p>A crowd-sourced directory of budget meals across Australia. Find cheap eats near you — and list your favourite spot for free.</p>
+
+  <!-- Live stats counter -->
+  <div id="heroStats" style="display:inline-flex;align-items:center;gap:6px;background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.25);border-radius:20px;padding:7px 18px;margin-bottom:16px">
+    <span style="width:8px;height:8px;border-radius:50%;background:#4caf7d;display:inline-block;flex-shrink:0"></span>
+    <span id="statsText" style="font-size:0.85rem;color:#4caf7d;font-weight:500">Loading...</span>
+  </div>
 
   <div class="price-tiers">
     <div class="tier-badge t10">🟢 Under $10</div>
     <div class="tier-badge t15">🟡 Under $15</div>
     <div class="tier-badge t20">🔴 Under $20</div>
+  </div>
+
+  <!-- Live counter -->
+  <div id="liveCounter" style="display:inline-flex;align-items:center;gap:8px;background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.25);border-radius:20px;padding:7px 18px;margin-top:16px">
+    <span style="width:8px;height:8px;border-radius:50%;background:#4caf7d;display:inline-block;flex-shrink:0;animation:pulse 2s infinite"></span>
+    <span id="counterText" style="font-size:0.85rem;color:#4caf7d;font-weight:500">Loading...</span>
   </div>
 </section>
 
@@ -1105,6 +1122,24 @@
   let map, markers = [];
 
   // ── LOAD RESTAURANTS FROM FIREBASE ──
+  function updateHeroStats() {
+    const statsEl = document.getElementById('statsText');
+    if (!statsEl || restaurants.length === 0) return;
+    const suburbs = new Set();
+    restaurants.forEach(r => {
+      if (r.address) {
+        const parts = r.address.split(',');
+        if (parts.length >= 2) {
+          const suburbPart = parts[parts.length - 2].trim().replace(/VIC|NSW|QLD|SA|WA|TAS|ACT|NT|\d/g, '').trim();
+          if (suburbPart) suburbs.add(suburbPart);
+        }
+      }
+    });
+    const count = restaurants.length;
+    const suburbCount = suburbs.size || Math.max(1, Math.ceil(count * 0.5));
+    statsEl.textContent = count + ' restaurant' + (count !== 1 ? 's' : '') + ' across ' + suburbCount + ' suburb' + (suburbCount !== 1 ? 's' : '') + ' — and growing!';
+  }
+
   async function loadRestaurants() {
     try {
       const q = query(
@@ -1114,6 +1149,9 @@
       const snapshot = await getDocs(q);
       restaurants = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       renderCards(getFiltered());
+      // Update live counter
+      updateLiveCounter();
+      updateHeroStats();
       // Update pins — if map already loaded, place now; otherwise wait
       if (map) {
         updateMapPins(getFiltered());
@@ -1815,6 +1853,22 @@
     icon.textContent = open ? '−' : '+';
     label.textContent = open ? 'Hide extra details' : 'Add more details — phone, hours, website, notes';
   };
+
+  function updateLiveCounter() {
+    const total = restaurants.length;
+    const suburbs = new Set(restaurants.map(r => {
+      if (!r.address) return null;
+      // Extract suburb from address e.g. "123 Main St, Mitcham VIC 3132" -> "Mitcham"
+      const parts = r.address.split(',');
+      if (parts.length >= 2) {
+        return parts[parts.length - 2].trim().replace(/\s+VIC.*/, '').replace(/\s+\d+.*/, '').trim();
+      }
+      return null;
+    }).filter(Boolean));
+    const suburbCount = suburbs.size;
+    const el = document.getElementById('counterText');
+    if (el) el.textContent = `${total} restaurant${total !== 1 ? 's' : ''} across ${suburbCount} suburb${suburbCount !== 1 ? 's' : ''} — and growing!`;
+  }
 
   window.quickSearch = (suburb) => {
     document.getElementById('searchInput').value = suburb;
