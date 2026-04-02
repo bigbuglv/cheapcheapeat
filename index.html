@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>CheapEats — Budget Meals Near You Across Australia</title>
+<title>CheapBites — Budget Meals Near You Across Australia</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -756,6 +756,7 @@
   .toast.error { background: var(--red); color: #fff; }
 
   @media (max-width: 600px) {
+    .how-section { display: none; }
     .form-grid { grid-template-columns: 1fr; }
     .header-actions .btn-ghost { display: none; }
     .submit-card { padding: 28px 20px; }
@@ -766,7 +767,7 @@
 
 <!-- HEADER -->
 <header>
-  <div class="logo">Cheap<span>Eats</span></div>
+  <div class="logo">Cheap<span>Bites</span></div>
 
   <div class="header-actions">
     <button class="btn btn-ghost" onclick="scrollToList()">Browse</button>
@@ -1086,7 +1087,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <strong>CheapEats</strong> — Community powered. Always free. &nbsp;·&nbsp; Built with ❤️ for budget food lovers in Australia.
+  <strong>CheapBites</strong> — Community powered. Always free. &nbsp;·&nbsp; Built with ❤️ for budget food lovers in Australia.
 </footer>
 
 <!-- MODAL -->
@@ -1938,7 +1939,7 @@
   loadGoogleMap(MAPS_API_KEY);
 
   // ── EMAILJS CONFIG ──
-  const EMAILJS_SERVICE = "cheapeats_service";
+  const EMAILJS_SERVICE = "cheapbites_service";
   const EMAILJS_TEMPLATE = "template_r4op13m";
   const EMAILJS_PUBLIC_KEY = "UjfzMQjMAfzpbEnOB";
   const ADMIN_URL = window.location.origin + "?admin=true";
@@ -1965,7 +1966,7 @@
   window.sendEmailNotification = sendEmailNotification;
 
   // ── ADMIN PANEL ──
-  const ADMIN_PASSWORD = "CheapEats2024!";
+  const ADMIN_PASSWORD = "CheapBites2024!";
 
   window.checkAdminPassword = () => {
     const input = document.getElementById('adminPasswordInput').value;
