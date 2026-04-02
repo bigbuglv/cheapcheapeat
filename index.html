@@ -767,6 +767,10 @@
 <!-- HEADER -->
 <header>
   <div class="logo">Cheap<span>Eats</span></div>
+  <div id="liveCounter" style="display:inline-flex;align-items:center;gap:6px;background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.25);border-radius:20px;padding:5px 12px">
+    <span style="width:7px;height:7px;border-radius:50%;background:#4caf7d;display:inline-block;flex-shrink:0"></span>
+    <span id="counterText" style="font-size:0.78rem;color:#4caf7d;font-weight:500">Loading...</span>
+  </div>
   <div class="header-actions">
     <button class="btn btn-ghost" onclick="scrollToList()">Browse</button>
     <button class="btn btn-ghost" onclick="document.getElementById('adminPanel').style.display='block';document.body.style.overflow='hidden'">🔐 Admin</button>
@@ -787,10 +791,7 @@
   </div>
 
   <!-- Live counter -->
-  <div id="liveCounter" style="display:inline-flex;align-items:center;gap:8px;background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.25);border-radius:20px;padding:7px 18px;margin-top:16px">
-    <span style="width:8px;height:8px;border-radius:50%;background:#4caf7d;display:inline-block;flex-shrink:0;animation:pulse 2s infinite"></span>
-    <span id="counterText" style="font-size:0.85rem;color:#4caf7d;font-weight:500">Loading...</span>
-  </div>
+
 </section>
 
 <!-- SEARCH -->
