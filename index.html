@@ -1167,6 +1167,7 @@
 
   // ── STATE ──
   let restaurants = [];
+  let nearbyRestaurants = null; // null means no location filter active
   let activeCuisineFilter = 'all';
   let activePriceFilter = 'all';
 
@@ -1294,7 +1295,9 @@
 
   function getFiltered() {
     const q = document.getElementById('searchInput').value.toLowerCase();
-    return restaurants.filter(r => {
+    // Use nearbyRestaurants if location search is active, otherwise all restaurants
+    const source = nearbyRestaurants !== null ? nearbyRestaurants : restaurants;
+    return source.filter(r => {
       const matchCuisine = activeCuisineFilter === 'all' ? true
         : activeCuisineFilter === 'owner' ? r.isOwner
         : r.cuisine === activeCuisineFilter;
@@ -1319,6 +1322,7 @@
 
   window.triggerSearch = () => {
     searchActive = true;
+    nearbyRestaurants = null; // clear location filter on new search
     const btn = document.getElementById('searchBtn');
     btn.textContent = 'Searching...';
     btn.classList.add('searching');
@@ -1673,7 +1677,7 @@
         searchActive = true;
 
         // Only show restaurants within 3km of user
-        const nearbyRestaurants = restaurants.filter(r => r.distance !== undefined && r.distance <= 3);
+        nearbyRestaurants = restaurants.filter(r => r.distance !== undefined && r.distance <= 3);
 
         // Save scroll position
         const scrollPos = window.scrollY;
@@ -1762,22 +1766,18 @@
       const raw = priceEl.value.replace(/[^0-9.]/g, '');
       const price = parseFloat(raw);
       if (isNaN(price)) return;
-      if (price <= 10) {
-        tierEl.value = '10';
-      } else if (price <= 15) {
-        tierEl.value = '15';
-      } else if (price <= 20) {
-        tierEl.value = '20';
-      }
+      if (price <= 10) tierEl.value = '10';
+      else if (price <= 15) tierEl.value = '15';
+      else if (price <= 20) tierEl.value = '20';
     });
   }
 
-  // Attach auto detect to all 3 dish price inputs (add form)
+  // Attach to add form
   autoDetectTier('f_price_1', 'f_tier_1');
   autoDetectTier('f_price_2', 'f_tier_2');
   autoDetectTier('f_price_3', 'f_tier_3');
 
-  // Attach auto detect to edit form price inputs
+  // Attach to edit form
   autoDetectTier('edit_price', 'edit_priceRange');
   autoDetectTier('edit_price_2', 'edit_tier_2');
   autoDetectTier('edit_price_3', 'edit_tier_3');
