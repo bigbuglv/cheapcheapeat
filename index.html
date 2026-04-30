@@ -360,6 +360,11 @@
   .filter-chip.deal:hover { border-color: #ff6b35; color: #ff6b35; }
   .filter-chip.deal.active { background: #ff6b35; border-color: #ff6b35; color: #fff; }
 
+  /* ── CUISINE SELECT ── */
+  #cuisineSelect:hover { border-color: var(--gold-dim); }
+  #cuisineSelect:focus { border-color: var(--gold); }
+  #cuisineSelect option { background: var(--surface); color: var(--cream); }
+
   /* ── DEAL BADGE ── */
   .deal-badge {
     display: inline-flex;
@@ -929,26 +934,28 @@
   </div>
 
   <!-- Cuisine filters -->
-  <div class="filter-row">
-    <button class="filter-chip active" onclick="setCuisineFilter('all', this)">All Cuisines</button>
-    <button class="filter-chip" onclick="setCuisineFilter('asian', this)">Asian</button>
-    <button class="filter-chip" onclick="setCuisineFilter('malaysian', this)">Malaysian</button>
-    <button class="filter-chip" onclick="setCuisineFilter('vietnamese', this)">Vietnamese</button>
-    <button class="filter-chip" onclick="setCuisineFilter('thai', this)">Thai</button>
-    <button class="filter-chip" onclick="setCuisineFilter('chinese', this)">Chinese</button>
-    <button class="filter-chip" onclick="setCuisineFilter('japanese', this)">Japanese</button>
-    <button class="filter-chip" onclick="setCuisineFilter('korean', this)">Korean</button>
-    <button class="filter-chip" onclick="setCuisineFilter('indonesian', this)">Indonesian</button>
-    <button class="filter-chip" onclick="setCuisineFilter('indian', this)">Indian</button>
-    <button class="filter-chip" onclick="setCuisineFilter('italian', this)">Italian</button>
-    <button class="filter-chip" onclick="setCuisineFilter('french', this)">French</button>
-    <button class="filter-chip" onclick="setCuisineFilter('mexican', this)">Mexican</button>
-    <button class="filter-chip" onclick="setCuisineFilter('burgers', this)">Burgers</button>
-    <button class="filter-chip" onclick="setCuisineFilter('vegetarian', this)">Vegetarian</button>
-    <button class="filter-chip" onclick="setCuisineFilter('bakery', this)">Bakery</button>
-    <button class="filter-chip" onclick="setCuisineFilter('dessert', this)">Dessert</button>
-    <button class="filter-chip" onclick="setCuisineFilter('owner', this)">Owner Verified ★</button>
-
+  <div class="filter-row" style="align-items:center">
+    <label for="cuisineSelect" style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-right:4px">Cuisine</label>
+    <select id="cuisineSelect" onchange="setCuisineFilter(this.value)" style="background:var(--surface2);border:1px solid var(--border);border-radius:100px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.85rem;padding:6px 14px;outline:none;cursor:pointer;min-width:180px">
+      <option value="all">All Cuisines</option>
+      <option value="asian">Asian</option>
+      <option value="malaysian">Malaysian</option>
+      <option value="vietnamese">Vietnamese</option>
+      <option value="thai">Thai</option>
+      <option value="chinese">Chinese</option>
+      <option value="japanese">Japanese</option>
+      <option value="korean">Korean</option>
+      <option value="indonesian">Indonesian</option>
+      <option value="indian">Indian</option>
+      <option value="italian">Italian</option>
+      <option value="french">French</option>
+      <option value="mexican">Mexican</option>
+      <option value="burgers">Burgers</option>
+      <option value="vegetarian">Vegetarian</option>
+      <option value="bakery">Bakery</option>
+      <option value="dessert">Dessert</option>
+      <option value="owner">Owner Verified ★</option>
+    </select>
   </div>
 
   <!-- Price filters -->
@@ -1608,8 +1615,12 @@
 
   window.setCuisineFilter = (f, el) => {
     activeCuisineFilter = f;
+    // Keep the dropdown in sync (if present)
+    const sel = document.getElementById('cuisineSelect');
+    if (sel && sel.value !== f) sel.value = f;
+    // Legacy chip support (in case any chips remain)
     document.querySelectorAll('.filter-row .filter-chip').forEach(c => c.classList.remove('active'));
-    el.classList.add('active');
+    if (el && el.classList) el.classList.add('active');
     const filtered = getFiltered();
     renderCards(filtered);
     updateMapPins(filtered);
@@ -1922,8 +1933,8 @@
           const si = document.getElementById('searchInput');
           if (si) si.value = '';
           document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-          const cuisineFirst = document.querySelector('.filter-row .filter-chip');
-          if (cuisineFirst) cuisineFirst.classList.add('active');
+          const cuisineSel = document.getElementById('cuisineSelect');
+          if (cuisineSel) cuisineSel.value = 'all';
           const priceFirst = document.querySelector('.price-filter-row .filter-chip');
           if (priceFirst) priceFirst.classList.add('active');
           renderCards(nearbyRestaurants);
