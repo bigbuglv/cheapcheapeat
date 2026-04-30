@@ -1,0 +1,3060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iI0M4ODUwQSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQ0IiBmaWxsPSIjRThBMDIwIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMzgiIGZpbGw9IiNGNUM1MTgiLz48dGV4dCB4PSI1MCIgeT0iNjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI1MCIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iIzhCNjAwMCI+JDwvdGV4dD48L3N2Zz4=">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>CheapBites — Budget Meals Near You Across Australia</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Find cheap meals under $20 near you across Australia. CheapBites is a free community-powered directory of budget restaurants, cafes and eateries. Search by suburb, cuisine or price.">
+  <meta name="keywords" content="cheap eats, budget meals, cheap food, affordable restaurants, cheap eats Melbourne, cheap eats Sydney, cheap eats Australia, under $10, under $15, under $20">
+  <meta name="author" content="CheapBites">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cheapbites.com.au">
+
+  <!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://cheapbites.com.au">
+  <meta property="og:title" content="CheapBites — Budget Meals Near You Across Australia">
+  <meta property="og:description" content="Find cheap meals under $20 near you. Free community-powered directory of budget restaurants across Australia.">
+  <meta property="og:image" content="https://cheapbites.com.au/og-image.jpg">
+  <meta property="og:site_name" content="CheapBites">
+  <meta property="og:locale" content="en_AU">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://cheapbites.com.au">
+  <meta name="twitter:title" content="CheapBites — Budget Meals Near You">
+  <meta name="twitter:description" content="Find cheap meals under $20 near you. Free community-powered directory of budget restaurants across Australia.">
+  <meta name="twitter:image" content="https://cheapbites.com.au/og-image.jpg">
+
+  <!-- Structured Data (Google Rich Results) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "CheapBites",
+    "url": "https://cheapbites.com.au",
+    "description": "Free community-powered directory of budget meals across Australia",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://cheapbites.com.au/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0c09;
+    --surface: #1a1710;
+    --surface2: #252118;
+    --gold: #f5c842;
+    --gold-dim: #b8942f;
+    --red: #e8402a;
+    --cream: #f0ead8;
+    --muted: #7a7060;
+    --border: rgba(245, 200, 66, 0.15);
+    --radius: 12px;
+    --green: #4caf7d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(14, 12, 9, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--cream); }
+
+  .header-actions { display: flex; gap: 12px; align-items: center; }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+  .btn-primary {
+    background: var(--gold);
+    color: #0e0c09;
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #ffd740; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 72px 24px 48px;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(245,200,66,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(245,200,66,0.12);
+    border: 1px solid rgba(245,200,66,0.3);
+    color: var(--gold);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--cream);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .hero p {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+  }
+
+  /* ── PRICE TIER BADGES ── */
+  .price-tiers {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .tier-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  .tier-badge.t10 { background: rgba(76,175,125,0.12); border-color: rgba(76,175,125,0.4); color: #4caf7d; }
+  .tier-badge.t15 { background: rgba(245,200,66,0.12); border-color: rgba(245,200,66,0.4); color: var(--gold); }
+  .tier-badge.t20 { background: rgba(232,64,42,0.12); border-color: rgba(232,64,42,0.4); color: var(--red); }
+
+  /* ── SEARCH BAR ── */
+  .search-bar {
+    max-width: 680px;
+    margin: 0 auto 48px;
+    padding: 0 24px;
+    display: flex;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .search-bar:focus-within { border-color: var(--gold-dim); }
+
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 14px 16px;
+  }
+  .search-bar input::placeholder { color: var(--muted); }
+
+  .search-bar button {
+    background: var(--gold);
+    color: #0e0c09;
+    border: none;
+    padding: 14px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .search-bar button:hover { background: #ffd740; }
+  .search-bar button:active { background: #e6b800; transform: scale(0.97); }
+  .search-bar button.searching { background: #e6b800; transform: scale(0.97); }
+
+  /* ── MAP AREA ── */
+  .map-section {
+    padding: 0 24px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .map-wrapper {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  #map {
+    width: 100%;
+    height: 480px;
+  }
+
+  .map-overlay-msg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    gap: 12px;
+  }
+
+  .map-icon { font-size: 3rem; }
+
+  .map-overlay-msg h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    color: var(--cream);
+  }
+
+  .map-overlay-msg p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-align: center;
+    max-width: 320px;
+  }
+
+  .map-overlay-msg .btn-primary { margin-top: 8px; font-size: 0.9rem; }
+
+  /* ── LISTINGS ── */
+  .listings-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 64px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .section-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--cream);
+  }
+
+  .section-header .count { font-size: 0.85rem; color: var(--muted); }
+
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Price filter row */
+  .price-filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .price-filter-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-right: 4px;
+  }
+
+  .filter-chip {
+    padding: 6px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-chip:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .filter-chip.active { background: var(--gold); border-color: var(--gold); color: #0e0c09; font-weight: 600; }
+
+  .filter-chip.p10.active { background: #4caf7d; border-color: #4caf7d; color: #fff; }
+  .filter-chip.p15.active { background: var(--gold); border-color: var(--gold); color: #0e0c09; }
+  .filter-chip.p20.active { background: var(--red); border-color: var(--red); color: #fff; }
+  .filter-chip.deal { border-color: rgba(255,107,53,0.4); color: #ff8b5e; }
+  .filter-chip.deal:hover { border-color: #ff6b35; color: #ff6b35; }
+  .filter-chip.deal.active { background: #ff6b35; border-color: #ff6b35; color: #fff; }
+
+  /* ── CUISINE SELECT ── */
+  #cuisineSelect:hover { border-color: var(--gold-dim); }
+  #cuisineSelect:focus { border-color: var(--gold); }
+  #cuisineSelect option { background: var(--surface); color: var(--cream); }
+
+  /* ── DEAL BADGE ── */
+  .deal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255,107,53,0.15);
+    border: 1px solid rgba(255,107,53,0.4);
+    color: #ff8b5e;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .deal-strip {
+    background: rgba(255,107,53,0.08);
+    border: 1px solid rgba(255,107,53,0.3);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    font-size: 0.78rem;
+  }
+  .deal-strip-label {
+    color: #ff8b5e;
+    font-weight: 700;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3px;
+  }
+  .deal-strip-content {
+    color: var(--cream);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .deal-strip-price { color: #ff8b5e; font-weight: 700; }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  /* Loading state */
+  .loading-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .loading-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.25s;
+    cursor: pointer;
+    position: relative;
+  }
+  .card:hover {
+    border-color: var(--gold-dim);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  }
+
+  .card-img {
+    height: 120px;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+
+
+  .card-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, rgba(26,23,16,0.8));
+  }
+
+  .owner-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 1;
+  }
+
+  /* Price tier indicator on card */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .price-tier-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.2);
+    flex-shrink: 0;
+  }
+  .price-tier-dot.t10 { background: #4caf7d; }
+  .price-tier-dot.t15 { background: var(--gold); }
+  .price-tier-dot.t20 { background: var(--red); }
+
+  .card-body { padding: 16px; }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+
+  .card-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+
+  .price-tag {
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 3px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .price-tag.t10 { background: rgba(76,175,125,0.15); border: 1px solid rgba(76,175,125,0.3); color: #4caf7d; }
+  .price-tag.t15 { background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.3); color: var(--gold); }
+  .price-tag.t20 { background: rgba(232,64,42,0.15); border: 1px solid rgba(232,64,42,0.3); color: var(--red); }
+
+  .card-cuisine { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+
+  .card-dish {
+    font-size: 0.88rem;
+    color: var(--cream);
+    opacity: 0.85;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-location { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--muted); }
+
+  .stars { font-size: 0.78rem; color: var(--gold); letter-spacing: 1px; }
+
+  /* ── SUBMIT FORM ── */
+  .submit-section {
+    max-width: 700px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+  }
+
+  .submit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--red), var(--gold));
+  }
+
+  .submit-card h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    margin-bottom: 8px;
+    color: var(--cream);
+  }
+
+  .submit-card > p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  .form-group label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .form-group label .required { color: var(--gold); }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--gold-dim); }
+
+  .form-group select option { background: #252118; }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+
+
+  .owner-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(245,200,66,0.07);
+    border: 1px solid rgba(245,200,66,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+
+  .owner-check input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; }
+
+  .owner-check label { font-size: 0.88rem; color: var(--cream); cursor: pointer; }
+  .owner-check label span { color: var(--gold); font-weight: 600; }
+
+  .free-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+    text-align: center;
+    justify-content: center;
+  }
+  .free-note strong { color: var(--gold); }
+
+  .pending-note {
+    background: rgba(76,175,125,0.08);
+    border: 1px solid rgba(76,175,125,0.25);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    color: #4caf7d;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .submit-btn:hover { background: #ffd740; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,200,66,0.25); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+  }
+
+  .how-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--cream);
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+  }
+
+  .step {
+    text-align: center;
+    padding: 28px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s;
+  }
+  .step:hover { border-color: var(--gold-dim); }
+
+  .step-num {
+    font-family: 'Fraunces', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgba(245,200,66,0.25);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .step-icon { font-size: 1.8rem; margin-bottom: 10px; }
+
+  .step h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .step p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  footer strong { color: var(--gold); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    animation: modalIn 0.25s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: var(--surface2);
+    border: none;
+    color: var(--muted);
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { color: var(--cream); }
+
+
+
+  .modal h3 { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+  .modal .modal-cuisine { color: var(--muted); font-size: 0.85rem; margin-bottom: 16px; }
+  .modal .modal-price { font-size: 2rem; font-family: 'Fraunces', serif; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
+  .modal .modal-dish { color: var(--cream); font-size: 0.95rem; margin-bottom: 16px; line-height: 1.5; }
+  .modal .modal-meta { display: flex; flex-direction: column; gap: 8px; }
+  .modal .meta-row { display: flex; gap: 10px; font-size: 0.85rem; }
+  .modal .meta-label { color: var(--muted); min-width: 80px; }
+  .modal .meta-val { color: var(--cream); }
+  .modal .map-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 20px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+    width: 100%;
+    justify-content: center;
+  }
+  .modal .map-link:hover { background: #ffd740; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--gold);
+    color: #0e0c09;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 14px 22px;
+    border-radius: 10px;
+    z-index: 300;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    max-width: 320px;
+  }
+  .toast.show { transform: none; opacity: 1; }
+  .toast.error { background: var(--red); color: #fff; }
+
+  @media (max-width: 600px) {
+    .how-section { display: none; }
+    .form-grid { grid-template-columns: 1fr; }
+    .header-actions .btn-ghost { display: none; }
+    .submit-card { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo"><svg viewBox="0 0 168 32" height="32" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;vertical-align:middle">
+      <text y="26" font-family="Fraunces, serif" font-size="28" font-weight="900" letter-spacing="-0.02em" fill="#f5c842">Cheap</text>
+      <text x="86" y="26" font-family="Fraunces, serif" font-size="28" font-weight="900" letter-spacing="-0.02em" fill="#f0ead8">Bites</text>
+      <!-- gold bitten coin overlaid on dot of i — covers original dot only -->
+      <circle cx="113" cy="5" r="7" fill="#C8850A"/>
+      <circle cx="113" cy="4" r="6" fill="#E8A020"/>
+      <circle cx="113" cy="3.5" r="5" fill="#F5C518"/>
+      <!-- bite chunk out of coin -->
+      <circle cx="118" cy="-1" r="4" fill="#0e0c09"/>
+    </svg></div>
+
+  <div class="header-actions">
+    <button class="btn btn-ghost" onclick="scrollToList()">Browse</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('adminPanel').style.display='block';document.body.style.overflow='hidden'">🔐 Admin</button>
+    <button class="btn btn-primary" onclick="showSubmitPage()">+ Add Restaurant</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">100% Free · Community Powered</div>
+  <h1>Real meals.<br><em>Cheap eats.</em><br>Near you.</h1>
+  <p>A crowd-sourced directory of budget meals across Australia. Find cheap eats near you — and list your favourite spot for free.</p>
+
+  <!-- Stats bar -->
+  <div id="statsBar" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(245,200,66,0.1);border-radius:12px;overflow:hidden;margin-bottom:24px;max-width:400px;margin-left:auto;margin-right:auto">
+    <div style="background:rgba(14,12,9,0.8);padding:14px;text-align:center">
+      <div id="statRestaurants" style="font-family:Fraunces,serif;font-size:24px;color:var(--gold);font-weight:900;line-height:1">—</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.08em">restaurants</div>
+    </div>
+    <div style="background:rgba(14,12,9,0.8);padding:14px;text-align:center;border-left:1px solid rgba(245,200,66,0.08);border-right:1px solid rgba(245,200,66,0.08)">
+      <div id="statSuburbs" style="font-family:Fraunces,serif;font-size:24px;color:var(--gold);font-weight:900;line-height:1">—</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.08em">suburbs</div>
+    </div>
+    <div style="background:rgba(14,12,9,0.8);padding:14px;text-align:center">
+      <div id="statCuisines" style="font-family:Fraunces,serif;font-size:24px;color:var(--gold);font-weight:900;line-height:1">—</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.08em">cuisines</div>
+    </div>
+  </div>
+
+  <div class="price-tiers">
+    <div class="tier-badge t10">🟢 Under $10</div>
+    <div class="tier-badge t15">🟡 Under $15</div>
+    <div class="tier-badge t20">🔴 Under $20</div>
+  </div>
+
+  <!-- Live counter -->
+
+</section>
+
+<!-- SEARCH -->
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search by suburb, cuisine, or dish..." oninput="filterCards()" onkeydown="if(event.key==='Enter') triggerSearch()">
+  <button id="locationBtn" onclick="useMyLocation()" title="Use my location" style="background:var(--surface2);color:var(--cream);border:none;padding:14px 16px;font-size:1.1rem;cursor:pointer;transition:background 0.2s;border-right:1px solid var(--border)">📍</button>
+  <button id="searchBtn" onclick="triggerSearch()">Search</button>
+</div>
+
+<!-- MAP -->
+<section class="map-section">
+  <div class="map-wrapper">
+    <div id="map"></div>
+    <div class="map-overlay-msg" id="mapOverlay">
+      <div class="map-icon">📍</div>
+      <h3>Interactive Map</h3>
+      <p>Enter your Google Maps API key to show restaurant locations near you.</p>
+      <button class="btn btn-primary" onclick="promptApiKey()">Enable Map</button>
+    </div>
+  </div>
+</section>
+
+<!-- LISTINGS -->
+<section class="listings-section">
+  <div class="section-header">
+    <h2 id="listingsTitle">Find Cheap Eats</h2>
+    <span class="count" id="listCount"></span>
+  </div>
+
+  <!-- Cuisine filters -->
+  <div class="filter-row" style="align-items:center">
+    <label for="cuisineSelect" style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-right:4px">Cuisine</label>
+    <select id="cuisineSelect" onchange="setCuisineFilter(this.value)" style="background:var(--surface2);border:1px solid var(--border);border-radius:100px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.85rem;padding:6px 14px;outline:none;cursor:pointer;min-width:180px">
+      <option value="all">All Cuisines</option>
+      <option value="asian">Asian</option>
+      <option value="malaysian">Malaysian</option>
+      <option value="vietnamese">Vietnamese</option>
+      <option value="thai">Thai</option>
+      <option value="chinese">Chinese</option>
+      <option value="japanese">Japanese</option>
+      <option value="korean">Korean</option>
+      <option value="indonesian">Indonesian</option>
+      <option value="indian">Indian</option>
+      <option value="italian">Italian</option>
+      <option value="french">French</option>
+      <option value="mexican">Mexican</option>
+      <option value="burgers">Burgers</option>
+      <option value="vegetarian">Vegetarian</option>
+      <option value="bakery">Bakery</option>
+      <option value="dessert">Dessert</option>
+      <option value="owner">Owner Verified ★</option>
+    </select>
+  </div>
+
+  <!-- Price filters -->
+  <div class="price-filter-row">
+    <span class="price-filter-label">Budget:</span>
+    <button class="filter-chip active" onclick="setPriceFilter('all', this)">All Prices</button>
+    <button class="filter-chip p10" onclick="setPriceFilter('10', this)">Under $10</button>
+    <button class="filter-chip p15" onclick="setPriceFilter('15', this)">Under $15</button>
+    <button class="filter-chip p20" onclick="setPriceFilter('20', this)">Under $20</button>
+    <button class="filter-chip deal" onclick="setPriceFilter('deal', this)">🔥 On Deal</button>
+  </div>
+
+  <!-- Empty state shown before search -->
+  <div id="emptyState" style="text-align:center;padding:48px 24px">
+    <div style="font-size:2.5rem;margin-bottom:16px">🍜</div>
+    <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.4rem;margin:0 0 8px">Where are you eating today?</h3>
+    <p style="color:var(--muted);font-size:0.9rem;margin:0 0 24px">Search a suburb or use your location to find cheap eats near you</p>
+    <button onclick="useMyLocation()" style="background:var(--gold);color:#0e0c09;border:none;padding:12px 24px;border-radius:10px;font-family:Fraunces,serif;font-size:1rem;font-weight:900;cursor:pointer;margin-bottom:24px;display:inline-flex;align-items:center;gap:8px">📍 Use my location</button>
+    <div>
+      <p style="color:var(--muted);font-size:0.8rem;margin:0 0 12px">Or try a popular suburb:</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+        <button onclick="quickSearch('Melbourne CBD')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Melbourne CBD</button>
+        <button onclick="quickSearch('Box Hill')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Box Hill</button>
+        <button onclick="quickSearch('Springvale')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Springvale</button>
+        <button onclick="quickSearch('Footscray')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Footscray</button>
+        <button onclick="quickSearch('Mitcham')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Mitcham</button>
+        <button onclick="quickSearch('Richmond')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Richmond</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid" style="display:none"></div>
+</section>
+
+<!-- TODAY'S DEALS -->
+<section id="todaysDealsSection" style="max-width:1200px;margin:0 auto;padding:0 24px 64px;display:none">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+    <h2 style="font-family:Fraunces,serif;font-size:1.8rem;font-weight:700;color:var(--cream);margin:0">🔥 Today's Deals</h2>
+    <span id="dealsCount" style="font-size:0.85rem;color:var(--muted)"></span>
+  </div>
+  <p style="color:var(--muted);font-size:0.9rem;margin:0 0 24px">Limited-time and daily specials posted by the CheapBites team</p>
+  <div class="cards-grid" id="dealsGrid"></div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-icon">🍽️</div>
+      <h3>Find a cheap meal</h3>
+      <p>Browse the map or search by cuisine, suburb, or dish to find affordable eats near you.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-icon">📝</div>
+      <h3>Anyone can submit</h3>
+      <p>Community members submit places they love. Restaurant owners get priority placement — for free.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-icon">✅</div>
+      <h3>Goes live instantly</h3>
+      <p>Listings go live immediately — no waiting. Owner-verified spots get a gold badge.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-icon">🗺️</div>
+      <h3>Get directions</h3>
+      <p>Each listing links directly to Google Maps so you can navigate there instantly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SUBMIT PAGE -->
+<div id="submitPage" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:150;overflow-y:auto">
+  <div style="max-width:700px;margin:0 auto;padding:24px">
+    <!-- Back button -->
+    <div style="margin-bottom:24px">
+      <button onclick="hideSubmitPage()" style="background:transparent;border:none;color:var(--muted);font-family:DM Sans,sans-serif;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;transition:color 0.2s" onmouseover="this.style.color='var(--cream)'" onmouseout="this.style.color='var(--muted)'">
+        ← Back to listings
+      </button>
+    </div>
+
+<section class="submit-section" id="submitSection" style="margin:0;padding:0;max-width:100%">
+  <div class="submit-card">
+    <h2>Add a Restaurant</h2>
+    <p style="color:var(--muted);font-size:0.88rem;margin-bottom:24px">Know a spot with great affordable food? Takes less than a minute!</p>
+
+    <!-- REQUIRED INFO -->
+    <div style="margin-bottom:4px">
+      <p style="font-size:0.72rem;color:#4caf7d;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px">Required info</p>
+
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Restaurant Name <span class="required">*</span></label>
+          <input type="text" id="f_name" placeholder="e.g. Jalan Alor">
+        </div>
+
+        <div class="form-group full">
+          <label>Address <span class="required">*</span></label>
+          <input type="text" id="f_address" placeholder="e.g. 26 Britannia Mall, Mitcham VIC 3132">
+        </div>
+
+        <div class="form-group">
+          <label>Cuisine <span class="required">*</span></label>
+          <select id="f_cuisine">
+            <option value="">Select cuisine...</option>
+            <option value="malaysian">Malaysian</option>
+            <option value="vietnamese">Vietnamese</option>
+            <option value="thai">Thai</option>
+            <option value="chinese">Chinese</option>
+            <option value="japanese">Japanese</option>
+            <option value="korean">Korean</option>
+            <option value="indonesian">Indonesian</option>
+            <option value="asian">Asian (Other)</option>
+            <option value="indian">Indian</option>
+            <option value="italian">Italian</option>
+            <option value="french">French</option>
+            <option value="mexican">Mexican</option>
+            <option value="burgers">Burgers</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="bakery">Bakery</option>
+            <option value="dessert">Dessert</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Are you the owner?</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer">
+            <input type="checkbox" id="f_owner" style="width:16px;height:16px;accent-color:var(--gold)">
+            <span style="font-size:0.88rem;color:var(--muted)">Yes, I own this restaurant</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Dish tip -->
+      <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start">
+        <span style="font-size:1rem;flex-shrink:0">💡</span>
+        <p style="font-size:0.78rem;color:var(--muted);margin:0;line-height:1.6">List your <strong style="color:var(--cream)">top 3 most popular budget dishes</strong> — not your full menu. Add your website below so customers can explore everything else.</p>
+      </div>
+
+      <!-- Dish 1 - Required -->
+      <div class="dish-row" id="dish-row-1" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+          <span style="font-size:0.72rem;color:var(--gold);font-weight:700;background:rgba(245,200,66,0.12);padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Featured dish</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
+          <input type="text" id="f_dish_1" placeholder="Dish name e.g. Pho Bo" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+          <input type="text" id="f_price_1" placeholder="Price e.g. $9.50" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+          <select id="f_tier_1" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+            <option value="10">Under $10</option>
+            <option value="15">Under $15</option>
+            <option value="20">Under $20</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" id="addDishBtn" onclick="addDishRow()" style="background:transparent;border:1px dashed rgba(245,200,66,0.4);color:var(--gold);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.82rem;margin-bottom:16px;width:100%;transition:all 0.2s">+ Add another dish (up to 3)</button>
+
+      <!-- Dish 2 -->
+      <div id="dish-row-2" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
+          <input type="text" id="f_dish_2" placeholder="Dish 2 (optional)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+          <input type="text" id="f_price_2" placeholder="e.g. $12" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+          <select id="f_tier_2" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+            <option value="10">Under $10</option>
+            <option value="15">Under $15</option>
+            <option value="20">Under $20</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Dish 3 -->
+      <div id="dish-row-3" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
+          <input type="text" id="f_dish_3" placeholder="Dish 3 (optional)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+          <input type="text" id="f_price_3" placeholder="e.g. $15" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+          <select id="f_tier_3" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+            <option value="10">Under $10</option>
+            <option value="15">Under $15</option>
+            <option value="20">Under $20</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- MORE DETAILS TOGGLE -->
+    <div style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:16px">
+      <button type="button" onclick="toggleMoreDetails()" style="width:100%;background:transparent;border:none;color:var(--muted);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 0;transition:color 0.2s" id="moreDetailsBtn">
+        <span id="moreDetailsIcon">+</span>
+        <span id="moreDetailsLabel">Add more details — phone, hours, website, notes</span>
+      </button>
+    </div>
+
+    <!-- MORE DETAILS SECTION (hidden by default) -->
+    <div id="moreDetailsSection" style="display:none;margin-bottom:16px">
+      <p style="font-size:0.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px">Optional details</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" id="f_phone" placeholder="e.g. 03 9123 4567">
+        </div>
+        <div class="form-group">
+          <label>Hours</label>
+          <input type="text" id="f_hours" placeholder="e.g. Mon–Fri 11am–3pm">
+        </div>
+        <div class="form-group full" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px">
+          <label style="margin-bottom:4px">Restaurant Website</label>
+          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Add your website so customers can see your full menu &amp; more dishes →</p>
+          <input type="text" id="f_website" placeholder="e.g. https://www.myrestaurant.com.au">
+        </div>
+        <div class="form-group full">
+          <label>Notes</label>
+          <input type="text" id="f_notes" placeholder="e.g. Cash only, BYO allowed, Lunch special Mon–Fri">
+        </div>
+      </div>
+    </div>
+
+    <div class="pending-note" style="background:rgba(76,175,125,0.08);border:1px solid rgba(76,175,125,0.25);color:#4caf7d">
+      ✅ Listings go live immediately — help keep info accurate using the Edit button.
+    </div>
+
+    <button type="button" id="submitBtn" onclick="submitForm()" class="submit-btn">Submit Listing →</button>
+  </div>
+</section>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>CheapBites</strong> — Community powered. Always free. &nbsp;·&nbsp; Built with ❤️ for budget food lovers in Australia.
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  // ── FIREBASE CONFIG ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyDoLc_QJsdT2Eiz4u5JAVIAgQXjhxbSn-o",
+    authDomain: "cheapcheapeats.firebaseapp.com",
+    projectId: "cheapcheapeats",
+    storageBucket: "cheapcheapeats.firebasestorage.app",
+    messagingSenderId: "47196090968",
+    appId: "1:47196090968:web:205e242bdf064e6bf9102d",
+    measurementId: "G-4VMBV1306Q"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+
+
+  // ── STATE ──
+  let restaurants = [];
+  let nearbyRestaurants = null; // null means no location filter active
+  let activeCuisineFilter = 'all';
+  let activePriceFilter = 'all';
+  let deals = [];
+
+  let map, markers = [];
+
+  // ── DEAL HELPERS ──
+  const DAY_KEYS = ['sun','mon','tue','wed','thu','fri','sat'];
+  const DAY_LABELS = { sun:'Sun', mon:'Mon', tue:'Tue', wed:'Wed', thu:'Thu', fri:'Fri', sat:'Sat' };
+
+  function todayKey() {
+    return DAY_KEYS[new Date().getDay()];
+  }
+
+  function isWithinDateRange(deal) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    if (deal.startDate) {
+      const s = new Date(deal.startDate); s.setHours(0,0,0,0);
+      if (today < s) return false;
+    }
+    if (deal.endDate) {
+      const e = new Date(deal.endDate); e.setHours(23,59,59,999);
+      if (today > e) return false;
+    }
+    return true;
+  }
+
+  // Returns { dish, price } for what's active TODAY, or null
+  function getActiveDealToday(deal) {
+    if (!deal) return null;
+    if (!isWithinDateRange(deal)) return null;
+    if (deal.type === 'limited') {
+      if (!deal.dish) return null;
+      return { dish: deal.dish, price: deal.price || '', notes: deal.notes || '' };
+    }
+    if (deal.type === 'weekly') {
+      const tk = todayKey();
+      const wd = deal.weeklyDishes && deal.weeklyDishes[tk];
+      if (wd && wd.dish) {
+        return { dish: wd.dish, price: wd.price || '', notes: deal.notes || '' };
+      }
+      return null;
+    }
+    return null;
+  }
+
+  // Returns the active deal object for a restaurant (or null)
+  function getRestaurantActiveDeal(restaurantId) {
+    for (const d of deals) {
+      if (d.restaurantId !== restaurantId) continue;
+      const active = getActiveDealToday(d);
+      if (active) return { deal: d, active };
+    }
+    return null;
+  }
+
+  // ── LOAD DEALS FROM FIREBASE ──
+  async function loadDeals() {
+    try {
+      const snapshot = await getDocs(collection(db, "deals"));
+      deals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderTodaysDeals();
+    } catch (err) {
+      console.error("Error loading deals:", err);
+      deals = [];
+      renderTodaysDeals();
+    }
+  }
+
+  // ── LOAD RESTAURANTS FROM FIREBASE ──
+  async function loadRestaurants() {
+    try {
+      const q = query(
+        collection(db, "restaurants"),
+        where("status", "==", "approved")
+      );
+      const snapshot = await getDocs(q);
+      restaurants = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderCards(getFiltered());
+      // Update live counter
+      updateLiveCounter();
+      // Update pins — if map already loaded, place now; otherwise wait
+      if (map) {
+        updateMapPins(getFiltered());
+      } else {
+        window._pendingPinUpdate = true;
+      }
+      // Re-render today's deals (needs both restaurants + deals)
+      renderTodaysDeals();
+    } catch (err) {
+      console.error("Error loading restaurants:", err);
+      restaurants = [];
+      renderCards(getFiltered());
+    }
+  }
+
+  // ── PRICE TIER HELPER ──
+  function getPriceTier(priceRange) {
+    if (priceRange === "10") return { cls: "t10", label: "Under $10" };
+    if (priceRange === "15") return { cls: "t15", label: "Under $15" };
+    return { cls: "t20", label: "Under $20" };
+  }
+
+  // ── RENDER CARDS ──
+  let searchActive = false;
+
+  function renderCards(list) {
+    const grid = document.getElementById('cardsGrid');
+    const emptyState = document.getElementById('emptyState');
+    const title = document.getElementById('listingsTitle');
+
+    if (!searchActive) {
+      emptyState.style.display = 'block';
+      grid.style.display = 'none';
+      document.getElementById('listCount').textContent = '';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    grid.style.display = 'grid';
+    document.getElementById('listCount').textContent = `${list.length} restaurant${list.length !== 1 ? 's' : ''}`;
+    if (title) title.textContent = 'Results';
+    grid.innerHTML = '';
+
+    if (list.length === 0) {
+      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🍽️</div><p>No restaurants found. Try a different filter!</p></div>`;
+      return;
+    }
+
+    list.forEach(r => {
+      // Find best matching dish for active price filter
+      let matchingDish = null;
+      if (activePriceFilter !== 'all' && activePriceFilter !== 'deal' && r.dishes && r.dishes.length > 0) {
+        matchingDish = r.dishes.find(d => d.tier === activePriceFilter)
+          || r.dishes.filter(d => parseInt(d.tier) <= parseInt(activePriceFilter))
+                     .sort((a,b) => parseInt(a.tier) - parseInt(b.tier))[0];
+      }
+      const effectivePriceRange = matchingDish ? matchingDish.tier : r.priceRange;
+      const tier = getPriceTier(effectivePriceRange);
+      const rawPrice = matchingDish ? matchingDish.price 
+        : (r.exactPrice || null);
+      const displayPrice = rawPrice ? (rawPrice.toString().startsWith('$') ? rawPrice : '$' + rawPrice)
+        : (effectivePriceRange === "10" ? "Under $10" : effectivePriceRange === "15" ? "Under $15" : "Under $20");
+      const card = document.createElement('div');
+      card.className = 'card';
+      // Build dishes list for card
+      const dishes = r.dishes && r.dishes.length > 0 ? r.dishes : 
+        (r.dish ? [{ name: r.dish, price: r.exactPrice || displayPrice, tier: r.priceRange || '10' }] : []);
+      const featuredDish = dishes[0] || {};
+      const extraCount = dishes.length - 1;
+
+      // Active deal for today (if any)
+      const dealInfo = getRestaurantActiveDeal(r.id);
+      const dealStripHtml = dealInfo ? (() => {
+        const dp = dealInfo.active.price ? (dealInfo.active.price.toString().startsWith('$') ? dealInfo.active.price : '$' + dealInfo.active.price) : '';
+        const label = dealInfo.deal.type === 'weekly' ? `Today's special` : `Limited deal`;
+        return `<div class="deal-strip">
+          <div class="deal-strip-label">🔥 ${label}</div>
+          <div class="deal-strip-content">
+            <span>${dealInfo.active.dish}</span>
+            <span class="deal-strip-price">${dp}</span>
+          </div>
+        </div>`;
+      })() : '';
+
+      card.innerHTML = `
+        <div class="card-body">
+          <div class="card-top">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="price-tier-dot ${tier.cls}" style="flex-shrink:0;position:relative;top:0"></span>
+              <div class="card-name">${r.name}</div>
+            </div>
+            <div class="price-tag ${tier.cls}">${displayPrice}</div>
+          </div>
+          ${dealInfo ? '<div style="margin-bottom:6px"><span class="deal-badge">🔥 On Deal</span></div>' : ''}
+          ${r.isOwner ? '<div style="margin-bottom:4px"><span style="background:var(--gold);color:#0e0c09;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Owner Verified</span></div>' : ''}
+          <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
+          ${dealStripHtml}
+          ${dishes.length > 0 ? `
+          <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
+            ${dishes.filter(d => activePriceFilter === 'all' || activePriceFilter === 'deal' || parseInt(d.tier) <= parseInt(activePriceFilter)).map(d => {
+              const dt = getPriceTier(d.tier || r.priceRange);
+              const dc = dt.cls === 't10' ? '#4caf7d' : dt.cls === 't15' ? 'var(--gold)' : 'var(--red)';
+              const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
+              return `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--surface2);border-radius:6px;font-size:0.78rem">
+                <span style="color:var(--cream);opacity:0.85">${d.name}</span>
+                <span style="color:${dc};font-weight:600">${dp}</span>
+              </div>`;
+            }).join('')}
+          </div>` : '<div style="margin-bottom:12px"></div>'}
+          <div class="card-footer">
+            <div class="card-location">📍 ${r.address ? r.address.split(',').slice(1).join(',').trim() : ''}</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              ${(r.distance && r.distance < 900 && typeof r.distance === 'number') ? `<span style="font-size:0.75rem;color:var(--muted)">${r.distance.toFixed(1)}km</span>` : ''}
+              <div class="stars">${'★'.repeat(r.stars || 4)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+      card.onclick = () => openModal(r);
+      grid.appendChild(card);
+    });
+  }
+
+  // ── RENDER TODAY'S DEALS SECTION ──
+  function renderTodaysDeals() {
+    const section = document.getElementById('todaysDealsSection');
+    const grid = document.getElementById('dealsGrid');
+    const countEl = document.getElementById('dealsCount');
+    if (!section || !grid) return;
+
+    // Find restaurants with an active deal today
+    const activeToday = [];
+    for (const r of restaurants) {
+      const info = getRestaurantActiveDeal(r.id);
+      if (info) activeToday.push({ r, info });
+    }
+
+    if (activeToday.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'block';
+    countEl.textContent = `${activeToday.length} restaurant${activeToday.length !== 1 ? 's' : ''}`;
+    grid.innerHTML = '';
+
+    activeToday.forEach(({ r, info }) => {
+      const dp = info.active.price ? (info.active.price.toString().startsWith('$') ? info.active.price : '$' + info.active.price) : '';
+      const label = info.deal.type === 'weekly' ? `Today's special` : 'Limited deal';
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-body">
+          <div class="card-top">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="card-name">${r.name}</div>
+            </div>
+            <div class="price-tag" style="background:rgba(255,107,53,0.15);border:1px solid rgba(255,107,53,0.4);color:#ff8b5e">${dp || 'Deal'}</div>
+          </div>
+          <div style="margin-bottom:6px"><span class="deal-badge">🔥 ${label}</span></div>
+          <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
+          <div class="deal-strip">
+            <div class="deal-strip-content">
+              <span style="color:var(--cream);font-weight:600">${info.active.dish}</span>
+              <span class="deal-strip-price">${dp}</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="card-location">📍 ${r.address ? r.address.split(',').slice(1).join(',').trim() : ''}</div>
+            <div class="stars">${'★'.repeat(r.stars || 4)}</div>
+          </div>
+        </div>
+      `;
+      card.onclick = () => openModal(r);
+      grid.appendChild(card);
+    });
+  }
+
+  // ── FILTER LOGIC ──
+
+
+  function getFiltered() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    // Use nearbyRestaurants if location search is active, otherwise all restaurants
+    const source = nearbyRestaurants !== null ? nearbyRestaurants : restaurants;
+    return source.filter(r => {
+      const matchCuisine = activeCuisineFilter === 'all' ? true
+        : activeCuisineFilter === 'owner' ? r.isOwner
+        : r.cuisine === activeCuisineFilter;
+      // Find the lowest price tier across all dishes
+      const lowestTier = (() => {
+        if (r.dishes && r.dishes.length > 0) {
+          const tiers = r.dishes.map(d => parseInt(d.tier || r.priceRange || '20'));
+          return Math.min(...tiers).toString();
+        }
+        return r.priceRange || '20';
+      })();
+      const matchPrice = activePriceFilter === 'all' ? true
+        : activePriceFilter === 'deal' ? !!getRestaurantActiveDeal(r.id)
+        : parseInt(lowestTier) <= parseInt(activePriceFilter);
+      const matchSearch = !q
+        || (r.name || '').toLowerCase().includes(q)
+        || (r.cuisineLabel || '').toLowerCase().includes(q)
+        || (r.dish || '').toLowerCase().includes(q)
+        || (r.address || '').toLowerCase().includes(q);
+      return matchCuisine && matchPrice && matchSearch;
+    });
+  }
+
+  window.triggerSearch = () => {
+    searchActive = true;
+    nearbyRestaurants = null; // clear location filter on new search
+    const btn = document.getElementById('searchBtn');
+    btn.textContent = 'Searching...';
+    btn.classList.add('searching');
+    setTimeout(() => {
+      const filtered = getFiltered();
+      renderCards(filtered);
+      updateMapPins(filtered);
+      btn.textContent = filtered.length > 0 ? `${filtered.length} found ✓` : 'No results';
+      setTimeout(() => {
+        btn.textContent = 'Search';
+        btn.classList.remove('searching');
+      }, 2000);
+    }, 300);
+  };
+
+  window.filterCards = () => {
+    const filtered = getFiltered();
+    renderCards(filtered);
+    updateMapPins(filtered);
+  };
+
+  function updateMapPins(filtered) {
+    if (!map) return;
+
+    // Clear all existing markers
+    markers.forEach(m => m.setMap(null));
+    markers = [];
+
+    if (filtered.length === 0) return;
+
+    const withCoords = filtered.filter(r => r.lat && r.lng);
+
+    // Info window shared across all markers
+    const infoWindow = new google.maps.InfoWindow();
+
+    // Add teardrop markers for filtered results
+    withCoords.forEach(r => {
+      const tier = getPriceTier(r.priceRange);
+      const color = tier.cls === 't10' ? '#4caf7d' : tier.cls === 't15' ? '#f5c842' : '#e8402a';
+      const strokeColor = tier.cls === 't10' ? '#2e7d32' : tier.cls === 't15' ? '#b8942f' : '#b71c1c';
+
+      const pinSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="48" viewBox="0 0 36 48"><path d="M18 2 C9 2 2 9 2 18 C2 30 18 46 18 46 C18 46 34 30 34 18 C34 9 27 2 18 2Z" fill="${color}" stroke="${strokeColor}" stroke-width="1.5"/><circle cx="18" cy="18" r="9" fill="white" opacity="0.92"/></svg>`;
+
+      const marker = new google.maps.Marker({
+        position: { lat: r.lat, lng: r.lng },
+        map,
+        title: r.name,
+        icon: {
+          url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(pinSvg),
+          scaledSize: new google.maps.Size(36, 48),
+          anchor: new google.maps.Point(18, 46)
+        }
+      });
+
+      marker.addListener('mouseover', () => {
+        const displayPrice = r.exactPrice || `Under $${r.priceRange}`;
+        const distText = r.distance ? `<div style="font-size:0.78rem;color:#888;margin-top:2px">📍 ${r.distance} away</div>` : '';
+        infoWindow.setContent(`
+          <div style="font-family:DM Sans,sans-serif;padding:4px 6px;min-width:160px">
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:2px">${r.name}</div>
+            <div style="font-size:0.82rem;color:#666;margin-bottom:2px">${r.cuisineLabel || r.cuisine}</div>
+            <div style="font-size:0.82rem;color:${color};font-weight:600">${displayPrice}</div>
+            ${distText}
+            <div style="font-size:0.78rem;color:#888;margin-top:2px">Click for details</div>
+          </div>
+        `);
+        infoWindow.open(map, marker);
+      });
+
+      marker.addListener('mouseout', () => infoWindow.close());
+      marker.addListener('click', () => { infoWindow.close(); openModal(r); });
+      markers.push(marker);
+    });
+
+    // Pan and zoom map to show results
+    if (withCoords.length === 1) {
+      map.setCenter({ lat: withCoords[0].lat, lng: withCoords[0].lng });
+      map.setZoom(15);
+    } else if (withCoords.length > 1) {
+      const bounds = new google.maps.LatLngBounds();
+      withCoords.forEach(r => bounds.extend({ lat: r.lat, lng: r.lng }));
+      map.fitBounds(bounds);
+      // Prevent zooming in too close
+      const listener = google.maps.event.addListener(map, 'idle', () => {
+        if (map.getZoom() > 15) map.setZoom(15);
+        google.maps.event.removeListener(listener);
+      });
+    }
+  }
+
+  window.setCuisineFilter = (f, el) => {
+    activeCuisineFilter = f;
+    // Keep the dropdown in sync (if present)
+    const sel = document.getElementById('cuisineSelect');
+    if (sel && sel.value !== f) sel.value = f;
+    // Legacy chip support (in case any chips remain)
+    document.querySelectorAll('.filter-row .filter-chip').forEach(c => c.classList.remove('active'));
+    if (el && el.classList) el.classList.add('active');
+    const filtered = getFiltered();
+    renderCards(filtered);
+    updateMapPins(filtered);
+  };
+
+  window.setPriceFilter = (f, el) => {
+    activePriceFilter = f;
+    document.querySelectorAll('.price-filter-row .filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    renderCards(getFiltered());
+  };
+
+  // ── MODAL ──
+  window.openModal = (r) => {
+    const tier = getPriceTier(r.priceRange);
+    const rawPrice = r.exactPrice || tier.label;
+    const displayPrice = rawPrice && !rawPrice.toString().startsWith('$') && !rawPrice.toString().startsWith('Under') ? '$' + rawPrice : rawPrice;
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((r.name || '') + ' ' + (r.address || ''))}`;
+    document.getElementById('modalContent').innerHTML = `
+
+      ${r.isOwner ? '<div style="display:inline-block;background:var(--gold);color:#0e0c09;font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:4px;margin-bottom:12px;letter-spacing:0.05em">★ OWNER VERIFIED</div>' : ''}
+      <h3>${r.name}</h3>
+      <div class="modal-cuisine">${r.cuisineLabel || r.cuisine}</div>
+      <div class="modal-price" style="color:${tier.cls === 't10' ? '#4caf7d' : tier.cls === 't20' ? 'var(--red)' : 'var(--gold)'}">${displayPrice}</div>
+      ${(() => {
+        // Show all relevant deals for this restaurant
+        const restaurantDeals = deals.filter(d => d.restaurantId === r.id && isWithinDateRange(d));
+        if (restaurantDeals.length === 0) return '';
+        return restaurantDeals.map(d => {
+          if (d.type === 'limited') {
+            const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
+            const dateLine = d.endDate ? `Until ${d.endDate}` : 'Limited time';
+            return `<div style="background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.3);border-radius:10px;padding:14px;margin-bottom:12px">
+              <div style="font-size:0.72rem;color:#ff8b5e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:700">🔥 Limited Deal · ${dateLine}</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-weight:600;color:var(--cream)">${d.dish || ''}</span>
+                <span style="color:#ff8b5e;font-weight:700">${dp}</span>
+              </div>
+              ${d.notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:6px">${d.notes}</div>` : ''}
+            </div>`;
+          }
+          if (d.type === 'weekly') {
+            const tk = todayKey();
+            const dateLine = d.endDate ? `Weekly · until ${d.endDate}` : 'Weekly specials';
+            const rows = DAY_KEYS.filter(k => k !== 'sun' && k !== 'sat').map(k => {
+              const wd = d.weeklyDishes && d.weeklyDishes[k];
+              if (!wd || !wd.dish) return '';
+              const dp = wd.price ? (wd.price.toString().startsWith('$') ? wd.price : '$' + wd.price) : '';
+              const isToday = k === tk;
+              const bg = isToday ? 'rgba(255,107,53,0.12)' : 'transparent';
+              const border = isToday ? '1px solid rgba(255,107,53,0.4)' : '1px solid var(--border)';
+              return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:${bg};border:${border};border-radius:8px;margin-bottom:4px">
+                <span style="font-size:0.85rem;color:var(--cream)"><strong style="color:${isToday ? '#ff8b5e' : 'var(--muted)'};margin-right:8px">${DAY_LABELS[k]}${isToday ? ' (today)' : ''}</strong>${wd.dish}</span>
+                <span style="color:${isToday ? '#ff8b5e' : 'var(--cream)'};font-weight:600;font-size:0.85rem">${dp}</span>
+              </div>`;
+            }).join('');
+            return `<div style="background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.3);border-radius:10px;padding:14px;margin-bottom:12px">
+              <div style="font-size:0.72rem;color:#ff8b5e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;font-weight:700">🔥 Daily Specials · ${dateLine}</div>
+              ${rows}
+              ${d.notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:8px">${d.notes}</div>` : ''}
+            </div>`;
+          }
+          return '';
+        }).join('');
+      })()}
+      ${(() => {
+        const dishes = r.dishes && r.dishes.length > 0 ? r.dishes :
+          (r.dish ? [{ name: r.dish, price: r.exactPrice || displayPrice, tier: r.priceRange || '10' }] : []);
+        if (dishes.length === 0) return '<div class=\'modal-dish\'>—</div>';
+        const featured = dishes[0];
+        const rest = dishes.slice(1);
+        return '<div style=\'background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:12px\'>' +
+          '<div style=\'font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px\'>Featured dish</div>' +
+          '<div style=\'display:flex;justify-content:space-between;align-items:center\'>' +
+          '<span style=\'font-weight:600;color:var(--cream)\'>' + featured.name + '</span>' +
+          '<span style=\'color:#4caf7d;font-weight:700\'>' + (featured.price ? (featured.price.toString().startsWith('$') ? featured.price : '$' + featured.price) : '') + '</span>' +
+          '</div></div>' +
+          (rest.length > 0 ? '<div style=\'margin-bottom:12px\'>' +
+          '<div style=\'font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px\'>More dishes</div>' +
+          '<div style=\'display:flex;flex-direction:column;gap:6px\'>' +
+          rest.map(d => {
+            const dc = d.tier === '10' ? '#4caf7d' : d.tier === '20' ? 'var(--red)' : 'var(--gold)';
+            const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
+            return '<div style=\'display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--border);border-radius:8px\'>' +
+              '<span style=\'font-size:0.88rem;color:var(--cream)\'>' + d.name + '</span>' +
+              '<span style=\'color:' + dc + ';font-weight:600;font-size:0.88rem\'>' + dp + '</span>' +
+              '</div>';
+          }).join('') + '</div></div>' : '');
+      })()}
+      <div class="modal-meta">
+        <div class="meta-row"><span class="meta-label">Address</span><span class="meta-val">${r.address || '—'}</span></div>
+        <div class="meta-row"><span class="meta-label">Hours</span><span class="meta-val">${r.hours || 'Not listed'}</span></div>
+        <div class="meta-row"><span class="meta-label">Phone</span><span class="meta-val">${r.phone || 'Not provided'}</span></div>
+        <div class="meta-row"><span class="meta-label">Rating</span><span class="meta-val" style="color:var(--gold)">${'★'.repeat(r.stars || 4)}</span></div>
+        ${r.notes ? `<div class="meta-row"><span class="meta-label">Notes</span><span class="meta-val">${r.notes}</span></div>` : ''}
+
+      </div>
+      <a class="map-link" href="${mapsUrl}" target="_blank">📍 Open in Google Maps</a>
+      ${r.website ? `<a class="map-link" href="${r.website}" target="_blank" style="margin-top:8px;background:var(--surface2);color:var(--cream);border:1px solid var(--border)">🌐 Visit Restaurant Website</a>` : ''}
+      <button onclick="openEditForm(this.dataset.id)" data-id="${r.id}" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">✏️ Suggest an Edit</button>
+    `;
+    document.getElementById('modal').classList.add('open');
+  };
+
+  window.closeModal = (e) => {
+    if (e.target === document.getElementById('modal')) {
+      document.getElementById('modal').classList.remove('open');
+    }
+  };
+
+
+
+  // ── SUBMIT FORM ──
+  window.submitForm = async () => {
+    const name = document.getElementById('f_name').value.trim();
+    const cuisine = document.getElementById('f_cuisine').value;
+    const address = document.getElementById('f_address').value.trim();
+    const dish1 = document.getElementById('f_dish_1').value.trim();
+    const price1 = document.getElementById('f_price_1').value.trim();
+    const tier1 = document.getElementById('f_tier_1').value;
+
+    if (!name || !cuisine || !address || !dish1) {
+      showToast('Please fill in all required fields including at least one dish.', true);
+      return;
+    }
+
+    // Collect all dishes (max 3)
+    const dishes = [];
+    for (let i = 1; i <= 3; i++) {
+      const dishEl = document.getElementById('f_dish_' + i);
+      const priceEl = document.getElementById('f_price_' + i);
+      const tierEl = document.getElementById('f_tier_' + i);
+      if (dishEl && dishEl.value.trim()) {
+        dishes.push({
+          name: dishEl.value.trim(),
+          price: priceEl ? priceEl.value.trim() : '',
+          tier: tierEl ? tierEl.value : '10'
+        });
+      }
+    }
+
+    // Use first dish tier as the main price range
+    const priceRange = dishes.length > 0 ? dishes[0].tier : '10';
+    const dish = dishes.length > 0 ? dishes[0].name : '';
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    try {
+      let photoUrl = null;
+
+      // Geocode address using Google Maps Geocoder (works with restricted keys)
+      btn.textContent = 'Getting location...';
+      let lat = null, lng = null;
+      try {
+        await new Promise((resolve) => {
+          const waitForGoogle = setInterval(() => {
+            if (window.google && window.google.maps) {
+              clearInterval(waitForGoogle);
+              const geocoder = new google.maps.Geocoder();
+              geocoder.geocode({ address: address + ', Australia' }, (results, status) => {
+                console.log('Geocode status:', status);
+                if (status === 'OK' && results.length > 0) {
+                  lat = results[0].geometry.location.lat();
+                  lng = results[0].geometry.location.lng();
+                  console.log('Coordinates found:', lat, lng);
+                } else {
+                  console.warn('Geocode failed:', status);
+                }
+                resolve();
+              });
+            }
+          }, 100);
+          // Timeout after 5 seconds
+          setTimeout(() => { clearInterval(waitForGoogle); resolve(); }, 5000);
+        });
+      } catch (geoErr) {
+        console.warn('Geocoding error:', geoErr);
+      }
+
+      const isOwner = document.getElementById('f_owner').checked;
+      const cuisineLabels = {
+        malaysian: 'Malaysian', vietnamese: 'Vietnamese', thai: 'Thai',
+        chinese: 'Chinese', japanese: 'Japanese', korean: 'Korean',
+        indonesian: 'Indonesian', asian: 'Asian', indian: 'Indian',
+        italian: 'Italian', french: 'French', mexican: 'Mexican', burgers: 'Burgers',
+        vegetarian: 'Vegetarian', bakery: 'Bakery', dessert: 'Dessert',
+        'middle-eastern': 'Middle Eastern', greek: 'Greek', other: 'Other'
+      };
+
+      const newEntry = {
+        name,
+        cuisine,
+        cuisineLabel: cuisineLabels[cuisine] || cuisine,
+        dish,
+        dishes,
+        priceRange,
+        exactPrice: dishes.length > 0 ? dishes[0].price : null,
+        address,
+        phone: document.getElementById('f_phone').value.trim() || null,
+        hours: document.getElementById('f_hours').value.trim() || null,
+        notes: document.getElementById('f_notes').value.trim() || null,
+        website: document.getElementById('f_website').value.trim() || null,
+        isOwner,
+        stars: isOwner ? 5 : 4,
+        lat,
+        lng,
+        status: 'approved',
+        createdAt: serverTimestamp()
+      };
+
+      const docRef = await addDoc(collection(db, "restaurants"), newEntry);
+      // Send email notification
+      sendEmailNotification(newEntry);
+
+      // Reset form
+      ['f_name', 'f_address', 'f_phone', 'f_hours', 'f_notes', 'f_website'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      for (let i = 1; i <= 3; i++) {
+        const d = document.getElementById('f_dish_' + i);
+        const p = document.getElementById('f_price_' + i);
+        const t = document.getElementById('f_tier_' + i);
+        if (d) d.value = '';
+        if (p) p.value = '';
+        if (t) t.selectedIndex = 0;
+        if (i > 1) {
+          const row = document.getElementById('dish-row-' + i);
+          if (row) row.style.display = 'none';
+        }
+      }
+      currentDishRow = 1;
+      document.getElementById('addDishBtn').style.display = 'inline-block';
+      document.getElementById('f_cuisine').selectedIndex = 0;
+      document.getElementById('f_owner').checked = false;
+      // Reset more details section
+      const mds = document.getElementById('moreDetailsSection');
+      if (mds) mds.style.display = 'none';
+      const mdi = document.getElementById('moreDetailsIcon');
+      if (mdi) mdi.textContent = '+';
+      const mdl = document.getElementById('moreDetailsLabel');
+      if (mdl) mdl.textContent = 'Add more details — phone, hours, website, notes';
+
+
+      showToast('🎉 Restaurant added! It is now live on the site.');
+      hideSubmitPage();
+
+    } catch (err) {
+      console.error("Submit error:", err);
+      showToast('Something went wrong. Please try again.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit Listing →';
+    }
+  };
+
+  // ── TOAST ──
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'toast' + (isError ? ' error' : '');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+  window.showToast = showToast;
+
+  // ── SCROLL HELPERS ──
+
+
+  // ── USE MY LOCATION ──
+  window.useMyLocation = () => {
+    const btn = document.getElementById('locationBtn');
+
+    // Already loading — ignore
+    if (btn.disabled) return;
+
+    if (!navigator.geolocation) {
+      showToast('Geolocation not supported.', true);
+      return;
+    }
+
+    btn.innerHTML = '⏳';
+    btn.disabled = true;
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        // Sort by distance
+        restaurants.forEach(r => {
+          r.distance = (r.lat && r.lng)
+            ? Math.sqrt(Math.pow(r.lat-lat,2) + Math.pow(r.lng-lng,2)) * 111
+            : 999;
+        });
+        restaurants.sort((a,b) => a.distance - b.distance);
+        searchActive = true;
+
+        // Only show restaurants within 3km of user
+        nearbyRestaurants = restaurants.filter(r => r.distance !== undefined && r.distance <= 3);
+
+        // Save scroll position
+        const scrollPos = window.scrollY;
+
+        try {
+          activeCuisineFilter = 'all';
+          activePriceFilter = 'all';
+          const si = document.getElementById('searchInput');
+          if (si) si.value = '';
+          document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+          const cuisineSel = document.getElementById('cuisineSelect');
+          if (cuisineSel) cuisineSel.value = 'all';
+          const priceFirst = document.querySelector('.price-filter-row .filter-chip');
+          if (priceFirst) priceFirst.classList.add('active');
+          renderCards(nearbyRestaurants);
+          updateMapPins(nearbyRestaurants);
+        } catch(e) { console.warn('Location UI error:', e); }
+
+        try {
+          if (map) {
+            new google.maps.Marker({
+              position: {lat, lng}, map,
+              title: 'You are here',
+              icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#4285F4', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 }
+            });
+            // Fit map to show user + all nearby restaurants
+            const nearbyWithCoords = nearbyRestaurants.filter(r => r.lat && r.lng);
+            if (nearbyWithCoords.length > 0) {
+              const bounds = new google.maps.LatLngBounds();
+              bounds.extend({lat, lng});
+              nearbyWithCoords.forEach(r => bounds.extend({lat: r.lat, lng: r.lng}));
+              map.fitBounds(bounds);
+              // Don't zoom in too close
+              const listener = google.maps.event.addListener(map, 'idle', () => {
+                if (map.getZoom() > 13) map.setZoom(13);
+                google.maps.event.removeListener(listener);
+              });
+            } else {
+              map.setCenter({lat, lng});
+              map.setZoom(13);
+            }
+          }
+        } catch(e) { console.warn('Location map error:', e); }
+
+        // Scroll to map after a short delay to let map update first
+        setTimeout(() => {
+          const mapEl = document.getElementById('map');
+          if (mapEl) {
+            const y = mapEl.getBoundingClientRect().top + window.pageYOffset - 70;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        }, 300);
+
+        showToast('📍 Found ' + nearbyRestaurants.length + ' restaurants within 3km!');
+        btn.innerHTML = '📍';
+        btn.disabled = false;
+      },
+      (err) => {
+        btn.innerHTML = '📍';
+        btn.disabled = false;
+        const msgs = ['', 'Location access denied.', 'Location unavailable.', 'Location timed out.'];
+        showToast(msgs[err.code] || 'Could not get location.', true);
+      },
+      {timeout: 8000, maximumAge: 30000, enableHighAccuracy: false}
+    );
+  };;
+
+  // ── MULTIPLE DISHES ──
+  let currentDishRow = 1;
+  window.addDishRow = () => {
+    if (currentDishRow >= 3) return;
+    currentDishRow++;
+    const row = document.getElementById('dish-row-' + currentDishRow);
+    if (row) row.style.display = 'block';
+    if (currentDishRow >= 3) {
+      document.getElementById('addDishBtn').style.display = 'none';
+    }
+  };
+
+  // ── AUTO DETECT PRICE TIER ──
+  function autoDetectTier(priceInputId, tierSelectId) {
+    const priceEl = document.getElementById(priceInputId);
+    const tierEl = document.getElementById(tierSelectId);
+    if (!priceEl || !tierEl) return;
+    priceEl.addEventListener('input', () => {
+      const raw = priceEl.value.replace(/[^0-9.]/g, '');
+      const price = parseFloat(raw);
+      if (isNaN(price)) return;
+      if (price <= 10) tierEl.value = '10';
+      else if (price <= 15) tierEl.value = '15';
+      else if (price <= 20) tierEl.value = '20';
+    });
+  }
+
+  // Attach to add form
+  autoDetectTier('f_price_1', 'f_tier_1');
+  autoDetectTier('f_price_2', 'f_tier_2');
+  autoDetectTier('f_price_3', 'f_tier_3');
+
+  // Attach to edit form
+  autoDetectTier('edit_price', 'edit_priceRange');
+  autoDetectTier('edit_price_2', 'edit_tier_2');
+  autoDetectTier('edit_price_3', 'edit_tier_3');
+
+  // ── GEOLOCATION ──
+  let userLat = null, userLng = null;
+
+  function calcDistance(lat1, lng1, lat2, lng2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+      Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const d = R * c;
+    return d < 1 ? Math.round(d * 1000) + 'm' : d.toFixed(1) + 'km';
+  }
+
+  ;
+
+  // ── EDIT FEATURE ──
+  window.openEditForm = (el) => {
+    const id = typeof el === 'string' ? el : el.dataset.id;
+    const r = restaurants.find(r => r.id == id);
+    if (!r) return;
+
+    // Close the restaurant modal first
+    document.getElementById('modal').classList.remove('open');
+
+    // Pre-fill edit form with current data
+    document.getElementById('edit_id').value = r.id;
+    document.getElementById('edit_name').value = r.name || '';
+    const d0 = r.dishes && r.dishes[0] ? r.dishes[0] : null;
+    const d1 = r.dishes && r.dishes[1] ? r.dishes[1] : null;
+    const d2 = r.dishes && r.dishes[2] ? r.dishes[2] : null;
+    document.getElementById('edit_dish').value = r.dish || (d0 ? d0.name : '') || '';
+    document.getElementById('edit_price').value = r.exactPrice || (d0 ? d0.price : '') || '';
+    document.getElementById('edit_dish_2').value = d1 ? d1.name : '';
+    document.getElementById('edit_price_2').value = d1 ? d1.price : '';
+    document.getElementById('edit_dish_3').value = d2 ? d2.name : '';
+    document.getElementById('edit_price_3').value = d2 ? d2.price : '';
+    document.getElementById('edit_address').value = r.address || '';
+    document.getElementById('edit_phone').value = r.phone || '';
+    document.getElementById('edit_hours').value = r.hours || '';
+    document.getElementById('edit_website').value = r.website || '';
+    document.getElementById('edit_reason').value = '';
+
+    // Set cuisine dropdown
+    const cuisineEl = document.getElementById('edit_cuisine');
+    for (let i = 0; i < cuisineEl.options.length; i++) {
+      if (cuisineEl.options[i].value === r.cuisine) {
+        cuisineEl.selectedIndex = i;
+        break;
+      }
+    }
+
+    // Set price range dropdowns
+    const priceEl = document.getElementById('edit_priceRange');
+    for (let i = 0; i < priceEl.options.length; i++) {
+      if (priceEl.options[i].value === r.priceRange) { priceEl.selectedIndex = i; break; }
+    }
+    const tier2El = document.getElementById('edit_tier_2');
+    if (d1) for (let i = 0; i < tier2El.options.length; i++) {
+      if (tier2El.options[i].value === d1.tier) { tier2El.selectedIndex = i; break; }
+    }
+    const tier3El = document.getElementById('edit_tier_3');
+    if (d2) for (let i = 0; i < tier3El.options.length; i++) {
+      if (tier3El.options[i].value === d2.tier) { tier3El.selectedIndex = i; break; }
+    }
+
+    document.getElementById('editPanel').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeEditForm = () => {
+    document.getElementById('editPanel').style.display = 'none';
+    document.body.style.overflow = '';
+  };
+
+  window.submitEdit = async () => {
+    const btn = document.getElementById('editSubmitBtn');
+    const id = document.getElementById('edit_id').value;
+    const r = restaurants.find(r => r.id == id);
+    if (!r) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+
+      const cuisineLabels = {
+        malaysian: 'Malaysian', vietnamese: 'Vietnamese', thai: 'Thai',
+        chinese: 'Chinese', japanese: 'Japanese', korean: 'Korean',
+        indonesian: 'Indonesian', asian: 'Asian', indian: 'Indian',
+        italian: 'Italian', french: 'French', mexican: 'Mexican', burgers: 'Burgers',
+        vegetarian: 'Vegetarian', bakery: 'Bakery', dessert: 'Dessert',
+        'middle-eastern': 'Middle Eastern', greek: 'Greek', other: 'Other'
+      };
+      const cuisine = document.getElementById('edit_cuisine').value;
+
+      // Build dishes array from edit form
+      const editDishes = [];
+      const d1n = document.getElementById('edit_dish').value.trim();
+      if (d1n) editDishes.push({ name: d1n, price: document.getElementById('edit_price').value.trim(), tier: document.getElementById('edit_priceRange').value });
+      const d2n = document.getElementById('edit_dish_2').value.trim();
+      if (d2n) editDishes.push({ name: d2n, price: document.getElementById('edit_price_2').value.trim(), tier: document.getElementById('edit_tier_2').value });
+      const d3n = document.getElementById('edit_dish_3').value.trim();
+      if (d3n) editDishes.push({ name: d3n, price: document.getElementById('edit_price_3').value.trim(), tier: document.getElementById('edit_tier_3').value });
+
+      // Apply edit directly to the restaurant
+      await updateDoc(doc(db, "restaurants", id), {
+        name: document.getElementById('edit_name').value.trim(),
+        cuisine: cuisine,
+        cuisineLabel: cuisineLabels[cuisine] || cuisine,
+        dish: d1n,
+        dishes: editDishes,
+        exactPrice: document.getElementById('edit_price').value.trim() || null,
+        priceRange: document.getElementById('edit_priceRange').value,
+        address: document.getElementById('edit_address').value.trim(),
+        phone: document.getElementById('edit_phone').value.trim() || null,
+        hours: document.getElementById('edit_hours').value.trim() || null,
+        website: document.getElementById('edit_website').value.trim() || null
+      });
+
+      // Reload restaurants to show updated data
+      await loadRestaurants();
+
+      closeEditForm();
+      showToast('✅ Listing updated successfully!');
+    } catch(err) {
+      console.error('Edit submit error:', err);
+      showToast('Something went wrong. Please try again.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit Edit →';
+    }
+  };
+
+  window.toggleMoreDetails = () => {
+    const section = document.getElementById('moreDetailsSection');
+    const icon = document.getElementById('moreDetailsIcon');
+    const label = document.getElementById('moreDetailsLabel');
+    const open = section.style.display === 'none';
+    section.style.display = open ? 'block' : 'none';
+    icon.textContent = open ? '−' : '+';
+    label.textContent = open ? 'Hide extra details' : 'Add more details — phone, hours, website, notes';
+  };
+
+  function updateLiveCounter() {
+    const total = restaurants.length;
+
+    // Count unique suburbs
+    const suburbs = new Set(restaurants.map(r => {
+      if (!r.address) return null;
+      const parts = r.address.split(',');
+      if (parts.length >= 2) {
+        return parts[parts.length - 2].trim()
+          .replace(/\s*(VIC|NSW|QLD|SA|WA|TAS|ACT|NT)\s*/gi, '')
+          .replace(/\d+/g, '').trim();
+      }
+      return null;
+    }).filter(s => s && s.length > 1));
+
+    // Count unique cuisines
+    const cuisines = new Set(restaurants
+      .map(r => r.cuisine)
+      .filter(Boolean));
+
+    // Update stats bar
+    const rEl = document.getElementById('statRestaurants');
+    const sEl = document.getElementById('statSuburbs');
+    const cEl = document.getElementById('statCuisines');
+    if (rEl) rEl.textContent = total;
+    if (sEl) sEl.textContent = suburbs.size;
+    if (cEl) cEl.textContent = cuisines.size;
+
+    // Also update old counterText if it exists
+    const el = document.getElementById('counterText');
+    if (el) el.textContent = total + ' restaurants · ' + suburbs.size + ' suburbs · ' + cuisines.size + ' cuisines';
+  }
+
+  window.quickSearch = (suburb) => {
+    document.getElementById('searchInput').value = suburb;
+    searchActive = true;
+    triggerSearch();
+  };
+
+  window.scrollToForm = () => showSubmitPage();
+
+  window.showSubmitPage = () => {
+    document.getElementById('submitPage').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
+  };
+
+  window.hideSubmitPage = () => {
+    document.getElementById('submitPage').style.display = 'none';
+    document.body.style.overflow = '';
+  };
+  window.scrollToList = () => document.querySelector('.listings-section').scrollIntoView({ behavior: 'smooth' });
+
+  // ── GOOGLE MAPS ──
+  const MAPS_API_KEY = "AIzaSyCf8M1WGFzW8kAzy-k2fXHIE-AcgxjRshU";
+
+  window.promptApiKey = () => loadGoogleMap(MAPS_API_KEY);
+
+  function initMapWithRestaurants() {
+    document.getElementById('mapOverlay').style.display = 'none';
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: -37.840, lng: 145.060 },
+      zoom: 11,
+      styles: [
+        { elementType: 'geometry', stylers: [{ color: '#1a1710' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#a09070' }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: '#0e0c09' }] },
+        { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#252118' }] },
+        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0a0807' }] },
+        { featureType: 'poi', stylers: [{ visibility: 'off' }] }
+      ]
+    });
+    // Place pins — use restaurants if already loaded, otherwise pending update will handle it
+    if (restaurants.length > 0) {
+      updateMapPins(getFiltered());
+    }
+    window._mapReady = true;
+    if (window._pendingPinUpdate) {
+      window._pendingPinUpdate = false;
+      updateMapPins(getFiltered());
+    }
+  }
+
+  window.loadGoogleMap = (apiKey) => {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+    script.async = true;
+    window.initMap = initMapWithRestaurants;
+    document.head.appendChild(script);
+  };
+
+  // Auto-load map on page load
+  loadGoogleMap(MAPS_API_KEY);
+
+  // ── EMAILJS CONFIG ──
+  const EMAILJS_SERVICE = "cheapbites_service";
+  const EMAILJS_TEMPLATE = "template_r4op13m";
+  const EMAILJS_PUBLIC_KEY = "UjfzMQjMAfzpbEnOB";
+  const ADMIN_URL = window.location.origin + "?admin=true";
+
+  async function sendEmailNotification(entry) {
+    try {
+      await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+        restaurant_name: entry.name,
+        cuisine: entry.cuisineLabel || entry.cuisine,
+        dish: entry.dish,
+        price: entry.priceRange,
+        address: entry.address || '—',
+        is_owner: entry.isOwner ? 'Yes — Owner Verified' : 'No',
+        phone: entry.phone || '—',
+        hours: entry.hours || '—',
+        notes: entry.notes || '—',
+        admin_url: ADMIN_URL
+      }, EMAILJS_PUBLIC_KEY);
+      console.log("Email notification sent!");
+    } catch (err) {
+      console.error("Email notification failed:", err);
+    }
+  }
+  window.sendEmailNotification = sendEmailNotification;
+
+  // ── ADMIN PANEL ──
+  // Authentication is handled by Firebase Auth (Google Sign-In).
+  // Only emails in the allowlist below are granted admin access in the UI.
+  // The REAL security comes from Firestore security rules — set those up in Firebase Console.
+  const ADMIN_EMAILS = [
+    "cheapbites.admin@gmail.com"
+    // Add more admin emails here if needed in future
+  ];
+
+  function isAdminUser(user) {
+    return !!user && !!user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+  }
+
+  window.checkAdminPassword = async () => {
+    const errorEl = document.getElementById('adminLoginError');
+    const btn = document.getElementById('adminLoginBtn');
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    const orig = btn.textContent;
+    btn.textContent = 'Opening Google sign-in...';
+
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      if (!isAdminUser(user)) {
+        // Not an admin — sign them straight out
+        await signOut(auth);
+        errorEl.textContent = `❌ ${user.email} is not authorised. Sign in with the admin Google account.`;
+        errorEl.style.display = 'block';
+      }
+      // If they are admin, onAuthStateChanged below will reveal the panel
+    } catch (err) {
+      console.error('Google sign-in failed:', err.code, err.message);
+      let msg = '❌ Sign-in failed. Please try again.';
+      if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+        msg = '❌ Sign-in cancelled.';
+      } else if (err.code === 'auth/popup-blocked') {
+        msg = '❌ Popup was blocked. Please allow popups for this site and try again.';
+      } else if (err.code === 'auth/network-request-failed') {
+        msg = '❌ Network error. Check your connection and try again.';
+      } else if (err.code === 'auth/unauthorized-domain') {
+        msg = '❌ This domain is not authorised in Firebase. Add it under Authentication → Settings → Authorised domains.';
+      }
+      errorEl.textContent = msg;
+      errorEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = orig;
+    }
+  };
+
+  window.adminSignOut = async () => {
+    try {
+      await signOut(auth);
+      document.getElementById('adminPanel').style.display = 'none';
+      document.body.style.overflow = '';
+      window.history.replaceState({}, '', window.location.pathname);
+      showToast('Signed out.');
+    } catch (err) {
+      console.error('Sign-out error:', err);
+    }
+  };
+
+  // React to auth state changes — show/hide admin UI accordingly
+  onAuthStateChanged(auth, (user) => {
+    const loginEl = document.getElementById('adminLogin');
+    const contentEl = document.getElementById('adminContent');
+    if (!loginEl || !contentEl) return;
+    if (user && isAdminUser(user)) {
+      loginEl.style.display = 'none';
+      contentEl.style.display = 'block';
+      // Show signed-in email in the header
+      const whoEl = document.getElementById('adminWhoAmI');
+      if (whoEl) whoEl.textContent = user.email;
+      loadPendingRestaurants();
+    } else {
+      loginEl.style.display = 'block';
+      contentEl.style.display = 'none';
+    }
+  });
+
+  async function loadPendingRestaurants() {
+    const list = document.getElementById('pendingList');
+    list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">Loading...</p>';
+    try {
+      const q = query(collection(db, "restaurants"), where("status", "==", "pending"));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px">🎉 No pending submissions!</p>';
+        return;
+      }
+      list.innerHTML = '';
+      snapshot.docs.forEach(docSnap => {
+        const r = { id: docSnap.id, ...docSnap.data() };
+        const card = document.createElement('div');
+        card.className = 'admin-card';
+        card.id = 'admin-card-' + r.id;
+        card.innerHTML = `
+          ${r.photoUrl ? `<img src="${r.photoUrl}" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px;border:1px solid var(--border)">` : ''}
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <strong style="font-family:Fraunces,serif;font-size:1.1rem;color:var(--cream)">${r.name}</strong>
+            <span style="background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);color:var(--gold);padding:2px 8px;border-radius:4px;font-size:0.8rem">Under $${r.priceRange}</span>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">🍽️ ${r.cuisineLabel || r.cuisine}</p>
+          <p style="color:var(--cream);font-size:0.88rem;margin-bottom:4px">${r.dish}</p>
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">📍 ${r.address || '—'}</p>
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">📞 ${r.phone || '—'} &nbsp;·&nbsp; 🕐 ${r.hours || '—'}</p>
+          ${r.isOwner ? '<p style="color:var(--gold);font-size:0.82rem;margin-bottom:8px">★ Claims to be owner</p>' : ''}
+          ${r.website ? `<p style="color:var(--muted);font-size:0.82rem;margin-bottom:4px">🌐 <a href="${r.website}" target="_blank" style="color:var(--gold)">${r.website}</a></p>` : ''}
+
+          ${r.notes ? `<p style="color:var(--muted);font-size:0.82rem;margin-bottom:8px">📝 ${r.notes}</p>` : ''}
+          <div style="display:flex;gap:10px;margin-top:12px">
+            <button onclick="approveRestaurant('${r.id}')" style="flex:1;padding:10px;background:#4caf7d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">✅ Approve</button>
+            <button onclick="rejectRestaurant('${r.id}')" style="flex:1;padding:10px;background:#e8402a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">❌ Reject</button>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    } catch (err) {
+      list.innerHTML = '<p style="color:var(--red)">Error loading submissions. Please try again.</p>';
+      console.error(err);
+    }
+  }
+
+  window.approveRestaurant = async (id) => {
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(doc(db, "restaurants", id), { status: "approved" });
+      const card = document.getElementById('admin-card-' + id);
+      if (card) card.remove();
+      showToast('✅ Restaurant approved and now live!');
+      loadRestaurants();
+    } catch (err) {
+      console.error(err);
+      showToast('Error approving. Try again.', true);
+    }
+  };
+
+  window.rejectRestaurant = async (id) => {
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(doc(db, "restaurants", id), { status: "rejected" });
+      const card = document.getElementById('admin-card-' + id);
+      if (card) card.remove();
+      showToast('❌ Restaurant rejected.');
+    } catch (err) {
+      console.error(err);
+      showToast('Error rejecting. Try again.', true);
+    }
+  };
+
+  // Show admin panel if ?admin=true in URL
+  if (window.location.search.includes('admin=true')) {
+    document.getElementById('adminPanel').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  // ── ADMIN TABS ──
+  window.switchAdminTab = (tab) => {
+    document.getElementById('pendingList').style.display = tab === 'submissions' ? 'block' : 'none';
+    document.getElementById('pendingEdits').style.display = tab === 'edits' ? 'block' : 'none';
+    document.getElementById('dealsAdmin').style.display = tab === 'deals' ? 'block' : 'none';
+
+    const setTab = (id, active) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.background = active ? 'var(--gold)' : 'transparent';
+      el.style.color = active ? '#0e0c09' : 'var(--muted)';
+      el.style.border = active ? 'none' : '1px solid var(--border)';
+      el.style.fontWeight = active ? '600' : 'normal';
+    };
+    setTab('tab-submissions', tab === 'submissions');
+    setTab('tab-edits', tab === 'edits');
+    setTab('tab-deals', tab === 'deals');
+
+    if (tab === 'edits') loadPendingEdits();
+    if (tab === 'deals') initDealsAdmin();
+  };
+
+  // ── DEALS ADMIN ──
+  let dealEditingId = null;
+  let dealCurrentType = 'limited';
+
+  window.setDealType = (t) => {
+    dealCurrentType = t;
+    document.getElementById('deal_limited_fields').style.display = t === 'limited' ? 'block' : 'none';
+    document.getElementById('deal_weekly_fields').style.display = t === 'weekly' ? 'block' : 'none';
+
+    const lim = document.getElementById('deal_type_limited');
+    const wk = document.getElementById('deal_type_weekly');
+    lim.style.background = t === 'limited' ? 'var(--gold)' : 'transparent';
+    lim.style.color = t === 'limited' ? '#0e0c09' : 'var(--muted)';
+    lim.style.border = t === 'limited' ? 'none' : '1px solid var(--border)';
+    lim.style.fontWeight = t === 'limited' ? '600' : 'normal';
+    wk.style.background = t === 'weekly' ? 'var(--gold)' : 'transparent';
+    wk.style.color = t === 'weekly' ? '#0e0c09' : 'var(--muted)';
+    wk.style.border = t === 'weekly' ? 'none' : '1px solid var(--border)';
+    wk.style.fontWeight = t === 'weekly' ? '600' : 'normal';
+  };
+
+  function buildWeeklyGrid() {
+    const grid = document.getElementById('deal_weekly_grid');
+    if (!grid) return;
+    const days = [['mon','Mon'],['tue','Tue'],['wed','Wed'],['thu','Thu'],['fri','Fri']];
+    grid.innerHTML = days.map(([k, label]) => `
+      <div style="display:grid;grid-template-columns:60px 2fr 1fr;gap:8px;align-items:center">
+        <span style="font-size:0.82rem;color:var(--muted);font-weight:600">${label}</span>
+        <input type="text" id="deal_w_${k}_dish" placeholder="Dish (optional)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+        <input type="text" id="deal_w_${k}_price" placeholder="$10" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+      </div>
+    `).join('');
+  }
+
+  function populateRestaurantPicker() {
+    const sel = document.getElementById('deal_restaurant');
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— Select a restaurant —</option>' +
+      restaurants
+        .slice()
+        .sort((a,b) => (a.name || '').localeCompare(b.name || ''))
+        .map(r => `<option value="${r.id}">${r.name}</option>`)
+        .join('');
+    if (current) sel.value = current;
+  }
+
+  window.initDealsAdmin = () => {
+    populateRestaurantPicker();
+    buildWeeklyGrid();
+    setDealType(dealCurrentType);
+    renderDealsAdminList();
+  };
+
+  window.resetDealForm = () => {
+    dealEditingId = null;
+    document.getElementById('dealFormTitle').textContent = 'Add a Deal';
+    document.getElementById('dealSaveBtn').textContent = '💾 Save Deal';
+    document.getElementById('deal_id').value = '';
+    document.getElementById('deal_restaurant').value = '';
+    document.getElementById('deal_dish').value = '';
+    document.getElementById('deal_price').value = '';
+    document.getElementById('deal_start').value = '';
+    document.getElementById('deal_end').value = '';
+    document.getElementById('deal_notes').value = '';
+    ['mon','tue','wed','thu','fri'].forEach(k => {
+      const d = document.getElementById('deal_w_' + k + '_dish');
+      const p = document.getElementById('deal_w_' + k + '_price');
+      if (d) d.value = '';
+      if (p) p.value = '';
+    });
+    setDealType('limited');
+  };
+
+  window.saveDeal = async () => {
+    const btn = document.getElementById('dealSaveBtn');
+    const restaurantId = document.getElementById('deal_restaurant').value;
+    if (!restaurantId) {
+      showToast('Please pick a restaurant.', true);
+      return;
+    }
+    const r = restaurants.find(x => x.id === restaurantId);
+    if (!r) {
+      showToast('Restaurant not found. Reload and try again.', true);
+      return;
+    }
+
+    const startDate = document.getElementById('deal_start').value || null;
+    const endDate = document.getElementById('deal_end').value || null;
+    const notes = document.getElementById('deal_notes').value.trim() || null;
+
+    const payload = {
+      restaurantId,
+      restaurantName: r.name,
+      type: dealCurrentType,
+      startDate,
+      endDate,
+      notes
+    };
+
+    if (dealCurrentType === 'limited') {
+      const dish = document.getElementById('deal_dish').value.trim();
+      const price = document.getElementById('deal_price').value.trim();
+      if (!dish) { showToast('Dish name is required for a limited deal.', true); return; }
+      payload.dish = dish;
+      payload.price = price || null;
+      payload.weeklyDishes = null;
+    } else {
+      const weeklyDishes = {};
+      let any = false;
+      ['mon','tue','wed','thu','fri'].forEach(k => {
+        const d = document.getElementById('deal_w_' + k + '_dish').value.trim();
+        const p = document.getElementById('deal_w_' + k + '_price').value.trim();
+        if (d) { weeklyDishes[k] = { dish: d, price: p || null }; any = true; }
+      });
+      if (!any) { showToast('Add at least one weekday dish.', true); return; }
+      payload.weeklyDishes = weeklyDishes;
+      payload.dish = null;
+      payload.price = null;
+    }
+
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = 'Saving...';
+
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      if (dealEditingId) {
+        await updateDoc(doc(db, "deals", dealEditingId), payload);
+        showToast('✅ Deal updated.');
+      } else {
+        payload.createdAt = serverTimestamp();
+        await addDoc(collection(db, "deals"), payload);
+        showToast('✅ Deal added — now live on the site.');
+      }
+      resetDealForm();
+      await loadDeals();
+      renderDealsAdminList();
+      // Refresh public-facing views too
+      renderCards(getFiltered());
+      if (map) updateMapPins(getFiltered());
+    } catch (err) {
+      console.error('Save deal error:', err);
+      showToast('Could not save deal. Try again.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  };
+
+  window.editDeal = (id) => {
+    const d = deals.find(x => x.id === id);
+    if (!d) return;
+    dealEditingId = id;
+    document.getElementById('dealFormTitle').textContent = 'Edit Deal';
+    document.getElementById('dealSaveBtn').textContent = '💾 Update Deal';
+    document.getElementById('deal_id').value = id;
+    document.getElementById('deal_restaurant').value = d.restaurantId || '';
+    document.getElementById('deal_start').value = d.startDate || '';
+    document.getElementById('deal_end').value = d.endDate || '';
+    document.getElementById('deal_notes').value = d.notes || '';
+    setDealType(d.type || 'limited');
+    if (d.type === 'limited') {
+      document.getElementById('deal_dish').value = d.dish || '';
+      document.getElementById('deal_price').value = d.price || '';
+    } else if (d.type === 'weekly' && d.weeklyDishes) {
+      ['mon','tue','wed','thu','fri'].forEach(k => {
+        const wd = d.weeklyDishes[k];
+        document.getElementById('deal_w_' + k + '_dish').value = wd && wd.dish ? wd.dish : '';
+        document.getElementById('deal_w_' + k + '_price').value = wd && wd.price ? wd.price : '';
+      });
+    }
+    document.getElementById('dealsAdmin').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  window.deleteDeal = async (id) => {
+    if (!confirm('Delete this deal? This cannot be undone.')) return;
+    try {
+      const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await deleteDoc(doc(db, "deals", id));
+      showToast('🗑️ Deal deleted.');
+      await loadDeals();
+      renderDealsAdminList();
+      renderCards(getFiltered());
+    } catch (err) {
+      console.error('Delete deal error:', err);
+      showToast('Could not delete. Try again.', true);
+    }
+  };
+
+  function renderDealsAdminList() {
+    const list = document.getElementById('dealsList');
+    if (!list) return;
+    if (deals.length === 0) {
+      list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px">No deals yet. Add one above.</p>';
+      return;
+    }
+    // Sort: active today first, then upcoming, then expired
+    const today = new Date(); today.setHours(0,0,0,0);
+    const sorted = deals.slice().sort((a,b) => {
+      const aActive = !!getActiveDealToday(a);
+      const bActive = !!getActiveDealToday(b);
+      if (aActive !== bActive) return aActive ? -1 : 1;
+      return (a.restaurantName || '').localeCompare(b.restaurantName || '');
+    });
+
+    list.innerHTML = sorted.map(d => {
+      const activeNow = !!getActiveDealToday(d);
+      const expired = d.endDate && new Date(d.endDate) < today;
+      let statusBadge;
+      if (expired) statusBadge = '<span style="background:rgba(232,64,42,0.15);border:1px solid rgba(232,64,42,0.35);color:#e8402a;font-size:0.7rem;padding:2px 8px;border-radius:4px">EXPIRED</span>';
+      else if (activeNow) statusBadge = '<span style="background:rgba(255,107,53,0.15);border:1px solid rgba(255,107,53,0.4);color:#ff8b5e;font-size:0.7rem;padding:2px 8px;border-radius:4px">ACTIVE TODAY</span>';
+      else statusBadge = '<span style="background:rgba(76,175,125,0.12);border:1px solid rgba(76,175,125,0.3);color:#4caf7d;font-size:0.7rem;padding:2px 8px;border-radius:4px">SCHEDULED</span>';
+
+      const dateLine = (d.startDate || d.endDate)
+        ? `${d.startDate || '—'} → ${d.endDate || '—'}`
+        : 'No date limit';
+
+      let body = '';
+      if (d.type === 'limited') {
+        const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
+        body = `<div style="display:flex;justify-content:space-between;color:var(--cream);font-size:0.9rem;margin-bottom:6px"><span>${d.dish || '—'}</span><span style="color:#ff8b5e;font-weight:600">${dp}</span></div>`;
+      } else {
+        const rows = ['mon','tue','wed','thu','fri'].map(k => {
+          const wd = d.weeklyDishes && d.weeklyDishes[k];
+          if (!wd || !wd.dish) return '';
+          const dp = wd.price ? (wd.price.toString().startsWith('$') ? wd.price : '$' + wd.price) : '';
+          return `<div style="display:flex;justify-content:space-between;font-size:0.82rem;color:var(--cream);padding:2px 0"><span><strong style="color:var(--muted);margin-right:8px">${DAY_LABELS[k]}</strong>${wd.dish}</span><span style="color:#ff8b5e">${dp}</span></div>`;
+        }).join('');
+        body = rows || '<span style="color:var(--muted);font-size:0.85rem">No weekday dishes set</span>';
+      }
+
+      return `<div class="admin-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px">
+          <div>
+            <strong style="font-family:Fraunces,serif;font-size:1.05rem;color:var(--cream)">${d.restaurantName || '(unknown)'}</strong>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">${d.type === 'weekly' ? 'Weekly' : 'Limited'} · ${dateLine}</div>
+          </div>
+          ${statusBadge}
+        </div>
+        ${body}
+        ${d.notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:6px">📝 ${d.notes}</div>` : ''}
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button onclick="editDeal('${d.id}')" style="flex:1;padding:8px;background:transparent;color:var(--gold);border:1px solid rgba(245,200,66,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">✏️ Edit</button>
+          <button onclick="deleteDeal('${d.id}')" style="flex:1;padding:8px;background:transparent;color:#e8402a;border:1px solid rgba(232,64,42,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🗑️ Delete</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function loadPendingEdits() {
+    const list = document.getElementById('pendingEdits');
+    list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">Loading...</p>';
+    try {
+      const q = query(collection(db, "edits"), where("status", "==", "pending_edit"));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px">🎉 No pending edits!</p>';
+        return;
+      }
+      list.innerHTML = '';
+      snapshot.docs.forEach(docSnap => {
+        const e = { id: docSnap.id, ...docSnap.data() };
+        const card = document.createElement('div');
+        card.className = 'admin-card';
+        card.id = 'edit-card-' + e.id;
+        card.innerHTML = `
+          <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:0.8rem;color:var(--muted)">
+            Suggested edit for: <strong style="color:var(--cream)">${e.originalName || e.name}</strong>
+            ${e.reason ? `<br>Reason: "${e.reason}"` : ''}
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:0.82rem;margin-bottom:12px">
+            <div><span style="color:var(--muted)">Name:</span> <span style="color:var(--cream)">${e.name}</span></div>
+            <div><span style="color:var(--muted)">Price:</span> <span style="color:var(--gold)">${e.exactPrice || ''}</span></div>
+            <div><span style="color:var(--muted)">Dish:</span> <span style="color:var(--cream)">${e.dish}</span></div>
+            <div><span style="color:var(--muted)">Range:</span> <span style="color:var(--cream)">Under $${e.priceRange}</span></div>
+            <div style="grid-column:1/-1"><span style="color:var(--muted)">Address:</span> <span style="color:var(--cream)">${e.address}</span></div>
+            <div><span style="color:var(--muted)">Phone:</span> <span style="color:var(--cream)">${e.phone || '—'}</span></div>
+            <div><span style="color:var(--muted)">Hours:</span> <span style="color:var(--cream)">${e.hours || '—'}</span></div>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button onclick="approveEdit(this.dataset.id, this.dataset.orig)" data-id="${e.id}" data-orig="${e.originalId}" style="flex:1;padding:10px;background:#4caf7d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">✅ Apply Edit</button>
+            <button onclick="rejectEdit(this.dataset.id)" data-id="${e.id}" style="flex:1;padding:10px;background:#e8402a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">❌ Reject</button>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    } catch(err) {
+      list.innerHTML = '<p style="color:var(--red)">Error loading edits.</p>';
+    }
+  }
+
+  window.approveEdit = async (editId, originalId) => {
+    try {
+      const { doc, updateDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      const editSnap = await getDoc(doc(db, "edits", editId));
+      const e = editSnap.data();
+      // Update original restaurant
+      await updateDoc(doc(db, "restaurants", originalId), {
+        name: e.name,
+        cuisine: e.cuisine,
+        dish: e.dish,
+        exactPrice: e.exactPrice,
+        priceRange: e.priceRange,
+        address: e.address,
+        phone: e.phone || null,
+        hours: e.hours || null,
+        website: e.website || null
+      });
+      // Mark edit as approved
+      await updateDoc(doc(db, "edits", editId), { status: 'approved' });
+      document.getElementById('edit-card-' + editId).remove();
+      showToast('✅ Edit applied to listing!');
+      loadRestaurants();
+    } catch(err) {
+      console.error(err);
+      showToast('Error applying edit.', true);
+    }
+  };
+
+  window.rejectEdit = async (editId) => {
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(doc(db, "edits", editId), { status: 'rejected' });
+      document.getElementById('edit-card-' + editId).remove();
+      showToast('❌ Edit rejected.');
+    } catch(err) {
+      showToast('Error rejecting edit.', true);
+    }
+  };
+
+  window.closeAdmin = () => {
+    document.getElementById('adminPanel').style.display = 'none';
+    document.body.style.overflow = '';
+    window.history.replaceState({}, '', window.location.pathname);
+  };
+
+  // ── INIT ──
+  loadRestaurants();
+  loadDeals();
+</script>
+
+<!-- EDIT FORM OVERLAY -->
+<div id="editPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:400;overflow-y:auto;backdrop-filter:blur(8px)">
+  <div style="max-width:600px;margin:40px auto;padding:24px">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;position:relative">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--red),var(--gold));border-radius:16px 16px 0 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div>
+          <h2 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.5rem;margin:0 0 4px">✏️ Suggest an Edit</h2>
+          <p style="color:var(--muted);font-size:0.82rem;margin:0">Help keep listings accurate — your edit will be reviewed before going live</p>
+        </div>
+        <button onclick="closeEditForm()" style="background:var(--surface2);border:none;color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem">✕</button>
+      </div>
+
+      <input type="hidden" id="edit_id">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Restaurant Name</label>
+          <input type="text" id="edit_name" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Cuisine</label>
+          <select id="edit_cuisine" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+            <option value="">Select cuisine...</option>
+            <option value="malaysian">Malaysian</option>
+            <option value="vietnamese">Vietnamese</option>
+            <option value="thai">Thai</option>
+            <option value="chinese">Chinese</option>
+            <option value="japanese">Japanese</option>
+            <option value="korean">Korean</option>
+            <option value="indonesian">Indonesian</option>
+            <option value="asian">Asian (Other)</option>
+            <option value="indian">Indian</option>
+            <option value="italian">Italian</option>
+          <option value="french">French</option>
+            <option value="mexican">Mexican</option>
+            <option value="burgers">Burgers</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="bakery">Bakery</option>
+            <option value="dessert">Dessert</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Dishes</label>
+          <!-- Dish 1 -->
+          <div style="background:rgba(245,200,66,0.06);border:1px solid rgba(245,200,66,0.2);border-radius:8px;padding:10px;margin-bottom:6px">
+            <p style="font-size:0.72rem;color:var(--gold);margin:0 0 6px;font-weight:600">★ Featured dish</p>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
+              <input type="text" id="edit_dish" placeholder="Dish name" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <input type="text" id="edit_price" placeholder="e.g. $9.50" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <select id="edit_priceRange" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
+          </div>
+          <!-- Dish 2 -->
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px">
+            <p style="font-size:0.72rem;color:var(--muted);margin:0 0 6px">Dish 2 (optional)</p>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
+              <input type="text" id="edit_dish_2" placeholder="Dish name" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <input type="text" id="edit_price_2" placeholder="e.g. $12" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <select id="edit_tier_2" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
+          </div>
+          <!-- Dish 3 -->
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px">
+            <p style="font-size:0.72rem;color:var(--muted);margin:0 0 6px">Dish 3 (optional)</p>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
+              <input type="text" id="edit_dish_3" placeholder="Dish name" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <input type="text" id="edit_price_3" placeholder="e.g. $15" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+              <select id="edit_tier_3" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+                <option value="10">Under $10</option>
+                <option value="15">Under $15</option>
+                <option value="20">Under $20</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Address</label>
+          <input type="text" id="edit_address" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Phone</label>
+          <input type="text" id="edit_phone" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Hours</label>
+          <input type="text" id="edit_hours" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Website</label>
+          <input type="text" id="edit_website" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+          <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">What did you change? (optional)</label>
+          <input type="text" id="edit_reason" placeholder="e.g. Price has changed to $12" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
+        </div>
+      </div>
+
+      <div style="background:rgba(76,175,125,0.08);border:1px solid rgba(76,175,125,0.25);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:0.8rem;color:#4caf7d">
+        ✅ Your edit will go live immediately — thank you for keeping listings accurate!
+      </div>
+
+      <button onclick="submitEdit()" id="editSubmitBtn" style="width:100%;padding:13px;background:var(--gold);color:#0e0c09;font-family:Fraunces,serif;font-size:1rem;font-weight:900;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s">Submit Edit →</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMAILJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<!-- ADMIN PANEL OVERLAY -->
+<div id="adminPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:500;overflow-y:auto;backdrop-filter:blur(8px)">
+  <div style="max-width:700px;margin:40px auto;padding:24px">
+
+    <!-- Login Screen -->
+    <div id="adminLogin" style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:12px">🔐</div>
+      <h2 style="font-family:Fraunces,serif;color:var(--cream);margin-bottom:8px">Admin Sign In</h2>
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:24px">Sign in with the admin Google account to manage submissions and deals.</p>
+      <p id="adminLoginError" style="display:none;color:#e8402a;font-size:0.85rem;margin-bottom:12px">❌ Sign-in failed.</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button id="adminLoginBtn" onclick="checkAdminPassword()" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;background:#fff;color:#1f1f1f;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-family:DM Sans,sans-serif;font-size:0.95rem">
+          <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+          Sign in with Google
+        </button>
+        <button onclick="closeAdmin()" style="padding:12px 20px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Pending Listings -->
+    <div id="adminContent" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap">
+        <h2 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.8rem;margin:0">Admin Panel</h2>
+        <div style="display:flex;gap:8px">
+          <button onclick="adminSignOut()" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Sign Out</button>
+          <button onclick="closeAdmin()" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">✕ Close</button>
+        </div>
+      </div>
+      <p style="color:var(--muted);font-size:0.78rem;margin:0 0 16px">Signed in as <span id="adminWhoAmI" style="color:var(--gold)"></span></p>
+      <!-- Tabs -->
+      <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+        <button id="tab-submissions" onclick="switchAdminTab('submissions')" style="padding:8px 16px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:600;font-size:0.85rem">New Submissions</button>
+        <button id="tab-edits" onclick="switchAdminTab('edits')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Edit Suggestions</button>
+        <button id="tab-deals" onclick="switchAdminTab('deals')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🔥 Deals</button>
+      </div>
+      <div id="pendingList"></div>
+      <div id="pendingEdits" style="display:none"></div>
+      <div id="dealsAdmin" style="display:none">
+        <!-- Deal form -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">
+          <h3 id="dealFormTitle" style="font-family:Fraunces,serif;color:var(--cream);font-size:1.2rem;margin:0 0 14px">Add a Deal</h3>
+          <input type="hidden" id="deal_id">
+
+          <!-- Restaurant picker -->
+          <div style="margin-bottom:12px">
+            <label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Restaurant *</label>
+            <select id="deal_restaurant" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
+              <option value="">— Select a restaurant —</option>
+            </select>
+          </div>
+
+          <!-- Type toggle -->
+          <div style="margin-bottom:12px">
+            <label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Deal type *</label>
+            <div style="display:flex;gap:8px">
+              <button type="button" id="deal_type_limited" onclick="setDealType('limited')" style="flex:1;padding:10px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:600;font-size:0.85rem">Limited time (one dish)</button>
+              <button type="button" id="deal_type_weekly" onclick="setDealType('weekly')" style="flex:1;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Weekly (Mon–Fri)</button>
+            </div>
+          </div>
+
+          <!-- Limited fields -->
+          <div id="deal_limited_fields">
+            <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-bottom:12px">
+              <input type="text" id="deal_dish" placeholder="Dish name e.g. Pho Bo" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
+              <input type="text" id="deal_price" placeholder="Price e.g. $10" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
+            </div>
+          </div>
+
+          <!-- Weekly fields -->
+          <div id="deal_weekly_fields" style="display:none;margin-bottom:12px">
+            <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Leave a day blank if there's no special that day.</p>
+            <div id="deal_weekly_grid" style="display:flex;flex-direction:column;gap:6px"></div>
+          </div>
+
+          <!-- Date range -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+            <div>
+              <label style="display:block;font-size:0.72rem;color:var(--muted);margin-bottom:4px">Start date (optional)</label>
+              <input type="date" id="deal_start" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:9px 12px;outline:none">
+            </div>
+            <div>
+              <label style="display:block;font-size:0.72rem;color:var(--muted);margin-bottom:4px">End date (optional)</label>
+              <input type="date" id="deal_end" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:9px 12px;outline:none">
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div style="margin-bottom:14px">
+            <input type="text" id="deal_notes" placeholder="Notes (optional) e.g. Dine-in only, lunch 11am–3pm" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
+          </div>
+
+          <div style="display:flex;gap:8px">
+            <button onclick="saveDeal()" id="dealSaveBtn" style="flex:1;padding:12px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">💾 Save Deal</button>
+            <button onclick="resetDealForm()" style="padding:12px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">Clear</button>
+          </div>
+        </div>
+
+        <!-- Existing deals list -->
+        <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.1rem;margin:0 0 12px">Active &amp; Upcoming Deals</h3>
+        <div id="dealsList"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .admin-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .admin-card:hover { border-color: var(--gold-dim); }
+</style>
+</body>
+</html>
