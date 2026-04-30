@@ -356,6 +356,49 @@
   .filter-chip.p10.active { background: #4caf7d; border-color: #4caf7d; color: #fff; }
   .filter-chip.p15.active { background: var(--gold); border-color: var(--gold); color: #0e0c09; }
   .filter-chip.p20.active { background: var(--red); border-color: var(--red); color: #fff; }
+  .filter-chip.deal { border-color: rgba(255,107,53,0.4); color: #ff8b5e; }
+  .filter-chip.deal:hover { border-color: #ff6b35; color: #ff6b35; }
+  .filter-chip.deal.active { background: #ff6b35; border-color: #ff6b35; color: #fff; }
+
+  /* ── DEAL BADGE ── */
+  .deal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255,107,53,0.15);
+    border: 1px solid rgba(255,107,53,0.4);
+    color: #ff8b5e;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .deal-strip {
+    background: rgba(255,107,53,0.08);
+    border: 1px solid rgba(255,107,53,0.3);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    font-size: 0.78rem;
+  }
+  .deal-strip-label {
+    color: #ff8b5e;
+    font-weight: 700;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3px;
+  }
+  .deal-strip-content {
+    color: var(--cream);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .deal-strip-price { color: #ff8b5e; font-weight: 700; }
 
   .cards-grid {
     display: grid;
@@ -886,47 +929,26 @@
   </div>
 
   <!-- Cuisine filters -->
-  <div class="filter-row" style="align-items:center;flex-wrap:wrap;gap:10px;">
-    <select id="cuisineDropdown" onchange="setCuisineFilterDropdown(this.value)" style="background:var(--surface2);border:1px solid var(--border);border-radius:100px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:7px 20px 7px 16px;cursor:pointer;outline:none;min-width:180px;">
-      <option value="all">All Cuisines</option>
-      <optgroup label="Asian">
-        <option value="asian">Asian (Other)</option>
-        <option value="chinese">Chinese</option>
-        <option value="japanese">Japanese</option>
-        <option value="korean">Korean</option>
-        <option value="malaysian">Malaysian</option>
-        <option value="vietnamese">Vietnamese</option>
-        <option value="thai">Thai</option>
-        <option value="indonesian">Indonesian</option>
-        <option value="filipino">Filipino</option>
-        <option value="nepalese">Nepalese</option>
-        <option value="srilankan">Sri Lankan</option>
-        <option value="indian">Indian</option>
-        <option value="afghan">Afghan</option>
-      </optgroup>
-      <optgroup label="Middle East and Mediterranean">
-        <option value="middleeastern">Middle Eastern</option>
-        <option value="lebanese">Lebanese</option>
-        <option value="turkish">Turkish</option>
-        <option value="greek">Greek</option>
-      </optgroup>
-      <optgroup label="Western">
-        <option value="italian">Italian</option>
-        <option value="french">French</option>
-        <option value="mexican">Mexican</option>
-        <option value="american">American</option>
-        <option value="burgers">Burgers</option>
-        <option value="seafood">Seafood</option>
-      </optgroup>
-      <optgroup label="Other">
-        <option value="vegetarian">Vegetarian</option>
-        <option value="bakery">Bakery</option>
-        <option value="cafe">Cafe</option>
-        <option value="dessert">Dessert</option>
-        <option value="other">Other</option>
-      </optgroup>
-    </select>
-    <button class="filter-chip" id="ownerVerifiedChip" onclick="setCuisineFilter('owner', this)" style="white-space:nowrap;">Owner Verified ★</button>
+  <div class="filter-row">
+    <button class="filter-chip active" onclick="setCuisineFilter('all', this)">All Cuisines</button>
+    <button class="filter-chip" onclick="setCuisineFilter('asian', this)">Asian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('malaysian', this)">Malaysian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('vietnamese', this)">Vietnamese</button>
+    <button class="filter-chip" onclick="setCuisineFilter('thai', this)">Thai</button>
+    <button class="filter-chip" onclick="setCuisineFilter('chinese', this)">Chinese</button>
+    <button class="filter-chip" onclick="setCuisineFilter('japanese', this)">Japanese</button>
+    <button class="filter-chip" onclick="setCuisineFilter('korean', this)">Korean</button>
+    <button class="filter-chip" onclick="setCuisineFilter('indonesian', this)">Indonesian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('indian', this)">Indian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('italian', this)">Italian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('french', this)">French</button>
+    <button class="filter-chip" onclick="setCuisineFilter('mexican', this)">Mexican</button>
+    <button class="filter-chip" onclick="setCuisineFilter('burgers', this)">Burgers</button>
+    <button class="filter-chip" onclick="setCuisineFilter('vegetarian', this)">Vegetarian</button>
+    <button class="filter-chip" onclick="setCuisineFilter('bakery', this)">Bakery</button>
+    <button class="filter-chip" onclick="setCuisineFilter('dessert', this)">Dessert</button>
+    <button class="filter-chip" onclick="setCuisineFilter('owner', this)">Owner Verified ★</button>
+
   </div>
 
   <!-- Price filters -->
@@ -936,6 +958,7 @@
     <button class="filter-chip p10" onclick="setPriceFilter('10', this)">Under $10</button>
     <button class="filter-chip p15" onclick="setPriceFilter('15', this)">Under $15</button>
     <button class="filter-chip p20" onclick="setPriceFilter('20', this)">Under $20</button>
+    <button class="filter-chip deal" onclick="setPriceFilter('deal', this)">🔥 On Deal</button>
   </div>
 
   <!-- Empty state shown before search -->
@@ -958,6 +981,16 @@
   </div>
 
   <div class="cards-grid" id="cardsGrid" style="display:none"></div>
+</section>
+
+<!-- TODAY'S DEALS -->
+<section id="todaysDealsSection" style="max-width:1200px;margin:0 auto;padding:0 24px 64px;display:none">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+    <h2 style="font-family:Fraunces,serif;font-size:1.8rem;font-weight:700;color:var(--cream);margin:0">🔥 Today's Deals</h2>
+    <span id="dealsCount" style="font-size:0.85rem;color:var(--muted)"></span>
+  </div>
+  <p style="color:var(--muted);font-size:0.9rem;margin:0 0 24px">Limited-time and daily specials posted by the CheapBites team</p>
+  <div class="cards-grid" id="dealsGrid"></div>
 </section>
 
 <!-- HOW IT WORKS -->
@@ -1025,42 +1058,23 @@
           <label>Cuisine <span class="required">*</span></label>
           <select id="f_cuisine">
             <option value="">Select cuisine...</option>
-            <optgroup label="Asian">
-              <option value="asian">Asian (Other)</option>
-              <option value="chinese">Chinese</option>
-              <option value="japanese">Japanese</option>
-              <option value="korean">Korean</option>
-              <option value="malaysian">Malaysian</option>
-              <option value="vietnamese">Vietnamese</option>
-              <option value="thai">Thai</option>
-              <option value="indonesian">Indonesian</option>
-              <option value="filipino">Filipino</option>
-              <option value="nepalese">Nepalese</option>
-              <option value="srilankan">Sri Lankan</option>
-              <option value="indian">Indian</option>
-              <option value="afghan">Afghan</option>
-            </optgroup>
-            <optgroup label="Middle East and Mediterranean">
-              <option value="middleeastern">Middle Eastern</option>
-              <option value="lebanese">Lebanese</option>
-              <option value="turkish">Turkish</option>
-              <option value="greek">Greek</option>
-            </optgroup>
-            <optgroup label="Western">
-              <option value="italian">Italian</option>
-              <option value="french">French</option>
-              <option value="mexican">Mexican</option>
-              <option value="american">American</option>
-              <option value="burgers">Burgers</option>
-              <option value="seafood">Seafood</option>
-            </optgroup>
-            <optgroup label="Other">
-              <option value="vegetarian">Vegetarian</option>
-              <option value="bakery">Bakery</option>
-              <option value="cafe">Cafe</option>
-              <option value="dessert">Dessert</option>
-              <option value="other">Other</option>
-            </optgroup>
+            <option value="malaysian">Malaysian</option>
+            <option value="vietnamese">Vietnamese</option>
+            <option value="thai">Thai</option>
+            <option value="chinese">Chinese</option>
+            <option value="japanese">Japanese</option>
+            <option value="korean">Korean</option>
+            <option value="indonesian">Indonesian</option>
+            <option value="asian">Asian (Other)</option>
+            <option value="indian">Indian</option>
+            <option value="italian">Italian</option>
+            <option value="french">French</option>
+            <option value="mexican">Mexican</option>
+            <option value="burgers">Burgers</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="bakery">Bakery</option>
+            <option value="dessert">Dessert</option>
+            <option value="other">Other</option>
           </select>
         </div>
 
@@ -1207,10 +1221,76 @@
 
   // ── STATE ──
   let restaurants = [];
+  let nearbyRestaurants = null; // null means no location filter active
   let activeCuisineFilter = 'all';
   let activePriceFilter = 'all';
+  let deals = [];
 
   let map, markers = [];
+
+  // ── DEAL HELPERS ──
+  const DAY_KEYS = ['sun','mon','tue','wed','thu','fri','sat'];
+  const DAY_LABELS = { sun:'Sun', mon:'Mon', tue:'Tue', wed:'Wed', thu:'Thu', fri:'Fri', sat:'Sat' };
+
+  function todayKey() {
+    return DAY_KEYS[new Date().getDay()];
+  }
+
+  function isWithinDateRange(deal) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    if (deal.startDate) {
+      const s = new Date(deal.startDate); s.setHours(0,0,0,0);
+      if (today < s) return false;
+    }
+    if (deal.endDate) {
+      const e = new Date(deal.endDate); e.setHours(23,59,59,999);
+      if (today > e) return false;
+    }
+    return true;
+  }
+
+  // Returns { dish, price } for what's active TODAY, or null
+  function getActiveDealToday(deal) {
+    if (!deal) return null;
+    if (!isWithinDateRange(deal)) return null;
+    if (deal.type === 'limited') {
+      if (!deal.dish) return null;
+      return { dish: deal.dish, price: deal.price || '', notes: deal.notes || '' };
+    }
+    if (deal.type === 'weekly') {
+      const tk = todayKey();
+      const wd = deal.weeklyDishes && deal.weeklyDishes[tk];
+      if (wd && wd.dish) {
+        return { dish: wd.dish, price: wd.price || '', notes: deal.notes || '' };
+      }
+      return null;
+    }
+    return null;
+  }
+
+  // Returns the active deal object for a restaurant (or null)
+  function getRestaurantActiveDeal(restaurantId) {
+    for (const d of deals) {
+      if (d.restaurantId !== restaurantId) continue;
+      const active = getActiveDealToday(d);
+      if (active) return { deal: d, active };
+    }
+    return null;
+  }
+
+  // ── LOAD DEALS FROM FIREBASE ──
+  async function loadDeals() {
+    try {
+      const snapshot = await getDocs(collection(db, "deals"));
+      deals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderTodaysDeals();
+    } catch (err) {
+      console.error("Error loading deals:", err);
+      deals = [];
+      renderTodaysDeals();
+    }
+  }
 
   // ── LOAD RESTAURANTS FROM FIREBASE ──
   async function loadRestaurants() {
@@ -1230,6 +1310,8 @@
       } else {
         window._pendingPinUpdate = true;
       }
+      // Re-render today's deals (needs both restaurants + deals)
+      renderTodaysDeals();
     } catch (err) {
       console.error("Error loading restaurants:", err);
       restaurants = [];
@@ -1273,7 +1355,7 @@
     list.forEach(r => {
       // Find best matching dish for active price filter
       let matchingDish = null;
-      if (activePriceFilter !== 'all' && r.dishes && r.dishes.length > 0) {
+      if (activePriceFilter !== 'all' && activePriceFilter !== 'deal' && r.dishes && r.dishes.length > 0) {
         matchingDish = r.dishes.find(d => d.tier === activePriceFilter)
           || r.dishes.filter(d => parseInt(d.tier) <= parseInt(activePriceFilter))
                      .sort((a,b) => parseInt(a.tier) - parseInt(b.tier))[0];
@@ -1292,6 +1374,20 @@
       const featuredDish = dishes[0] || {};
       const extraCount = dishes.length - 1;
 
+      // Active deal for today (if any)
+      const dealInfo = getRestaurantActiveDeal(r.id);
+      const dealStripHtml = dealInfo ? (() => {
+        const dp = dealInfo.active.price ? (dealInfo.active.price.toString().startsWith('$') ? dealInfo.active.price : '$' + dealInfo.active.price) : '';
+        const label = dealInfo.deal.type === 'weekly' ? `Today's special` : `Limited deal`;
+        return `<div class="deal-strip">
+          <div class="deal-strip-label">🔥 ${label}</div>
+          <div class="deal-strip-content">
+            <span>${dealInfo.active.dish}</span>
+            <span class="deal-strip-price">${dp}</span>
+          </div>
+        </div>`;
+      })() : '';
+
       card.innerHTML = `
         <div class="card-body">
           <div class="card-top">
@@ -1301,11 +1397,13 @@
             </div>
             <div class="price-tag ${tier.cls}">${displayPrice}</div>
           </div>
+          ${dealInfo ? '<div style="margin-bottom:6px"><span class="deal-badge">🔥 On Deal</span></div>' : ''}
           ${r.isOwner ? '<div style="margin-bottom:4px"><span style="background:var(--gold);color:#0e0c09;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Owner Verified</span></div>' : ''}
           <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
+          ${dealStripHtml}
           ${dishes.length > 0 ? `
           <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
-            ${dishes.filter(d => activePriceFilter === 'all' || parseInt(d.tier) <= parseInt(activePriceFilter)).map(d => {
+            ${dishes.filter(d => activePriceFilter === 'all' || activePriceFilter === 'deal' || parseInt(d.tier) <= parseInt(activePriceFilter)).map(d => {
               const dt = getPriceTier(d.tier || r.priceRange);
               const dc = dt.cls === 't10' ? '#4caf7d' : dt.cls === 't15' ? 'var(--gold)' : 'var(--red)';
               const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
@@ -1329,12 +1427,69 @@
     });
   }
 
+  // ── RENDER TODAY'S DEALS SECTION ──
+  function renderTodaysDeals() {
+    const section = document.getElementById('todaysDealsSection');
+    const grid = document.getElementById('dealsGrid');
+    const countEl = document.getElementById('dealsCount');
+    if (!section || !grid) return;
+
+    // Find restaurants with an active deal today
+    const activeToday = [];
+    for (const r of restaurants) {
+      const info = getRestaurantActiveDeal(r.id);
+      if (info) activeToday.push({ r, info });
+    }
+
+    if (activeToday.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'block';
+    countEl.textContent = `${activeToday.length} restaurant${activeToday.length !== 1 ? 's' : ''}`;
+    grid.innerHTML = '';
+
+    activeToday.forEach(({ r, info }) => {
+      const dp = info.active.price ? (info.active.price.toString().startsWith('$') ? info.active.price : '$' + info.active.price) : '';
+      const label = info.deal.type === 'weekly' ? `Today's special` : 'Limited deal';
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-body">
+          <div class="card-top">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="card-name">${r.name}</div>
+            </div>
+            <div class="price-tag" style="background:rgba(255,107,53,0.15);border:1px solid rgba(255,107,53,0.4);color:#ff8b5e">${dp || 'Deal'}</div>
+          </div>
+          <div style="margin-bottom:6px"><span class="deal-badge">🔥 ${label}</span></div>
+          <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
+          <div class="deal-strip">
+            <div class="deal-strip-content">
+              <span style="color:var(--cream);font-weight:600">${info.active.dish}</span>
+              <span class="deal-strip-price">${dp}</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="card-location">📍 ${r.address ? r.address.split(',').slice(1).join(',').trim() : ''}</div>
+            <div class="stars">${'★'.repeat(r.stars || 4)}</div>
+          </div>
+        </div>
+      `;
+      card.onclick = () => openModal(r);
+      grid.appendChild(card);
+    });
+  }
+
   // ── FILTER LOGIC ──
 
 
   function getFiltered() {
     const q = document.getElementById('searchInput').value.toLowerCase();
-    return restaurants.filter(r => {
+    // Use nearbyRestaurants if location search is active, otherwise all restaurants
+    const source = nearbyRestaurants !== null ? nearbyRestaurants : restaurants;
+    return source.filter(r => {
       const matchCuisine = activeCuisineFilter === 'all' ? true
         : activeCuisineFilter === 'owner' ? r.isOwner
         : r.cuisine === activeCuisineFilter;
@@ -1347,6 +1502,7 @@
         return r.priceRange || '20';
       })();
       const matchPrice = activePriceFilter === 'all' ? true
+        : activePriceFilter === 'deal' ? !!getRestaurantActiveDeal(r.id)
         : parseInt(lowestTier) <= parseInt(activePriceFilter);
       const matchSearch = !q
         || (r.name || '').toLowerCase().includes(q)
@@ -1359,6 +1515,7 @@
 
   window.triggerSearch = () => {
     searchActive = true;
+    nearbyRestaurants = null; // clear location filter on new search
     const btn = document.getElementById('searchBtn');
     btn.textContent = 'Searching...';
     btn.classList.add('searching');
@@ -1449,21 +1606,8 @@
     }
   }
 
-  window.setCuisineFilterDropdown = (f) => {
-    activeCuisineFilter = f;
-    // Remove active from owner verified chip when dropdown changes
-    const ownerChip = document.getElementById('ownerVerifiedChip');
-    if (ownerChip) ownerChip.classList.remove('active');
-    const filtered = getFiltered();
-    renderCards(filtered);
-    updateMapPins(filtered);
-  };
-
   window.setCuisineFilter = (f, el) => {
     activeCuisineFilter = f;
-    // Reset dropdown to "All Cuisines" when owner verified is clicked
-    const dd = document.getElementById('cuisineDropdown');
-    if (dd) dd.value = 'all';
     document.querySelectorAll('.filter-row .filter-chip').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
     const filtered = getFiltered();
@@ -1490,6 +1634,47 @@
       <h3>${r.name}</h3>
       <div class="modal-cuisine">${r.cuisineLabel || r.cuisine}</div>
       <div class="modal-price" style="color:${tier.cls === 't10' ? '#4caf7d' : tier.cls === 't20' ? 'var(--red)' : 'var(--gold)'}">${displayPrice}</div>
+      ${(() => {
+        // Show all relevant deals for this restaurant
+        const restaurantDeals = deals.filter(d => d.restaurantId === r.id && isWithinDateRange(d));
+        if (restaurantDeals.length === 0) return '';
+        return restaurantDeals.map(d => {
+          if (d.type === 'limited') {
+            const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
+            const dateLine = d.endDate ? `Until ${d.endDate}` : 'Limited time';
+            return `<div style="background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.3);border-radius:10px;padding:14px;margin-bottom:12px">
+              <div style="font-size:0.72rem;color:#ff8b5e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:700">🔥 Limited Deal · ${dateLine}</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-weight:600;color:var(--cream)">${d.dish || ''}</span>
+                <span style="color:#ff8b5e;font-weight:700">${dp}</span>
+              </div>
+              ${d.notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:6px">${d.notes}</div>` : ''}
+            </div>`;
+          }
+          if (d.type === 'weekly') {
+            const tk = todayKey();
+            const dateLine = d.endDate ? `Weekly · until ${d.endDate}` : 'Weekly specials';
+            const rows = DAY_KEYS.filter(k => k !== 'sun' && k !== 'sat').map(k => {
+              const wd = d.weeklyDishes && d.weeklyDishes[k];
+              if (!wd || !wd.dish) return '';
+              const dp = wd.price ? (wd.price.toString().startsWith('$') ? wd.price : '$' + wd.price) : '';
+              const isToday = k === tk;
+              const bg = isToday ? 'rgba(255,107,53,0.12)' : 'transparent';
+              const border = isToday ? '1px solid rgba(255,107,53,0.4)' : '1px solid var(--border)';
+              return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:${bg};border:${border};border-radius:8px;margin-bottom:4px">
+                <span style="font-size:0.85rem;color:var(--cream)"><strong style="color:${isToday ? '#ff8b5e' : 'var(--muted)'};margin-right:8px">${DAY_LABELS[k]}${isToday ? ' (today)' : ''}</strong>${wd.dish}</span>
+                <span style="color:${isToday ? '#ff8b5e' : 'var(--cream)'};font-weight:600;font-size:0.85rem">${dp}</span>
+              </div>`;
+            }).join('');
+            return `<div style="background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.3);border-radius:10px;padding:14px;margin-bottom:12px">
+              <div style="font-size:0.72rem;color:#ff8b5e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;font-weight:700">🔥 Daily Specials · ${dateLine}</div>
+              ${rows}
+              ${d.notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:8px">${d.notes}</div>` : ''}
+            </div>`;
+          }
+          return '';
+        }).join('');
+      })()}
       ${(() => {
         const dishes = r.dishes && r.dishes.length > 0 ? r.dishes :
           (r.dish ? [{ name: r.dish, price: r.exactPrice || displayPrice, tier: r.priceRange || '10' }] : []);
@@ -1611,12 +1796,9 @@
         malaysian: 'Malaysian', vietnamese: 'Vietnamese', thai: 'Thai',
         chinese: 'Chinese', japanese: 'Japanese', korean: 'Korean',
         indonesian: 'Indonesian', asian: 'Asian', indian: 'Indian',
-        filipino: 'Filipino', nepalese: 'Nepalese', srilankan: 'Sri Lankan',
-        afghan: 'Afghan', middleeastern: 'Middle Eastern', lebanese: 'Lebanese',
-        turkish: 'Turkish', greek: 'Greek', italian: 'Italian', french: 'French',
-        mexican: 'Mexican', american: 'American', burgers: 'Burgers', seafood: 'Seafood',
-        vegetarian: 'Vegetarian', bakery: 'Bakery', cafe: 'Cafe', dessert: 'Dessert',
-        'middle-eastern': 'Middle Eastern', other: 'Other'
+        italian: 'Italian', french: 'French', mexican: 'Mexican', burgers: 'Burgers',
+        vegetarian: 'Vegetarian', bakery: 'Bakery', dessert: 'Dessert',
+        'middle-eastern': 'Middle Eastern', greek: 'Greek', other: 'Other'
       };
 
       const newEntry = {
@@ -1729,7 +1911,7 @@
         searchActive = true;
 
         // Only show restaurants within 3km of user
-        const nearbyRestaurants = restaurants.filter(r => r.distance !== undefined && r.distance <= 3);
+        nearbyRestaurants = restaurants.filter(r => r.distance !== undefined && r.distance <= 3);
 
         // Save scroll position
         const scrollPos = window.scrollY;
@@ -1808,6 +1990,31 @@
       document.getElementById('addDishBtn').style.display = 'none';
     }
   };
+
+  // ── AUTO DETECT PRICE TIER ──
+  function autoDetectTier(priceInputId, tierSelectId) {
+    const priceEl = document.getElementById(priceInputId);
+    const tierEl = document.getElementById(tierSelectId);
+    if (!priceEl || !tierEl) return;
+    priceEl.addEventListener('input', () => {
+      const raw = priceEl.value.replace(/[^0-9.]/g, '');
+      const price = parseFloat(raw);
+      if (isNaN(price)) return;
+      if (price <= 10) tierEl.value = '10';
+      else if (price <= 15) tierEl.value = '15';
+      else if (price <= 20) tierEl.value = '20';
+    });
+  }
+
+  // Attach to add form
+  autoDetectTier('f_price_1', 'f_tier_1');
+  autoDetectTier('f_price_2', 'f_tier_2');
+  autoDetectTier('f_price_3', 'f_tier_3');
+
+  // Attach to edit form
+  autoDetectTier('edit_price', 'edit_priceRange');
+  autoDetectTier('edit_price_2', 'edit_tier_2');
+  autoDetectTier('edit_price_3', 'edit_tier_3');
 
   // ── GEOLOCATION ──
   let userLat = null, userLng = null;
@@ -1901,12 +2108,9 @@
         malaysian: 'Malaysian', vietnamese: 'Vietnamese', thai: 'Thai',
         chinese: 'Chinese', japanese: 'Japanese', korean: 'Korean',
         indonesian: 'Indonesian', asian: 'Asian', indian: 'Indian',
-        filipino: 'Filipino', nepalese: 'Nepalese', srilankan: 'Sri Lankan',
-        afghan: 'Afghan', middleeastern: 'Middle Eastern', lebanese: 'Lebanese',
-        turkish: 'Turkish', greek: 'Greek', italian: 'Italian', french: 'French',
-        mexican: 'Mexican', american: 'American', burgers: 'Burgers', seafood: 'Seafood',
-        vegetarian: 'Vegetarian', bakery: 'Bakery', cafe: 'Cafe', dessert: 'Dessert',
-        'middle-eastern': 'Middle Eastern', other: 'Other'
+        italian: 'Italian', french: 'French', mexican: 'Mexican', burgers: 'Burgers',
+        vegetarian: 'Vegetarian', bakery: 'Bakery', dessert: 'Dessert',
+        'middle-eastern': 'Middle Eastern', greek: 'Greek', other: 'Other'
       };
       const cuisine = document.getElementById('edit_cuisine').value;
 
@@ -2173,12 +2377,273 @@
   window.switchAdminTab = (tab) => {
     document.getElementById('pendingList').style.display = tab === 'submissions' ? 'block' : 'none';
     document.getElementById('pendingEdits').style.display = tab === 'edits' ? 'block' : 'none';
-    document.getElementById('tab-submissions').style.background = tab === 'submissions' ? 'var(--gold)' : 'transparent';
-    document.getElementById('tab-submissions').style.color = tab === 'submissions' ? '#0e0c09' : 'var(--muted)';
-    document.getElementById('tab-edits').style.background = tab === 'edits' ? 'var(--gold)' : 'transparent';
-    document.getElementById('tab-edits').style.color = tab === 'edits' ? '#0e0c09' : 'var(--muted)';
+    document.getElementById('dealsAdmin').style.display = tab === 'deals' ? 'block' : 'none';
+
+    const setTab = (id, active) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.background = active ? 'var(--gold)' : 'transparent';
+      el.style.color = active ? '#0e0c09' : 'var(--muted)';
+      el.style.border = active ? 'none' : '1px solid var(--border)';
+      el.style.fontWeight = active ? '600' : 'normal';
+    };
+    setTab('tab-submissions', tab === 'submissions');
+    setTab('tab-edits', tab === 'edits');
+    setTab('tab-deals', tab === 'deals');
+
     if (tab === 'edits') loadPendingEdits();
+    if (tab === 'deals') initDealsAdmin();
   };
+
+  // ── DEALS ADMIN ──
+  let dealEditingId = null;
+  let dealCurrentType = 'limited';
+
+  window.setDealType = (t) => {
+    dealCurrentType = t;
+    document.getElementById('deal_limited_fields').style.display = t === 'limited' ? 'block' : 'none';
+    document.getElementById('deal_weekly_fields').style.display = t === 'weekly' ? 'block' : 'none';
+
+    const lim = document.getElementById('deal_type_limited');
+    const wk = document.getElementById('deal_type_weekly');
+    lim.style.background = t === 'limited' ? 'var(--gold)' : 'transparent';
+    lim.style.color = t === 'limited' ? '#0e0c09' : 'var(--muted)';
+    lim.style.border = t === 'limited' ? 'none' : '1px solid var(--border)';
+    lim.style.fontWeight = t === 'limited' ? '600' : 'normal';
+    wk.style.background = t === 'weekly' ? 'var(--gold)' : 'transparent';
+    wk.style.color = t === 'weekly' ? '#0e0c09' : 'var(--muted)';
+    wk.style.border = t === 'weekly' ? 'none' : '1px solid var(--border)';
+    wk.style.fontWeight = t === 'weekly' ? '600' : 'normal';
+  };
+
+  function buildWeeklyGrid() {
+    const grid = document.getElementById('deal_weekly_grid');
+    if (!grid) return;
+    const days = [['mon','Mon'],['tue','Tue'],['wed','Wed'],['thu','Thu'],['fri','Fri']];
+    grid.innerHTML = days.map(([k, label]) => `
+      <div style="display:grid;grid-template-columns:60px 2fr 1fr;gap:8px;align-items:center">
+        <span style="font-size:0.82rem;color:var(--muted);font-weight:600">${label}</span>
+        <input type="text" id="deal_w_${k}_dish" placeholder="Dish (optional)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+        <input type="text" id="deal_w_${k}_price" placeholder="$10" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
+      </div>
+    `).join('');
+  }
+
+  function populateRestaurantPicker() {
+    const sel = document.getElementById('deal_restaurant');
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— Select a restaurant —</option>' +
+      restaurants
+        .slice()
+        .sort((a,b) => (a.name || '').localeCompare(b.name || ''))
+        .map(r => `<option value="${r.id}">${r.name}</option>`)
+        .join('');
+    if (current) sel.value = current;
+  }
+
+  window.initDealsAdmin = () => {
+    populateRestaurantPicker();
+    buildWeeklyGrid();
+    setDealType(dealCurrentType);
+    renderDealsAdminList();
+  };
+
+  window.resetDealForm = () => {
+    dealEditingId = null;
+    document.getElementById('dealFormTitle').textContent = 'Add a Deal';
+    document.getElementById('dealSaveBtn').textContent = '💾 Save Deal';
+    document.getElementById('deal_id').value = '';
+    document.getElementById('deal_restaurant').value = '';
+    document.getElementById('deal_dish').value = '';
+    document.getElementById('deal_price').value = '';
+    document.getElementById('deal_start').value = '';
+    document.getElementById('deal_end').value = '';
+    document.getElementById('deal_notes').value = '';
+    ['mon','tue','wed','thu','fri'].forEach(k => {
+      const d = document.getElementById('deal_w_' + k + '_dish');
+      const p = document.getElementById('deal_w_' + k + '_price');
+      if (d) d.value = '';
+      if (p) p.value = '';
+    });
+    setDealType('limited');
+  };
+
+  window.saveDeal = async () => {
+    const btn = document.getElementById('dealSaveBtn');
+    const restaurantId = document.getElementById('deal_restaurant').value;
+    if (!restaurantId) {
+      showToast('Please pick a restaurant.', true);
+      return;
+    }
+    const r = restaurants.find(x => x.id === restaurantId);
+    if (!r) {
+      showToast('Restaurant not found. Reload and try again.', true);
+      return;
+    }
+
+    const startDate = document.getElementById('deal_start').value || null;
+    const endDate = document.getElementById('deal_end').value || null;
+    const notes = document.getElementById('deal_notes').value.trim() || null;
+
+    const payload = {
+      restaurantId,
+      restaurantName: r.name,
+      type: dealCurrentType,
+      startDate,
+      endDate,
+      notes
+    };
+
+    if (dealCurrentType === 'limited') {
+      const dish = document.getElementById('deal_dish').value.trim();
+      const price = document.getElementById('deal_price').value.trim();
+      if (!dish) { showToast('Dish name is required for a limited deal.', true); return; }
+      payload.dish = dish;
+      payload.price = price || null;
+      payload.weeklyDishes = null;
+    } else {
+      const weeklyDishes = {};
+      let any = false;
+      ['mon','tue','wed','thu','fri'].forEach(k => {
+        const d = document.getElementById('deal_w_' + k + '_dish').value.trim();
+        const p = document.getElementById('deal_w_' + k + '_price').value.trim();
+        if (d) { weeklyDishes[k] = { dish: d, price: p || null }; any = true; }
+      });
+      if (!any) { showToast('Add at least one weekday dish.', true); return; }
+      payload.weeklyDishes = weeklyDishes;
+      payload.dish = null;
+      payload.price = null;
+    }
+
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = 'Saving...';
+
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      if (dealEditingId) {
+        await updateDoc(doc(db, "deals", dealEditingId), payload);
+        showToast('✅ Deal updated.');
+      } else {
+        payload.createdAt = serverTimestamp();
+        await addDoc(collection(db, "deals"), payload);
+        showToast('✅ Deal added — now live on the site.');
+      }
+      resetDealForm();
+      await loadDeals();
+      renderDealsAdminList();
+      // Refresh public-facing views too
+      renderCards(getFiltered());
+      if (map) updateMapPins(getFiltered());
+    } catch (err) {
+      console.error('Save deal error:', err);
+      showToast('Could not save deal. Try again.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  };
+
+  window.editDeal = (id) => {
+    const d = deals.find(x => x.id === id);
+    if (!d) return;
+    dealEditingId = id;
+    document.getElementById('dealFormTitle').textContent = 'Edit Deal';
+    document.getElementById('dealSaveBtn').textContent = '💾 Update Deal';
+    document.getElementById('deal_id').value = id;
+    document.getElementById('deal_restaurant').value = d.restaurantId || '';
+    document.getElementById('deal_start').value = d.startDate || '';
+    document.getElementById('deal_end').value = d.endDate || '';
+    document.getElementById('deal_notes').value = d.notes || '';
+    setDealType(d.type || 'limited');
+    if (d.type === 'limited') {
+      document.getElementById('deal_dish').value = d.dish || '';
+      document.getElementById('deal_price').value = d.price || '';
+    } else if (d.type === 'weekly' && d.weeklyDishes) {
+      ['mon','tue','wed','thu','fri'].forEach(k => {
+        const wd = d.weeklyDishes[k];
+        document.getElementById('deal_w_' + k + '_dish').value = wd && wd.dish ? wd.dish : '';
+        document.getElementById('deal_w_' + k + '_price').value = wd && wd.price ? wd.price : '';
+      });
+    }
+    document.getElementById('dealsAdmin').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  window.deleteDeal = async (id) => {
+    if (!confirm('Delete this deal? This cannot be undone.')) return;
+    try {
+      const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await deleteDoc(doc(db, "deals", id));
+      showToast('🗑️ Deal deleted.');
+      await loadDeals();
+      renderDealsAdminList();
+      renderCards(getFiltered());
+    } catch (err) {
+      console.error('Delete deal error:', err);
+      showToast('Could not delete. Try again.', true);
+    }
+  };
+
+  function renderDealsAdminList() {
+    const list = document.getElementById('dealsList');
+    if (!list) return;
+    if (deals.length === 0) {
+      list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px">No deals yet. Add one above.</p>';
+      return;
+    }
+    // Sort: active today first, then upcoming, then expired
+    const today = new Date(); today.setHours(0,0,0,0);
+    const sorted = deals.slice().sort((a,b) => {
+      const aActive = !!getActiveDealToday(a);
+      const bActive = !!getActiveDealToday(b);
+      if (aActive !== bActive) return aActive ? -1 : 1;
+      return (a.restaurantName || '').localeCompare(b.restaurantName || '');
+    });
+
+    list.innerHTML = sorted.map(d => {
+      const activeNow = !!getActiveDealToday(d);
+      const expired = d.endDate && new Date(d.endDate) < today;
+      let statusBadge;
+      if (expired) statusBadge = '<span style="background:rgba(232,64,42,0.15);border:1px solid rgba(232,64,42,0.35);color:#e8402a;font-size:0.7rem;padding:2px 8px;border-radius:4px">EXPIRED</span>';
+      else if (activeNow) statusBadge = '<span style="background:rgba(255,107,53,0.15);border:1px solid rgba(255,107,53,0.4);color:#ff8b5e;font-size:0.7rem;padding:2px 8px;border-radius:4px">ACTIVE TODAY</span>';
+      else statusBadge = '<span style="background:rgba(76,175,125,0.12);border:1px solid rgba(76,175,125,0.3);color:#4caf7d;font-size:0.7rem;padding:2px 8px;border-radius:4px">SCHEDULED</span>';
+
+      const dateLine = (d.startDate || d.endDate)
+        ? `${d.startDate || '—'} → ${d.endDate || '—'}`
+        : 'No date limit';
+
+      let body = '';
+      if (d.type === 'limited') {
+        const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
+        body = `<div style="display:flex;justify-content:space-between;color:var(--cream);font-size:0.9rem;margin-bottom:6px"><span>${d.dish || '—'}</span><span style="color:#ff8b5e;font-weight:600">${dp}</span></div>`;
+      } else {
+        const rows = ['mon','tue','wed','thu','fri'].map(k => {
+          const wd = d.weeklyDishes && d.weeklyDishes[k];
+          if (!wd || !wd.dish) return '';
+          const dp = wd.price ? (wd.price.toString().startsWith('$') ? wd.price : '$' + wd.price) : '';
+          return `<div style="display:flex;justify-content:space-between;font-size:0.82rem;color:var(--cream);padding:2px 0"><span><strong style="color:var(--muted);margin-right:8px">${DAY_LABELS[k]}</strong>${wd.dish}</span><span style="color:#ff8b5e">${dp}</span></div>`;
+        }).join('');
+        body = rows || '<span style="color:var(--muted);font-size:0.85rem">No weekday dishes set</span>';
+      }
+
+      return `<div class="admin-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px">
+          <div>
+            <strong style="font-family:Fraunces,serif;font-size:1.05rem;color:var(--cream)">${d.restaurantName || '(unknown)'}</strong>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">${d.type === 'weekly' ? 'Weekly' : 'Limited'} · ${dateLine}</div>
+          </div>
+          ${statusBadge}
+        </div>
+        ${body}
+        ${d.notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:6px">📝 ${d.notes}</div>` : ''}
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button onclick="editDeal('${d.id}')" style="flex:1;padding:8px;background:transparent;color:var(--gold);border:1px solid rgba(245,200,66,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">✏️ Edit</button>
+          <button onclick="deleteDeal('${d.id}')" style="flex:1;padding:8px;background:transparent;color:#e8402a;border:1px solid rgba(232,64,42,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🗑️ Delete</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
 
   async function loadPendingEdits() {
     const list = document.getElementById('pendingEdits');
@@ -2269,6 +2734,7 @@
 
   // ── INIT ──
   loadRestaurants();
+  loadDeals();
 </script>
 
 <!-- EDIT FORM OVERLAY -->
@@ -2295,42 +2761,23 @@
           <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Cuisine</label>
           <select id="edit_cuisine" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
             <option value="">Select cuisine...</option>
-            <optgroup label="Asian">
-              <option value="asian">Asian (Other)</option>
-              <option value="chinese">Chinese</option>
-              <option value="japanese">Japanese</option>
-              <option value="korean">Korean</option>
-              <option value="malaysian">Malaysian</option>
-              <option value="vietnamese">Vietnamese</option>
-              <option value="thai">Thai</option>
-              <option value="indonesian">Indonesian</option>
-              <option value="filipino">Filipino</option>
-              <option value="nepalese">Nepalese</option>
-              <option value="srilankan">Sri Lankan</option>
-              <option value="indian">Indian</option>
-              <option value="afghan">Afghan</option>
-            </optgroup>
-            <optgroup label="Middle East and Mediterranean">
-              <option value="middleeastern">Middle Eastern</option>
-              <option value="lebanese">Lebanese</option>
-              <option value="turkish">Turkish</option>
-              <option value="greek">Greek</option>
-            </optgroup>
-            <optgroup label="Western">
-              <option value="italian">Italian</option>
-              <option value="french">French</option>
-              <option value="mexican">Mexican</option>
-              <option value="american">American</option>
-              <option value="burgers">Burgers</option>
-              <option value="seafood">Seafood</option>
-            </optgroup>
-            <optgroup label="Other">
-              <option value="vegetarian">Vegetarian</option>
-              <option value="bakery">Bakery</option>
-              <option value="cafe">Cafe</option>
-              <option value="dessert">Dessert</option>
-              <option value="other">Other</option>
-            </optgroup>
+            <option value="malaysian">Malaysian</option>
+            <option value="vietnamese">Vietnamese</option>
+            <option value="thai">Thai</option>
+            <option value="chinese">Chinese</option>
+            <option value="japanese">Japanese</option>
+            <option value="korean">Korean</option>
+            <option value="indonesian">Indonesian</option>
+            <option value="asian">Asian (Other)</option>
+            <option value="indian">Indian</option>
+            <option value="italian">Italian</option>
+          <option value="french">French</option>
+            <option value="mexican">Mexican</option>
+            <option value="burgers">Burgers</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="bakery">Bakery</option>
+            <option value="dessert">Dessert</option>
+            <option value="other">Other</option>
           </select>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
@@ -2435,12 +2882,77 @@
         <button onclick="closeAdmin()" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">✕ Close</button>
       </div>
       <!-- Tabs -->
-      <div style="display:flex;gap:8px;margin-bottom:20px">
+      <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
         <button id="tab-submissions" onclick="switchAdminTab('submissions')" style="padding:8px 16px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:600;font-size:0.85rem">New Submissions</button>
         <button id="tab-edits" onclick="switchAdminTab('edits')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Edit Suggestions</button>
+        <button id="tab-deals" onclick="switchAdminTab('deals')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🔥 Deals</button>
       </div>
       <div id="pendingList"></div>
       <div id="pendingEdits" style="display:none"></div>
+      <div id="dealsAdmin" style="display:none">
+        <!-- Deal form -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">
+          <h3 id="dealFormTitle" style="font-family:Fraunces,serif;color:var(--cream);font-size:1.2rem;margin:0 0 14px">Add a Deal</h3>
+          <input type="hidden" id="deal_id">
+
+          <!-- Restaurant picker -->
+          <div style="margin-bottom:12px">
+            <label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Restaurant *</label>
+            <select id="deal_restaurant" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
+              <option value="">— Select a restaurant —</option>
+            </select>
+          </div>
+
+          <!-- Type toggle -->
+          <div style="margin-bottom:12px">
+            <label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Deal type *</label>
+            <div style="display:flex;gap:8px">
+              <button type="button" id="deal_type_limited" onclick="setDealType('limited')" style="flex:1;padding:10px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:600;font-size:0.85rem">Limited time (one dish)</button>
+              <button type="button" id="deal_type_weekly" onclick="setDealType('weekly')" style="flex:1;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Weekly (Mon–Fri)</button>
+            </div>
+          </div>
+
+          <!-- Limited fields -->
+          <div id="deal_limited_fields">
+            <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-bottom:12px">
+              <input type="text" id="deal_dish" placeholder="Dish name e.g. Pho Bo" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
+              <input type="text" id="deal_price" placeholder="Price e.g. $10" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
+            </div>
+          </div>
+
+          <!-- Weekly fields -->
+          <div id="deal_weekly_fields" style="display:none;margin-bottom:12px">
+            <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Leave a day blank if there's no special that day.</p>
+            <div id="deal_weekly_grid" style="display:flex;flex-direction:column;gap:6px"></div>
+          </div>
+
+          <!-- Date range -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+            <div>
+              <label style="display:block;font-size:0.72rem;color:var(--muted);margin-bottom:4px">Start date (optional)</label>
+              <input type="date" id="deal_start" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:9px 12px;outline:none">
+            </div>
+            <div>
+              <label style="display:block;font-size:0.72rem;color:var(--muted);margin-bottom:4px">End date (optional)</label>
+              <input type="date" id="deal_end" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:9px 12px;outline:none">
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div style="margin-bottom:14px">
+            <input type="text" id="deal_notes" placeholder="Notes (optional) e.g. Dine-in only, lunch 11am–3pm" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
+          </div>
+
+          <div style="display:flex;gap:8px">
+            <button onclick="saveDeal()" id="dealSaveBtn" style="flex:1;padding:12px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif">💾 Save Deal</button>
+            <button onclick="resetDealForm()" style="padding:12px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">Clear</button>
+          </div>
+        </div>
+
+        <!-- Existing deals list -->
+        <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.1rem;margin:0 0 12px">Active &amp; Upcoming Deals</h3>
+        <div id="dealsList"></div>
+      </div>
     </div>
 
   </div>
