@@ -1412,9 +1412,9 @@
           ${r.isOwner ? '<div style="margin-bottom:4px"><span style="background:var(--gold);color:#0e0c09;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Owner Verified</span></div>' : ''}
           <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
           ${dealStripHtml}
-          ${dishes.length > 0 ? `
+          ${(dishes.length > 0 && activePriceFilter !== 'deal') ? `
           <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
-            ${dishes.filter(d => activePriceFilter === 'all' || activePriceFilter === 'deal' || parseInt(d.tier) <= parseInt(activePriceFilter)).map(d => {
+            ${dishes.filter(d => activePriceFilter === 'all' || parseInt(d.tier) <= parseInt(activePriceFilter)).map(d => {
               const dt = getPriceTier(d.tier || r.priceRange);
               const dc = dt.cls === 't10' ? '#4caf7d' : dt.cls === 't15' ? 'var(--gold)' : 'var(--red)';
               const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
