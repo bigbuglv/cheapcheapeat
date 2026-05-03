@@ -2606,6 +2606,123 @@
     renderDealsAdminList();
   };
 
+  // ── QUICK-ADD RESTAURANT (from Deals admin) ──
+  window.toggleQuickAddRestaurant = (forceState) => {
+    const form = document.getElementById('quickAddForm');
+    const btn = document.getElementById('quickAddToggleBtn');
+    if (!form || !btn) return;
+    const showNow = (forceState === true) ? true
+                  : (forceState === false) ? false
+                  : (form.style.display === 'none');
+    form.style.display = showNow ? 'block' : 'none';
+    btn.textContent = showNow ? '× Cancel' : '+ Add new restaurant';
+    if (!showNow) {
+      // Reset fields when closing
+      ['qa_name','qa_address'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      ['qa_cuisine','qa_pricerange'].forEach(id => { const el = document.getElementById(id); if (el) el.selectedIndex = 0; });
+    }
+  };
+
+  window.saveQuickAddRestaurant = async () => {
+    const name = document.getElementById('qa_name').value.trim();
+    const address = document.getElementById('qa_address').value.trim();
+    const cuisine = document.getElementById('qa_cuisine').value;
+    const priceRange = document.getElementById('qa_pricerange').value;
+    const btn = document.getElementById('qaSaveBtn');
+
+    if (!name) { showToast('Restaurant name is required.', true); return; }
+    if (!address) { showToast('Address is required.', true); return; }
+    if (!cuisine) { showToast('Please pick a cuisine.', true); return; }
+    if (!priceRange) { showToast('Please pick a price tier.', true); return; }
+
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = 'Saving...';
+
+    // Same cuisine label mapping as elsewhere
+    const cuisineLabels = {
+      malaysian: 'Malaysian', vietnamese: 'Vietnamese', thai: 'Thai',
+      chinese: 'Chinese', japanese: 'Japanese', korean: 'Korean',
+      indonesian: 'Indonesian', asian: 'Asian', indian: 'Indian',
+      filipino: 'Filipino', nepalese: 'Nepalese', srilankan: 'Sri Lankan',
+      afghan: 'Afghan', middleeastern: 'Middle Eastern', lebanese: 'Lebanese',
+      turkish: 'Turkish', greek: 'Greek',
+      italian: 'Italian', french: 'French', mexican: 'Mexican',
+      american: 'American', burgers: 'Burgers', seafood: 'Seafood',
+      vegetarian: 'Vegetarian', bakery: 'Bakery', cafe: 'Cafe', dessert: 'Dessert',
+      'middle-eastern': 'Middle Eastern', other: 'Other'
+    };
+
+    // Geocode the address to get lat/lng (same pattern as the public submit form)
+    let lat = null, lng = null;
+    try {
+      await new Promise((resolve) => {
+        const waitForGoogle = setInterval(() => {
+          if (window.google && window.google.maps) {
+            clearInterval(waitForGoogle);
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address: address + ', Australia' }, (results, status) => {
+              if (status === 'OK' && results.length > 0) {
+                lat = results[0].geometry.location.lat();
+                lng = results[0].geometry.location.lng();
+              } else {
+                console.warn('Geocode failed:', status);
+              }
+              resolve();
+            });
+          }
+        }, 100);
+        setTimeout(() => { clearInterval(waitForGoogle); resolve(); }, 5000);
+      });
+    } catch (geoErr) {
+      console.warn('Geocoding error:', geoErr);
+    }
+
+    const newEntry = {
+      name,
+      cuisine,
+      cuisineLabel: cuisineLabels[cuisine] || cuisine,
+      address,
+      priceRange,
+      dishes: [],
+      dish: null,
+      exactPrice: null,
+      phone: null,
+      hours: null,
+      notes: null,
+      website: null,
+      isOwner: false,
+      stars: 4,
+      lat,
+      lng,
+      status: 'approved',
+      createdAt: serverTimestamp(),
+      createdVia: 'admin-quickadd'
+    };
+
+    try {
+      const docRef = await addDoc(collection(db, "restaurants"), newEntry);
+      showToast('✅ Restaurant added: ' + name);
+      // Refresh local state and dropdowns
+      restaurants.push({ id: docRef.id, ...newEntry });
+      populateRestaurantPicker();
+      // Auto-select the newly created restaurant in the deal form
+      const sel = document.getElementById('deal_restaurant');
+      if (sel) sel.value = docRef.id;
+      // Close the quick-add panel
+      toggleQuickAddRestaurant(false);
+      // Refresh public-side cards/pins so the new restaurant shows up
+      renderCards(getFiltered());
+      if (map) updateMapPins(getFiltered());
+    } catch (err) {
+      console.error('Quick-add error:', err);
+      showToast('Could not save restaurant. Try again.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  };
+
   window.resetDealForm = () => {
     dealEditingId = null;
     document.getElementById('dealFormTitle').textContent = 'Add a Deal';
@@ -3099,10 +3216,76 @@
 
           <!-- Restaurant picker -->
           <div style="margin-bottom:12px">
-            <label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Restaurant *</label>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px">
+              <label style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Restaurant *</label>
+              <button type="button" id="quickAddToggleBtn" onclick="toggleQuickAddRestaurant()" style="background:transparent;color:var(--gold);border:1px solid rgba(245,200,66,0.4);border-radius:6px;padding:4px 10px;font-size:0.75rem;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap">+ Add new restaurant</button>
+            </div>
             <select id="deal_restaurant" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
               <option value="">— Select a restaurant —</option>
             </select>
+
+            <!-- Mini quick-add form (hidden by default) -->
+            <div id="quickAddForm" style="display:none;background:rgba(245,200,66,0.06);border:1px solid rgba(245,200,66,0.3);border-radius:10px;padding:14px;margin-top:10px">
+              <div style="font-size:0.75rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;font-weight:700">⚡ Quick-add restaurant</div>
+              <p style="font-size:0.78rem;color:var(--muted);margin:0 0 10px">Just the essentials — you can fill in dishes, hours, etc. later via the main listing.</p>
+
+              <input type="text" id="qa_name" placeholder="Restaurant name *" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none;margin-bottom:8px;box-sizing:border-box">
+
+              <input type="text" id="qa_address" placeholder="Address * e.g. 123 Smith St, Fitzroy VIC 3065" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none;margin-bottom:8px;box-sizing:border-box">
+
+              <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-bottom:10px">
+                <select id="qa_cuisine" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:9px 12px;outline:none">
+                  <option value="">Select cuisine *</option>
+                  <optgroup label="🌏 Asian">
+                    <option value="asian">Asian (Other)</option>
+                    <option value="chinese">Chinese</option>
+                    <option value="japanese">Japanese</option>
+                    <option value="korean">Korean</option>
+                    <option value="malaysian">Malaysian</option>
+                    <option value="vietnamese">Vietnamese</option>
+                    <option value="thai">Thai</option>
+                    <option value="indonesian">Indonesian</option>
+                    <option value="filipino">Filipino</option>
+                    <option value="nepalese">Nepalese</option>
+                    <option value="srilankan">Sri Lankan</option>
+                    <option value="indian">Indian</option>
+                    <option value="afghan">Afghan</option>
+                  </optgroup>
+                  <optgroup label="🥙 Middle East &amp; Mediterranean">
+                    <option value="middleeastern">Middle Eastern</option>
+                    <option value="lebanese">Lebanese</option>
+                    <option value="turkish">Turkish</option>
+                    <option value="greek">Greek</option>
+                  </optgroup>
+                  <optgroup label="🍕 Western">
+                    <option value="italian">Italian</option>
+                    <option value="french">French</option>
+                    <option value="mexican">Mexican</option>
+                    <option value="american">American</option>
+                    <option value="burgers">Burgers</option>
+                    <option value="seafood">Seafood</option>
+                  </optgroup>
+                  <optgroup label="🍰 Other">
+                    <option value="vegetarian">Vegetarian</option>
+                    <option value="bakery">Bakery</option>
+                    <option value="cafe">Cafe</option>
+                    <option value="dessert">Dessert</option>
+                    <option value="other">Other</option>
+                  </optgroup>
+                </select>
+                <select id="qa_pricerange" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:9px 12px;outline:none">
+                  <option value="">Price tier *</option>
+                  <option value="10">Under $10</option>
+                  <option value="15">Under $15</option>
+                  <option value="20">Under $20</option>
+                </select>
+              </div>
+
+              <div style="display:flex;gap:8px">
+                <button type="button" id="qaSaveBtn" onclick="saveQuickAddRestaurant()" style="flex:1;padding:10px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif;font-size:0.88rem">⚡ Save Restaurant</button>
+                <button type="button" onclick="toggleQuickAddRestaurant(false)" style="padding:10px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.88rem">Cancel</button>
+              </div>
+            </div>
           </div>
 
           <!-- Type toggle -->
