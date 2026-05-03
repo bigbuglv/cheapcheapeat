@@ -364,6 +364,7 @@
   #cuisineSelect:hover { border-color: var(--gold-dim); }
   #cuisineSelect:focus { border-color: var(--gold); }
   #cuisineSelect option { background: var(--surface); color: var(--cream); }
+  #cuisineSelect optgroup { background: var(--surface); color: var(--gold); font-weight: 700; font-style: normal; }
 
   /* ── DEAL BADGE ── */
   .deal-badge {
@@ -934,28 +935,48 @@
   </div>
 
   <!-- Cuisine filters -->
-  <div class="filter-row" style="align-items:center">
+  <div class="filter-row" style="align-items:center;flex-wrap:wrap;gap:10px">
     <label for="cuisineSelect" style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-right:4px">Cuisine</label>
-    <select id="cuisineSelect" onchange="setCuisineFilter(this.value)" style="background:var(--surface2);border:1px solid var(--border);border-radius:100px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.85rem;padding:6px 14px;outline:none;cursor:pointer;min-width:180px">
+    <select id="cuisineSelect" onchange="setCuisineFilter(this.value)" style="background:var(--surface2);border:1px solid var(--border);border-radius:100px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.85rem;padding:7px 20px 7px 16px;outline:none;cursor:pointer;min-width:180px">
       <option value="all">All Cuisines</option>
-      <option value="asian">Asian</option>
-      <option value="malaysian">Malaysian</option>
-      <option value="vietnamese">Vietnamese</option>
-      <option value="thai">Thai</option>
-      <option value="chinese">Chinese</option>
-      <option value="japanese">Japanese</option>
-      <option value="korean">Korean</option>
-      <option value="indonesian">Indonesian</option>
-      <option value="indian">Indian</option>
-      <option value="italian">Italian</option>
-      <option value="french">French</option>
-      <option value="mexican">Mexican</option>
-      <option value="burgers">Burgers</option>
-      <option value="vegetarian">Vegetarian</option>
-      <option value="bakery">Bakery</option>
-      <option value="dessert">Dessert</option>
-      <option value="owner">Owner Verified ★</option>
+      <optgroup label="🌏 Asian">
+        <option value="asian">Asian (Other)</option>
+        <option value="chinese">Chinese</option>
+        <option value="japanese">Japanese</option>
+        <option value="korean">Korean</option>
+        <option value="malaysian">Malaysian</option>
+        <option value="vietnamese">Vietnamese</option>
+        <option value="thai">Thai</option>
+        <option value="indonesian">Indonesian</option>
+        <option value="filipino">Filipino</option>
+        <option value="nepalese">Nepalese</option>
+        <option value="srilankan">Sri Lankan</option>
+        <option value="indian">Indian</option>
+        <option value="afghan">Afghan</option>
+      </optgroup>
+      <optgroup label="🥙 Middle East &amp; Mediterranean">
+        <option value="middleeastern">Middle Eastern</option>
+        <option value="lebanese">Lebanese</option>
+        <option value="turkish">Turkish</option>
+        <option value="greek">Greek</option>
+      </optgroup>
+      <optgroup label="🍕 Western">
+        <option value="italian">Italian</option>
+        <option value="french">French</option>
+        <option value="mexican">Mexican</option>
+        <option value="american">American</option>
+        <option value="burgers">Burgers</option>
+        <option value="seafood">Seafood</option>
+      </optgroup>
+      <optgroup label="🍰 Other">
+        <option value="vegetarian">Vegetarian</option>
+        <option value="bakery">Bakery</option>
+        <option value="cafe">Cafe</option>
+        <option value="dessert">Dessert</option>
+        <option value="other">Other</option>
+      </optgroup>
     </select>
+    <button class="filter-chip" id="ownerVerifiedChip" onclick="setCuisineFilter('owner', this)" style="white-space:nowrap">Owner Verified ★</button>
   </div>
 
   <!-- Price filters -->
@@ -1065,22 +1086,42 @@
           <label>Cuisine <span class="required">*</span></label>
           <select id="f_cuisine">
             <option value="">Select cuisine...</option>
-            <option value="malaysian">Malaysian</option>
-            <option value="vietnamese">Vietnamese</option>
-            <option value="thai">Thai</option>
-            <option value="chinese">Chinese</option>
-            <option value="japanese">Japanese</option>
-            <option value="korean">Korean</option>
-            <option value="indonesian">Indonesian</option>
-            <option value="asian">Asian (Other)</option>
-            <option value="indian">Indian</option>
-            <option value="italian">Italian</option>
-            <option value="french">French</option>
-            <option value="mexican">Mexican</option>
-            <option value="burgers">Burgers</option>
-            <option value="vegetarian">Vegetarian</option>
-            <option value="bakery">Bakery</option>
-            <option value="dessert">Dessert</option>
+            <optgroup label="🌏 Asian">
+              <option value="asian">Asian (Other)</option>
+              <option value="chinese">Chinese</option>
+              <option value="japanese">Japanese</option>
+              <option value="korean">Korean</option>
+              <option value="malaysian">Malaysian</option>
+              <option value="vietnamese">Vietnamese</option>
+              <option value="thai">Thai</option>
+              <option value="indonesian">Indonesian</option>
+              <option value="filipino">Filipino</option>
+              <option value="nepalese">Nepalese</option>
+              <option value="srilankan">Sri Lankan</option>
+              <option value="indian">Indian</option>
+              <option value="afghan">Afghan</option>
+            </optgroup>
+            <optgroup label="🥙 Middle East &amp; Mediterranean">
+              <option value="middleeastern">Middle Eastern</option>
+              <option value="lebanese">Lebanese</option>
+              <option value="turkish">Turkish</option>
+              <option value="greek">Greek</option>
+            </optgroup>
+            <optgroup label="🍕 Western">
+              <option value="italian">Italian</option>
+              <option value="french">French</option>
+              <option value="mexican">Mexican</option>
+              <option value="american">American</option>
+              <option value="burgers">Burgers</option>
+              <option value="seafood">Seafood</option>
+            </optgroup>
+            <optgroup label="🍰 Other">
+              <option value="vegetarian">Vegetarian</option>
+              <option value="bakery">Bakery</option>
+              <option value="cafe">Cafe</option>
+              <option value="dessert">Dessert</option>
+              <option value="other">Other</option>
+            </optgroup>
           </select>
         </div>
 
@@ -1634,10 +1675,18 @@
     activeCuisineFilter = f;
     // Keep the dropdown in sync (if present)
     const sel = document.getElementById('cuisineSelect');
-    if (sel && sel.value !== f) sel.value = f;
+    if (sel) sel.value = (f === 'owner' ? 'all' : f);
+    // Manage Owner Verified chip state — only active when filter === 'owner'
+    const ownerChip = document.getElementById('ownerVerifiedChip');
+    if (ownerChip) {
+      if (f === 'owner') ownerChip.classList.add('active');
+      else ownerChip.classList.remove('active');
+    }
     // Legacy chip support (in case any chips remain)
-    document.querySelectorAll('.filter-row .filter-chip').forEach(c => c.classList.remove('active'));
-    if (el && el.classList) el.classList.add('active');
+    document.querySelectorAll('.filter-row .filter-chip').forEach(c => {
+      if (c.id !== 'ownerVerifiedChip') c.classList.remove('active');
+    });
+    if (el && el.classList && el.id !== 'ownerVerifiedChip') el.classList.add('active');
     const filtered = getFiltered();
     renderCards(filtered);
     updateMapPins(filtered);
@@ -1826,9 +1875,13 @@
         malaysian: 'Malaysian', vietnamese: 'Vietnamese', thai: 'Thai',
         chinese: 'Chinese', japanese: 'Japanese', korean: 'Korean',
         indonesian: 'Indonesian', asian: 'Asian', indian: 'Indian',
-        italian: 'Italian', french: 'French', mexican: 'Mexican', burgers: 'Burgers',
-        vegetarian: 'Vegetarian', bakery: 'Bakery', dessert: 'Dessert',
-        'middle-eastern': 'Middle Eastern', greek: 'Greek', other: 'Other'
+        filipino: 'Filipino', nepalese: 'Nepalese', srilankan: 'Sri Lankan',
+        afghan: 'Afghan', middleeastern: 'Middle Eastern', lebanese: 'Lebanese',
+        turkish: 'Turkish', greek: 'Greek',
+        italian: 'Italian', french: 'French', mexican: 'Mexican',
+        american: 'American', burgers: 'Burgers', seafood: 'Seafood',
+        vegetarian: 'Vegetarian', bakery: 'Bakery', cafe: 'Cafe', dessert: 'Dessert',
+        'middle-eastern': 'Middle Eastern', other: 'Other'
       };
 
       const newEntry = {
@@ -2139,9 +2192,13 @@
         malaysian: 'Malaysian', vietnamese: 'Vietnamese', thai: 'Thai',
         chinese: 'Chinese', japanese: 'Japanese', korean: 'Korean',
         indonesian: 'Indonesian', asian: 'Asian', indian: 'Indian',
-        italian: 'Italian', french: 'French', mexican: 'Mexican', burgers: 'Burgers',
-        vegetarian: 'Vegetarian', bakery: 'Bakery', dessert: 'Dessert',
-        'middle-eastern': 'Middle Eastern', greek: 'Greek', other: 'Other'
+        filipino: 'Filipino', nepalese: 'Nepalese', srilankan: 'Sri Lankan',
+        afghan: 'Afghan', middleeastern: 'Middle Eastern', lebanese: 'Lebanese',
+        turkish: 'Turkish', greek: 'Greek',
+        italian: 'Italian', french: 'French', mexican: 'Mexican',
+        american: 'American', burgers: 'Burgers', seafood: 'Seafood',
+        vegetarian: 'Vegetarian', bakery: 'Bakery', cafe: 'Cafe', dessert: 'Dessert',
+        'middle-eastern': 'Middle Eastern', other: 'Other'
       };
       const cuisine = document.getElementById('edit_cuisine').value;
 
@@ -2883,22 +2940,42 @@
           <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Cuisine</label>
           <select id="edit_cuisine" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
             <option value="">Select cuisine...</option>
-            <option value="malaysian">Malaysian</option>
-            <option value="vietnamese">Vietnamese</option>
-            <option value="thai">Thai</option>
-            <option value="chinese">Chinese</option>
-            <option value="japanese">Japanese</option>
-            <option value="korean">Korean</option>
-            <option value="indonesian">Indonesian</option>
-            <option value="asian">Asian (Other)</option>
-            <option value="indian">Indian</option>
-            <option value="italian">Italian</option>
-            <option value="french">French</option>
-            <option value="mexican">Mexican</option>
-            <option value="burgers">Burgers</option>
-            <option value="vegetarian">Vegetarian</option>
-            <option value="bakery">Bakery</option>
-            <option value="dessert">Dessert</option>
+            <optgroup label="🌏 Asian">
+              <option value="asian">Asian (Other)</option>
+              <option value="chinese">Chinese</option>
+              <option value="japanese">Japanese</option>
+              <option value="korean">Korean</option>
+              <option value="malaysian">Malaysian</option>
+              <option value="vietnamese">Vietnamese</option>
+              <option value="thai">Thai</option>
+              <option value="indonesian">Indonesian</option>
+              <option value="filipino">Filipino</option>
+              <option value="nepalese">Nepalese</option>
+              <option value="srilankan">Sri Lankan</option>
+              <option value="indian">Indian</option>
+              <option value="afghan">Afghan</option>
+            </optgroup>
+            <optgroup label="🥙 Middle East &amp; Mediterranean">
+              <option value="middleeastern">Middle Eastern</option>
+              <option value="lebanese">Lebanese</option>
+              <option value="turkish">Turkish</option>
+              <option value="greek">Greek</option>
+            </optgroup>
+            <optgroup label="🍕 Western">
+              <option value="italian">Italian</option>
+              <option value="french">French</option>
+              <option value="mexican">Mexican</option>
+              <option value="american">American</option>
+              <option value="burgers">Burgers</option>
+              <option value="seafood">Seafood</option>
+            </optgroup>
+            <optgroup label="🍰 Other">
+              <option value="vegetarian">Vegetarian</option>
+              <option value="bakery">Bakery</option>
+              <option value="cafe">Cafe</option>
+              <option value="dessert">Dessert</option>
+              <option value="other">Other</option>
+            </optgroup>
           </select>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
