@@ -1536,6 +1536,9 @@
   window.triggerSearch = () => {
     searchActive = true;
     nearbyRestaurants = null; // clear location filter on new search
+    // Also clear any distance values left over from a previous "use my location" run,
+    // so cards don't show stale "X.X km" badges on suburb-only searches.
+    restaurants.forEach(r => { delete r.distance; });
     const btn = document.getElementById('searchBtn');
     btn.textContent = 'Searching...';
     btn.classList.add('searching');
