@@ -1395,6 +1395,7 @@
             <span>${dealInfo.active.dish}</span>
             <span class="deal-strip-price">${dp}</span>
           </div>
+          <div style="font-size:0.72rem;color:#ff8b5e;opacity:0.85;margin-top:6px;text-align:right">Tap for full deal details →</div>
         </div>`;
       })() : '';
 
@@ -1444,9 +1445,17 @@
     const countEl = document.getElementById('dealsCount');
     if (!section || !grid) return;
 
-    // Find restaurants with an active deal today
+    // Hide section entirely when On Deal filter is active — would just duplicate the main list.
+    if (activePriceFilter === 'deal') {
+      section.style.display = 'none';
+      return;
+    }
+
+    // Find restaurants with an active deal today, BUT only from the currently filtered set
+    // so suburb/cuisine searches narrow the deals section accordingly.
+    const filteredRestaurants = getFiltered();
     const activeToday = [];
-    for (const r of restaurants) {
+    for (const r of filteredRestaurants) {
       const info = getRestaurantActiveDeal(r.id);
       if (info) activeToday.push({ r, info });
     }
@@ -1480,6 +1489,7 @@
               <span style="color:var(--cream);font-weight:600">${info.active.dish}</span>
               <span class="deal-strip-price">${dp}</span>
             </div>
+            <div style="font-size:0.72rem;color:#ff8b5e;opacity:0.85;margin-top:6px;text-align:right">Tap for full deal details →</div>
           </div>
           <div class="card-footer">
             <div class="card-location">📍 ${r.address ? r.address.split(',').slice(1).join(',').trim() : ''}</div>
@@ -1533,6 +1543,7 @@
       const filtered = getFiltered();
       renderCards(filtered);
       updateMapPins(filtered);
+      renderTodaysDeals();
       btn.textContent = filtered.length > 0 ? `${filtered.length} found ✓` : 'No results';
       setTimeout(() => {
         btn.textContent = 'Search';
@@ -1545,6 +1556,7 @@
     const filtered = getFiltered();
     renderCards(filtered);
     updateMapPins(filtered);
+    renderTodaysDeals();
   };
 
   function updateMapPins(filtered) {
@@ -1627,6 +1639,7 @@
     const filtered = getFiltered();
     renderCards(filtered);
     updateMapPins(filtered);
+    renderTodaysDeals();
   };
 
   window.setPriceFilter = (f, el) => {
@@ -1634,6 +1647,7 @@
     document.querySelectorAll('.price-filter-row .filter-chip').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
     renderCards(getFiltered());
+    renderTodaysDeals();
   };
 
   // ── MODAL ──
@@ -1942,6 +1956,7 @@
           if (priceFirst) priceFirst.classList.add('active');
           renderCards(nearbyRestaurants);
           updateMapPins(nearbyRestaurants);
+          renderTodaysDeals();
         } catch(e) { console.warn('Location UI error:', e); }
 
         try {
@@ -2816,8 +2831,30 @@
   };
 
   // ── INIT ──
-  loadRestaurants();
-  loadDeals();
+  // Apply URL parameters after data is loaded (e.g. ?deal=true to preselect On Deal filter)
+  function applyUrlParamsAfterLoad() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      // ?deal=true or ?deals=true → auto-apply On Deal filter
+      if (params.get('deal') === 'true' || params.get('deals') === 'true') {
+        const dealChip = document.querySelector('.price-filter-row .filter-chip.deal');
+        if (dealChip) {
+          // Trigger the same flow as if the user clicked it
+          window.setPriceFilter('deal', dealChip);
+          // Smooth-scroll to the listings so the user sees the filter took effect
+          setTimeout(() => {
+            const listings = document.getElementById('listings') || document.querySelector('.cards-grid');
+            if (listings) listings.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 200);
+        }
+      }
+    } catch (err) {
+      console.warn('URL param handling error:', err);
+    }
+  }
+
+  // Load restaurants and deals in parallel, then apply URL params
+  Promise.all([loadRestaurants(), loadDeals()]).then(applyUrlParamsAfterLoad);
 </script>
 
 <!-- EDIT FORM OVERLAY -->
