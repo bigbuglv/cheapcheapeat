@@ -1300,19 +1300,50 @@
     return true;
   }
 
-  // Returns { dish, price } for what's active TODAY, or null
+  // Helper: parse "$10" / "10" / "$10.50" → number, or null if unparseable
+  function parsePriceNum(p) {
+    if (p == null) return null;
+    const m = p.toString().match(/[\d.]+/);
+    return m ? parseFloat(m[0]) : null;
+  }
+
+  // Returns { dish, price, notes, allDishes? } for what's active TODAY, or null.
+  // For multi-dish limited deals, picks the cheapest dish as the headline and includes the full list.
   function getActiveDealToday(deal) {
     if (!deal) return null;
     if (!isWithinDateRange(deal)) return null;
     if (deal.type === 'limited') {
+      // New multi-dish format
+      if (Array.isArray(deal.dishes) && deal.dishes.length > 0) {
+        const ranked = deal.dishes
+          .filter(d => d && d.dish)
+          .slice()
+          .sort((a, b) => {
+            const ap = parsePriceNum(a.price);
+            const bp = parsePriceNum(b.price);
+            if (ap == null && bp == null) return 0;
+            if (ap == null) return 1;
+            if (bp == null) return -1;
+            return ap - bp;
+          });
+        if (ranked.length === 0) return null;
+        return {
+          dish: ranked[0].dish,
+          price: ranked[0].price || '',
+          notes: deal.notes || '',
+          allDishes: ranked,
+          extraCount: ranked.length - 1
+        };
+      }
+      // Legacy single-dish format
       if (!deal.dish) return null;
-      return { dish: deal.dish, price: deal.price || '', notes: deal.notes || '' };
+      return { dish: deal.dish, price: deal.price || '', notes: deal.notes || '', allDishes: null, extraCount: 0 };
     }
     if (deal.type === 'weekly') {
       const tk = todayKey();
       const wd = deal.weeklyDishes && deal.weeklyDishes[tk];
       if (wd && wd.dish) {
-        return { dish: wd.dish, price: wd.price || '', notes: deal.notes || '' };
+        return { dish: wd.dish, price: wd.price || '', notes: deal.notes || '', allDishes: null, extraCount: 0 };
       }
       return null;
     }
@@ -1429,10 +1460,12 @@
       const dealStripHtml = dealInfo ? (() => {
         const dp = dealInfo.active.price ? (dealInfo.active.price.toString().startsWith('$') ? dealInfo.active.price : '$' + dealInfo.active.price) : '';
         const label = dealInfo.deal.type === 'weekly' ? `Today's special` : `Limited deal`;
+        const extra = dealInfo.active.extraCount || 0;
+        const extraHint = extra > 0 ? ` <span style="color:var(--muted);font-weight:400;font-size:0.78em">+${extra} more</span>` : '';
         return `<div class="deal-strip">
           <div class="deal-strip-label">🔥 ${label}</div>
           <div class="deal-strip-content">
-            <span>${dealInfo.active.dish}</span>
+            <span>${dealInfo.active.dish}${extraHint}</span>
             <span class="deal-strip-price">${dp}</span>
           </div>
           <div style="font-size:0.72rem;color:#ff8b5e;opacity:0.85;margin-top:6px;text-align:right">Tap for full deal details →</div>
@@ -1526,7 +1559,7 @@
           <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
           <div class="deal-strip">
             <div class="deal-strip-content">
-              <span style="color:var(--cream);font-weight:600">${info.active.dish}</span>
+              <span style="color:var(--cream);font-weight:600">${info.active.dish}${(info.active.extraCount > 0) ? ` <span style="color:var(--muted);font-weight:400;font-size:0.78em">+${info.active.extraCount} more</span>` : ''}</span>
               <span class="deal-strip-price">${dp}</span>
             </div>
             <div style="font-size:0.72rem;color:#ff8b5e;opacity:0.85;margin-top:6px;text-align:right">Tap for full deal details →</div>
@@ -1672,6 +1705,10 @@
   }
 
   window.setCuisineFilter = (f, el) => {
+    // If the user clicks the already-active Owner Verified chip, toggle it off.
+    if (f === 'owner' && activeCuisineFilter === 'owner') {
+      f = 'all';
+    }
     activeCuisineFilter = f;
     // Keep the dropdown in sync (if present)
     const sel = document.getElementById('cuisineSelect');
@@ -1719,14 +1756,21 @@
         if (restaurantDeals.length === 0) return '';
         return restaurantDeals.map(d => {
           if (d.type === 'limited') {
-            const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
             const dateLine = d.endDate ? `Until ${d.endDate}` : 'Limited time';
+            // Build dishes list — supports new array format AND legacy single-dish format
+            const dishesList = (Array.isArray(d.dishes) && d.dishes.length > 0)
+              ? d.dishes
+              : (d.dish ? [{ dish: d.dish, price: d.price || '' }] : []);
+            const rows = dishesList.map(dd => {
+              const dp = dd.price ? (dd.price.toString().startsWith('$') ? dd.price : '$' + dd.price) : '';
+              return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">
+                <span style="font-weight:600;color:var(--cream)">${dd.dish || ''}</span>
+                <span style="color:#ff8b5e;font-weight:700">${dp}</span>
+              </div>`;
+            }).join('');
             return `<div style="background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.3);border-radius:10px;padding:14px;margin-bottom:12px">
               <div style="font-size:0.72rem;color:#ff8b5e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:700">🔥 Limited Deal · ${dateLine}</div>
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <span style="font-weight:600;color:var(--cream)">${d.dish || ''}</span>
-                <span style="color:#ff8b5e;font-weight:700">${dp}</span>
-              </div>
+              ${rows}
               ${d.notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:6px">${d.notes}</div>` : ''}
             </div>`;
           }
@@ -2586,6 +2630,64 @@
     `).join('');
   }
 
+  // ── LIMITED-DEAL DISHES (up to 3) ──
+  const MAX_LIMITED_DISHES = 3;
+
+  function makeLimitedDishRow(idx, dish = '', price = '') {
+    const removable = idx > 0;
+    return `<div class="limited-dish-row" data-idx="${idx}" style="display:grid;grid-template-columns:2fr 1fr ${removable ? '36px' : ''};gap:8px;align-items:center">
+      <input type="text" class="qa-dish" placeholder="Dish name e.g. Pho Bo" value="${dish.replace(/"/g, '&quot;')}" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
+      <input type="text" class="qa-price" placeholder="Price e.g. $10" value="${price.replace(/"/g, '&quot;')}" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
+      ${removable ? `<button type="button" onclick="removeLimitedDishRow(this)" title="Remove dish" style="background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px;cursor:pointer;font-family:DM Sans,sans-serif">×</button>` : ''}
+    </div>`;
+  }
+
+  function buildLimitedDishes(initialDishes) {
+    const container = document.getElementById('deal_limited_dishes');
+    if (!container) return;
+    let dishes = Array.isArray(initialDishes) && initialDishes.length > 0 ? initialDishes : [{dish: '', price: ''}];
+    if (dishes.length > MAX_LIMITED_DISHES) dishes = dishes.slice(0, MAX_LIMITED_DISHES);
+    container.innerHTML = dishes.map((d, i) => makeLimitedDishRow(i, d.dish || '', d.price || '')).join('');
+    updateAddDishBtn();
+  }
+
+  function updateAddDishBtn() {
+    const btn = document.getElementById('deal_add_dish_btn');
+    if (!btn) return;
+    const rows = document.querySelectorAll('#deal_limited_dishes .limited-dish-row');
+    btn.style.display = rows.length >= MAX_LIMITED_DISHES ? 'none' : 'inline-block';
+  }
+
+  window.addLimitedDishRow = () => {
+    const container = document.getElementById('deal_limited_dishes');
+    if (!container) return;
+    const rows = container.querySelectorAll('.limited-dish-row');
+    if (rows.length >= MAX_LIMITED_DISHES) return;
+    const tmp = document.createElement('div');
+    tmp.innerHTML = makeLimitedDishRow(rows.length);
+    container.appendChild(tmp.firstChild);
+    updateAddDishBtn();
+  };
+
+  window.removeLimitedDishRow = (btnEl) => {
+    const row = btnEl.closest('.limited-dish-row');
+    if (row) row.remove();
+    // Re-index data-idx attributes for cleanliness
+    document.querySelectorAll('#deal_limited_dishes .limited-dish-row').forEach((r, i) => r.dataset.idx = i);
+    updateAddDishBtn();
+  };
+
+  function readLimitedDishes() {
+    const rows = document.querySelectorAll('#deal_limited_dishes .limited-dish-row');
+    const out = [];
+    rows.forEach(r => {
+      const dish = r.querySelector('.qa-dish').value.trim();
+      const price = r.querySelector('.qa-price').value.trim();
+      if (dish) out.push({ dish, price: price || null });
+    });
+    return out;
+  }
+
   function populateRestaurantPicker() {
     const sel = document.getElementById('deal_restaurant');
     if (!sel) return;
@@ -2602,6 +2704,7 @@
   window.initDealsAdmin = () => {
     populateRestaurantPicker();
     buildWeeklyGrid();
+    buildLimitedDishes();
     setDealType(dealCurrentType);
     renderDealsAdminList();
   };
@@ -2740,6 +2843,7 @@
       if (d) d.value = '';
       if (p) p.value = '';
     });
+    buildLimitedDishes(); // reset to single empty row
     setDealType('limited');
   };
 
@@ -2770,11 +2874,13 @@
     };
 
     if (dealCurrentType === 'limited') {
-      const dish = document.getElementById('deal_dish').value.trim();
-      const price = document.getElementById('deal_price').value.trim();
-      if (!dish) { showToast('Dish name is required for a limited deal.', true); return; }
-      payload.dish = dish;
-      payload.price = price || null;
+      const limitedDishes = readLimitedDishes();
+      if (limitedDishes.length === 0) { showToast('At least one dish name is required.', true); return; }
+      // Save the new dishes array AND legacy fields (dish/price = first entry)
+      // so old code paths that read .dish / .price still see something sensible.
+      payload.dishes = limitedDishes;
+      payload.dish = limitedDishes[0].dish;
+      payload.price = limitedDishes[0].price;
       payload.weeklyDishes = null;
     } else {
       const weeklyDishes = {};
@@ -2786,6 +2892,7 @@
       });
       if (!any) { showToast('Add at least one weekday dish.', true); return; }
       payload.weeklyDishes = weeklyDishes;
+      payload.dishes = null;
       payload.dish = null;
       payload.price = null;
     }
@@ -2832,8 +2939,16 @@
     document.getElementById('deal_notes').value = d.notes || '';
     setDealType(d.type || 'limited');
     if (d.type === 'limited') {
-      document.getElementById('deal_dish').value = d.dish || '';
-      document.getElementById('deal_price').value = d.price || '';
+      // New format: d.dishes array. Old format: d.dish + d.price single entry.
+      let initialDishes;
+      if (Array.isArray(d.dishes) && d.dishes.length > 0) {
+        initialDishes = d.dishes;
+      } else if (d.dish) {
+        initialDishes = [{ dish: d.dish, price: d.price || '' }];
+      } else {
+        initialDishes = [{ dish: '', price: '' }];
+      }
+      buildLimitedDishes(initialDishes);
     } else if (d.type === 'weekly' && d.weeklyDishes) {
       ['mon','tue','wed','thu','fri'].forEach(k => {
         const wd = d.weeklyDishes[k];
@@ -2889,8 +3004,18 @@
 
       let body = '';
       if (d.type === 'limited') {
-        const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
-        body = `<div style="display:flex;justify-content:space-between;color:var(--cream);font-size:0.9rem;margin-bottom:6px"><span>${d.dish || '—'}</span><span style="color:#ff8b5e;font-weight:600">${dp}</span></div>`;
+        // Supports new array format AND legacy single-dish format
+        const dishesList = (Array.isArray(d.dishes) && d.dishes.length > 0)
+          ? d.dishes
+          : (d.dish ? [{ dish: d.dish, price: d.price || '' }] : []);
+        if (dishesList.length === 0) {
+          body = '<span style="color:var(--muted);font-size:0.85rem">No dishes set</span>';
+        } else {
+          body = dishesList.map(dd => {
+            const dp = dd.price ? (dd.price.toString().startsWith('$') ? dd.price : '$' + dd.price) : '';
+            return `<div style="display:flex;justify-content:space-between;color:var(--cream);font-size:0.9rem;padding:2px 0"><span>${dd.dish || '—'}</span><span style="color:#ff8b5e;font-weight:600">${dp}</span></div>`;
+          }).join('');
+        }
       } else {
         const rows = ['mon','tue','wed','thu','fri'].map(k => {
           const wd = d.weeklyDishes && d.weeklyDishes[k];
@@ -3299,10 +3424,12 @@
 
           <!-- Limited fields -->
           <div id="deal_limited_fields">
-            <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-bottom:12px">
-              <input type="text" id="deal_dish" placeholder="Dish name e.g. Pho Bo" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
-              <input type="text" id="deal_price" placeholder="Price e.g. $10" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
-            </div>
+            <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Add up to 3 dishes on the same deal.</p>
+            <div id="deal_limited_dishes" style="display:flex;flex-direction:column;gap:6px"></div>
+            <button type="button" id="deal_add_dish_btn" onclick="addLimitedDishRow()" style="background:transparent;color:var(--gold);border:1px solid rgba(245,200,66,0.4);border-radius:8px;padding:8px 12px;font-size:0.82rem;cursor:pointer;font-family:DM Sans,sans-serif;margin-top:6px;margin-bottom:12px">+ Add another dish</button>
+            <!-- Hidden first-dish backwards-compat fields kept so older save paths don't break -->
+            <input type="hidden" id="deal_dish" value="">
+            <input type="hidden" id="deal_price" value="">
           </div>
 
           <!-- Weekly fields -->
