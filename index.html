@@ -1159,7 +1159,7 @@
       <button type="button" id="addDishBtn" onclick="addDishRow()" style="background:transparent;border:1px dashed rgba(245,200,66,0.4);color:var(--gold);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.82rem;margin-bottom:16px;width:100%;transition:all 0.2s">+ Add another dish (up to 3)</button>
 
       <!-- Dish 2 -->
-      <div id="dish-row-2" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+      <div id="dish-row-2" class="dish-row" style="display:none;border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
         <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
           <input type="text" id="f_dish_2" placeholder="Dish 2 (optional)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
           <input type="text" id="f_price_2" placeholder="e.g. $12" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
@@ -1172,7 +1172,7 @@
       </div>
 
       <!-- Dish 3 -->
-      <div id="dish-row-3" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+      <div id="dish-row-3" class="dish-row" style="display:none;border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
         <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
           <input type="text" id="f_dish_3" placeholder="Dish 3 (optional)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
           <input type="text" id="f_price_3" placeholder="e.g. $15" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
@@ -2287,8 +2287,7 @@
       const d3n = document.getElementById('edit_dish_3').value.trim();
       if (d3n) editDishes.push({ name: d3n, price: document.getElementById('edit_price_3').value.trim(), tier: document.getElementById('edit_tier_3').value });
 
-      // Apply edit directly to the restaurant
-      await updateDoc(doc(db, "restaurants", id), {
+      const editData = {
         name: document.getElementById('edit_name').value.trim(),
         cuisine: cuisine,
         cuisineLabel: cuisineLabels[cuisine] || cuisine,
@@ -2300,13 +2299,30 @@
         phone: document.getElementById('edit_phone').value.trim() || null,
         hours: document.getElementById('edit_hours').value.trim() || null,
         website: document.getElementById('edit_website').value.trim() || null
-      });
+      };
 
-      // Reload restaurants to show updated data
-      await loadRestaurants();
+      // Check if currently signed in as admin
+      const currentUser = auth.currentUser;
+      const isAdminUser = currentUser && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
 
-      closeEditForm();
-      showToast('✅ Listing updated successfully!');
+      if (isAdminUser) {
+        // Admin: apply changes directly to the restaurant
+        await updateDoc(doc(db, "restaurants", id), editData);
+        await loadRestaurants();
+        closeEditForm();
+        showToast('✅ Listing updated successfully!');
+      } else {
+        // Public user: save as an edit suggestion for admin review
+        await addDoc(collection(db, "edits"), {
+          restaurantId: id,
+          restaurantName: r.name,
+          changes: editData,
+          status: 'pending',
+          createdAt: serverTimestamp()
+        });
+        closeEditForm();
+        showToast('✅ Edit suggestion submitted! It will be reviewed shortly.');
+      }
     } catch(err) {
       console.error('Edit submit error:', err);
       showToast('Something went wrong. Please try again.', true);
