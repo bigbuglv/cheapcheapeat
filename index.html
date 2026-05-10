@@ -1297,6 +1297,28 @@
   const DAY_KEYS = ['sun','mon','tue','wed','thu','fri','sat'];
   const DAY_LABELS = { sun:'Sun', mon:'Mon', tue:'Tue', wed:'Wed', thu:'Thu', fri:'Fri', sat:'Sat' };
 
+  const DEAL_CATEGORIES = {
+    fixed_price:  { emoji: '🏷️', label: 'Fixed Price Special',     short: 'FIXED PRICE SPECIAL' },
+    bogo:         { emoji: '🎁', label: 'Buy 1 Get 1 Free',        short: 'BUY 1 GET 1 FREE' },
+    free_gift:    { emoji: '🎁', label: 'Free Gift with Purchase', short: 'FREE GIFT WITH PURCHASE' },
+    percent_off:  { emoji: '💰', label: 'Percentage Discount',     short: 'DISCOUNT' },
+    dollar_off:   { emoji: '💰', label: 'Dollar Off',              short: 'DOLLAR OFF' },
+    set_menu:     { emoji: '🍽️', label: 'Set Menu / Combo',        short: 'SET MENU' },
+    happy_hour:   { emoji: '🍺', label: 'Happy Hour',              short: 'HAPPY HOUR' },
+    other:        { emoji: '🔥', label: 'Other Special',           short: 'SPECIAL' }
+  };
+
+  function getDealCategory(deal) {
+    if (deal && deal.category && DEAL_CATEGORIES[deal.category]) return DEAL_CATEGORIES[deal.category];
+    return DEAL_CATEGORIES.fixed_price; // default for old deals without category
+  }
+
+  function dealCategoryOptionsHtml(selectedValue) {
+    return Object.entries(DEAL_CATEGORIES).map(([k, v]) =>
+      `<option value="${k}" ${k === selectedValue ? 'selected' : ''}>${v.emoji} ${v.label}</option>`
+    ).join('');
+  }
+
   function todayKey() {
     return DAY_KEYS[new Date().getDay()];
   }
@@ -1474,7 +1496,8 @@
       const dealInfo = getRestaurantActiveDeal(r.id);
       const dealStripHtml = dealInfo ? (() => {
         const dp = dealInfo.active.price ? (dealInfo.active.price.toString().startsWith('$') ? dealInfo.active.price : '$' + dealInfo.active.price) : '';
-        const label = dealInfo.deal.type === 'weekly' ? `Today's special` : `Limited deal`;
+        const cat = getDealCategory(dealInfo.deal);
+        const label = dealInfo.deal.type === 'weekly' ? `Today's special` : `${cat.emoji} ${cat.short}`;
         const extra = dealInfo.active.extraCount || 0;
         const extraHint = extra > 0 ? ` <span style="color:var(--muted);font-weight:400;font-size:0.78em">+${extra} more</span>` : '';
         return `<div class="deal-strip">
@@ -1496,7 +1519,7 @@
             </div>
             <div class="price-tag ${tier.cls}">${displayPrice}</div>
           </div>
-          ${dealInfo ? '<div style="margin-bottom:6px"><span class="deal-badge">🔥 On Deal</span></div>' : ''}
+          ${dealInfo ? `<div style="margin-bottom:6px"><span class="deal-badge">${getDealCategory(dealInfo.deal).emoji} ${getDealCategory(dealInfo.deal).short}</span></div>` : ''}
           ${r.isOwner ? '<div style="margin-bottom:4px"><span style="background:var(--gold);color:#0e0c09;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Owner Verified</span></div>' : ''}
           <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
           ${dealStripHtml}
@@ -1559,7 +1582,7 @@
 
     activeToday.forEach(({ r, info }) => {
       const dp = info.active.price ? (info.active.price.toString().startsWith('$') ? info.active.price : '$' + info.active.price) : '';
-      const label = info.deal.type === 'weekly' ? `Today's special` : 'Limited deal';
+      const label = info.deal.type === 'weekly' ? `Today's special` : `${getDealCategory(info.deal).emoji} ${getDealCategory(info.deal).short}`;
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
@@ -1801,7 +1824,8 @@
               </div>`;
             }).join('');
             return `<div style="background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.3);border-radius:10px;padding:14px;margin-bottom:12px">
-              <div style="font-size:0.72rem;color:#ff8b5e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:700">🔥 Limited Deal · ${dateLine}</div>
+              <div style="font-size:0.72rem;color:#ff8b5e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:700">${(() => { const mc = getDealCategory(d); return mc.emoji + ' ' + mc.short; })()} · ${dateLine}</div>
+              ${d.source ? `<div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">📸 Spotted by ${d.source}</div>` : ''}
               ${rows}
               ${d.notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:6px">${d.notes}</div>` : ''}
             </div>`;
@@ -2763,6 +2787,8 @@
     populateRestaurantPicker();
     buildWeeklyGrid();
     buildLimitedDishes();
+    const catSel = document.getElementById('deal_category');
+    if (catSel) catSel.innerHTML = dealCategoryOptionsHtml('fixed_price');
     setDealType(dealCurrentType);
     renderDealsAdminList();
   };
@@ -2902,6 +2928,8 @@
       if (p) p.value = '';
     });
     buildLimitedDishes(); // reset to single empty row
+    const catSel = document.getElementById('deal_category');
+    if (catSel) catSel.value = 'fixed_price';
     setDealType('limited');
   };
 
@@ -2922,10 +2950,13 @@
     const endDate = document.getElementById('deal_end').value || null;
     const notes = document.getElementById('deal_notes').value.trim() || null;
 
+    const category = document.getElementById('deal_category').value || 'fixed_price';
+
     const payload = {
       restaurantId,
       restaurantName: r.name,
       type: dealCurrentType,
+      category,
       startDate,
       endDate,
       notes
@@ -2996,6 +3027,8 @@
     document.getElementById('deal_end').value = d.endDate || '';
     document.getElementById('deal_notes').value = d.notes || '';
     setDealType(d.type || 'limited');
+    const catSel = document.getElementById('deal_category');
+    if (catSel) catSel.value = d.category || 'fixed_price';
     if (d.type === 'limited') {
       // New format: d.dishes array. Old format: d.dish + d.price single entry.
       let initialDishes;
@@ -3038,6 +3071,8 @@
   window.initQuickEntry = () => {
     buildQELimitedDishes();
     buildQEWeeklyGrid();
+    const catSel = document.getElementById('qe_category');
+    if (catSel) catSel.innerHTML = dealCategoryOptionsHtml('fixed_price');
     setQEDealType('limited');
   };
 
@@ -3174,6 +3209,8 @@
       if (p) p.value = '';
     });
     buildQELimitedDishes();
+    const qeCatSel = document.getElementById('qe_category');
+    if (qeCatSel) qeCatSel.value = 'fixed_price';
     setQEDealType('limited');
   };
 
@@ -3231,6 +3268,7 @@
     dealPayload.endDate = document.getElementById('qe_end').value || null;
     dealPayload.notes = document.getElementById('qe_notes').value.trim() || null;
     dealPayload.source = document.getElementById('qe_source').value.trim() || null;
+    dealPayload.category = document.getElementById('qe_category').value || 'fixed_price';
     dealPayload.createdAt = serverTimestamp();
 
     btn.disabled = true;
@@ -3374,7 +3412,7 @@
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px">
           <div>
             <strong style="font-family:Fraunces,serif;font-size:1.05rem;color:var(--cream)">${d.restaurantName || '(unknown)'}</strong>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">${d.type === 'weekly' ? 'Weekly' : 'Limited'} · ${dateLine}</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">${d.type === 'weekly' ? 'Weekly' : 'Limited'} · ${getDealCategory(d).emoji} ${getDealCategory(d).label} · ${dateLine}</div>
           </div>
           ${statusBadge}
         </div>
@@ -3823,6 +3861,12 @@
             </div>
           </div>
 
+          <!-- Deal category -->
+          <div style="margin-bottom:12px">
+            <label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Deal category</label>
+            <select id="deal_category" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none"></select>
+          </div>
+
           <!-- Limited fields -->
           <div id="deal_limited_fields">
             <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Add up to 3 dishes on the same deal.</p>
@@ -3937,7 +3981,9 @@
             <button type="button" id="qe_type_weekly" onclick="setQEDealType('weekly')" style="flex:1;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Weekly (Mon–Fri)</button>
           </div>
 
-          <!-- Limited dishes -->
+          <div style="margin-bottom:12px">
+            <select id="qe_category" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none"></select>
+          </div>
           <div id="qe_limited_fields">
             <div id="qe_limited_dishes" style="display:flex;flex-direction:column;gap:6px"></div>
             <button type="button" id="qe_add_dish_btn" onclick="addQEDishRow()" style="background:transparent;color:var(--gold);border:1px solid rgba(245,200,66,0.4);border-radius:8px;padding:6px 12px;font-size:0.78rem;cursor:pointer;font-family:DM Sans,sans-serif;margin-top:6px;margin-bottom:12px">+ Add another dish</button>
