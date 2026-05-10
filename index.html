@@ -2301,28 +2301,35 @@
         website: document.getElementById('edit_website').value.trim() || null
       };
 
-      // Check if currently signed in as admin
-      const currentUser = auth.currentUser;
-      const isAdminUser = currentUser && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
+      // Apply edit directly to the restaurant (for any user)
+      await updateDoc(doc(db, "restaurants", id), editData);
 
-      if (isAdminUser) {
-        // Admin: apply changes directly to the restaurant
-        await updateDoc(doc(db, "restaurants", id), editData);
-        await loadRestaurants();
-        closeEditForm();
-        showToast('✅ Listing updated successfully!');
-      } else {
-        // Public user: save as an edit suggestion for admin review
-        await addDoc(collection(db, "edits"), {
-          restaurantId: id,
-          restaurantName: r.name,
-          changes: editData,
-          status: 'pending',
-          createdAt: serverTimestamp()
-        });
-        closeEditForm();
-        showToast('✅ Edit suggestion submitted! It will be reviewed shortly.');
+      // Notify admin via email — but only if a PUBLIC user made the edit (skip if admin is signed in)
+      const currentUser = auth.currentUser;
+      const isAdminEdit = currentUser && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
+      if (!isAdminEdit) {
+        try {
+          await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+            restaurant_name: '✏️ EDIT: ' + editData.name,
+            cuisine: editData.cuisineLabel || editData.cuisine,
+            dish: editData.dish || '—',
+            price: editData.priceRange || '—',
+            address: editData.address || '—',
+            is_owner: '—',
+            phone: editData.phone || '—',
+            hours: editData.hours || '—',
+            notes: 'A public user edited this listing. Changes applied automatically.',
+            admin_url: ADMIN_URL
+          }, EMAILJS_PUBLIC_KEY);
+          console.log("Edit notification email sent!");
+        } catch (emailErr) {
+          console.warn("Edit notification email failed:", emailErr);
+        }
       }
+
+      await loadRestaurants();
+      closeEditForm();
+      showToast('✅ Listing updated successfully!');
     } catch(err) {
       console.error('Edit submit error:', err);
       showToast('Something went wrong. Please try again.', true);
