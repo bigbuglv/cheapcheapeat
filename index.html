@@ -1917,6 +1917,7 @@
       <a class="map-link" href="${mapsUrl}" target="_blank">📍 Open in Google Maps</a>
       ${r.website ? `<a class="map-link" href="${r.website}" target="_blank" style="margin-top:8px;background:var(--surface2);color:var(--cream);border:1px solid var(--border)">🌐 Visit Restaurant Website</a>` : ''}
       <button onclick="openEditForm(this.dataset.id)" data-id="${r.id}" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">✏️ Suggest an Edit</button>
+      ${(auth.currentUser && ADMIN_EMAILS.includes(auth.currentUser.email.toLowerCase())) ? `<button onclick="generateRestaurantPost('${r.id}')" style="width:100%;margin-top:6px;padding:10px;background:transparent;color:#4caf7d;border:1px solid rgba(76,175,125,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='#4caf7d';this.style.color='#4caf7d'" onmouseout="this.style.borderColor='rgba(76,175,125,0.4)';this.style.color='#4caf7d'">📱 Generate Social Post</button>` : ''}
     `;
     document.getElementById('modal').classList.add('open');
   };
@@ -3384,6 +3385,187 @@
     }
   };
 
+  // ── SOCIAL POST GENERATOR ──
+  window.generateDealPost = (dealId) => {
+    const d = deals.find(x => x.id === dealId);
+    if (!d) { showToast('Deal not found.', true); return; }
+    const r = restaurants.find(x => x.id === d.restaurantId);
+    const cat = getDealCategory(d);
+    const rName = d.restaurantName || (r && r.name) || 'Unknown';
+    const cuisine = r ? (r.cuisineLabel || r.cuisine || '') : '';
+    const address = r ? (r.address || '') : '';
+    // Extract suburb from address (second part usually)
+    const addrParts = address.split(',').map(s => s.trim());
+    const suburb = addrParts.length > 1 ? addrParts[1].replace(/\s*(VIC|NSW|QLD|WA|SA|TAS|NT|ACT)\s*\d*/i, '').trim() : (addrParts[0] || '');
+
+    // Build deal description
+    let dealDesc = '';
+    if (d.type === 'limited') {
+      const dishesList = (Array.isArray(d.dishes) && d.dishes.length > 0)
+        ? d.dishes
+        : (d.dish ? [{ dish: d.dish, price: d.price || '' }] : []);
+      if (dishesList.length === 1) {
+        const dd = dishesList[0];
+        const dp = dd.price ? (dd.price.toString().startsWith('$') ? dd.price : '$' + dd.price) : 'FREE';
+        dealDesc = `${dd.dish} for ${dp}`;
+      } else {
+        dealDesc = dishesList.map(dd => {
+          const dp = dd.price ? (dd.price.toString().startsWith('$') ? dd.price : '$' + dd.price) : 'FREE';
+          return `${dd.dish} (${dp})`;
+        }).join(', ');
+      }
+    } else if (d.type === 'weekly' && d.weeklyDishes) {
+      const dayNames = { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri' };
+      const items = ['mon','tue','wed','thu','fri'].map(k => {
+        const wd = d.weeklyDishes[k];
+        if (!wd || !wd.dish) return null;
+        const dp = wd.price ? (wd.price.toString().startsWith('$') ? wd.price : '$' + wd.price) : '';
+        return `${dayNames[k]}: ${wd.dish}${dp ? ' ' + dp : ''}`;
+      }).filter(Boolean);
+      dealDesc = 'different deals every day 👀\n' + items.join('\n');
+    }
+
+    // Category-specific openers
+    const openers = {
+      fixed_price:  [`Yo look what we just found! 🔥🔥`, `Ok this one's a steal 🔥`, `Budget eats alert! 🚨🔥`],
+      bogo:         [`BUY ONE GET ONE FREE?! Say less 🔥🔥`, `2 for the price of 1?! We're THERE 🔥`, `BOGO alert!! 🚨🔥`],
+      free_gift:    [`FREE stuff with your meal?! Yes please 🔥`, `They're literally giving stuff away 🔥🔥`, `We love free things 🔥`],
+      percent_off:  [`Discount alert! 🔥💰`, `They're slashing prices and we're here for it 🔥`, `Your wallet is gonna love this one 💰🔥`],
+      dollar_off:   [`$$$ saved! 🔥💰`, `Money off your meal = more food for later 🔥`, `Saving money never tasted so good 💰🔥`],
+      set_menu:     [`This combo deal is unreal 🔥🍽️`, `Set menu vibes and we're all in 🔥`, `Combo deal alert! 🔥🍽️`],
+      happy_hour:   [`Happy hour just got HAPPIER 🍺🔥`, `Cheap drinks o'clock! 🍺🔥`, `Someone said happy hour?! 🍺🔥`],
+      other:        [`Yo look what we just found! 🔥🔥`, `Ok you need to see this 🔥`, `Budget eats alert! 🚨🔥`]
+    };
+    const catKey = d.category || 'fixed_price';
+    const openerList = openers[catKey] || openers.other;
+    const opener = openerList[Math.floor(Math.random() * openerList.length)];
+
+    // Build the post
+    const notesLine = d.notes ? `\n${d.notes}` : '';
+    const dateLine = d.endDate ? `\n⏰ Don't sleep on it — ends ${d.endDate}` : '';
+    const sourceLine = d.source ? `\n📸 Pic courtesy of ${d.source}` : '';
+
+    // City for hashtags
+    const cityMatch = address.match(/\b(Melbourne|Sydney|Brisbane|Perth|Adelaide|Hobart|Darwin|Canberra)\b/i);
+    const city = cityMatch ? cityMatch[1].toLowerCase() : 'melbourne';
+    const cuisineTag = cuisine ? cuisine.toLowerCase().replace(/[^a-z]/g, '') : '';
+
+    const post = `${opener}
+
+${rName} at ${suburb || address} — ${cat.emoji} ${dealDesc}. We obviously added them to cheapbites.com.au because that's what we do 😤${notesLine}${dateLine}
+
+Search "${rName}" or "${suburb}" on the site and boom, deal's right there 👉 cheapbites.com.au/?deal=true${sourceLine}
+
+#cheapbites #${city}eats #${city}fooddeals #cheapaets #budgetfood${cuisineTag ? ' #' + cuisineTag : ''}`.trim();
+
+    showSocialPostModal(post);
+  };
+
+  window.generateRestaurantPost = (restaurantId) => {
+    const r = restaurants.find(x => x.id === restaurantId);
+    if (!r) { showToast('Restaurant not found.', true); return; }
+
+    const cuisine = r.cuisineLabel || r.cuisine || '';
+    const address = r.address || '';
+    const addrParts = address.split(',').map(s => s.trim());
+    const suburb = addrParts.length > 1 ? addrParts[1].replace(/\s*(VIC|NSW|QLD|WA|SA|TAS|NT|ACT)\s*\d*/i, '').trim() : (addrParts[0] || '');
+    const tier = r.priceRange ? 'Under $' + r.priceRange : '';
+
+    // Dish list
+    let dishText = '';
+    if (r.dishes && r.dishes.length > 0) {
+      dishText = r.dishes.map(d => {
+        const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
+        return `${d.name}${dp ? ' for ' + dp : ''}`;
+      }).join(', ');
+    } else if (r.dish) {
+      const dp = r.exactPrice ? (r.exactPrice.toString().startsWith('$') ? r.exactPrice : '$' + r.exactPrice) : '';
+      dishText = `${r.dish}${dp ? ' for ' + dp : ''}`;
+    }
+
+    // Deal info if active
+    const dealInfo = getRestaurantActiveDeal(r.id);
+    let dealLine = '';
+    if (dealInfo) {
+      const cat = getDealCategory(dealInfo.deal);
+      const dp = dealInfo.active.price ? (dealInfo.active.price.toString().startsWith('$') ? dealInfo.active.price : '$' + dealInfo.active.price) : 'FREE';
+      dealLine = `\n\nOh and they've got a ${cat.emoji} ${cat.label.toLowerCase()} going on right now — ${dealInfo.active.dish} for ${dp}! 🙌`;
+    }
+
+    const cityMatch = address.match(/\b(Melbourne|Sydney|Brisbane|Perth|Adelaide|Hobart|Darwin|Canberra)\b/i);
+    const city = cityMatch ? cityMatch[1].toLowerCase() : 'melbourne';
+    const cuisineTag = cuisine ? cuisine.toLowerCase().replace(/[^a-z]/g, '') : '';
+
+    const openersR = [
+      `Look what we found! 🔥`,
+      `Another cheap eat added to the collection 🔥🔥`,
+      `Budget ${cuisine.toLowerCase()} eats? Say no more 🔥`,
+      `We just added this gem to cheapbites.com.au 🔥`
+    ];
+    const opener = openersR[Math.floor(Math.random() * openersR.length)];
+
+    const post = `${opener}
+
+${r.name} at ${suburb || address} — ${dishText ? dishText : 'cheap and tasty ' + cuisine.toLowerCase() + ' food'}${tier ? '. ' + tier + ' too 💰' : ''}${dealLine}
+
+Already on cheapbites.com.au — search "${r.name}" or "${suburb}" and it pops right up 👉 cheapbites.com.au
+
+${r.isOwner ? '★ Owner verified listing!\n' : ''}#cheapbites #${city}eats #${city}food #cheapaets #budgetfood${cuisineTag ? ' #' + cuisineTag : ''}`.trim();
+
+    showSocialPostModal(post);
+  };
+
+  function showSocialPostModal(text) {
+    // Create or reuse the social post modal
+    let modal = document.getElementById('socialPostModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'socialPostModal';
+      modal.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px)';
+      modal.innerHTML = `
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;position:relative">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.2rem;margin:0">📱 Social Post</h3>
+            <button onclick="closeSocialPostModal()" style="background:var(--surface2);border:none;color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem">✕</button>
+          </div>
+          <p style="font-size:0.78rem;color:var(--muted);margin:0 0 12px">Copy and paste into Facebook, Instagram, or X.</p>
+          <textarea id="socialPostText" style="width:100%;min-height:250px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:14px;outline:none;resize:vertical;line-height:1.6;box-sizing:border-box" readonly></textarea>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button id="socialCopyBtn" onclick="copySocialPost()" style="flex:1;padding:12px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif;font-size:0.95rem">📋 Copy to Clipboard</button>
+            <button onclick="closeSocialPostModal()" style="padding:12px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">Close</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    modal.style.display = 'flex';
+    document.getElementById('socialPostText').value = text;
+    document.body.style.overflow = 'hidden';
+  }
+
+  window.closeSocialPostModal = () => {
+    const modal = document.getElementById('socialPostModal');
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+  };
+
+  window.copySocialPost = async () => {
+    const text = document.getElementById('socialPostText').value;
+    const btn = document.getElementById('socialCopyBtn');
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => { btn.textContent = '📋 Copy to Clipboard'; }, 2000);
+    } catch (err) {
+      // Fallback for older browsers
+      const textarea = document.getElementById('socialPostText');
+      textarea.select();
+      document.execCommand('copy');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => { btn.textContent = '📋 Copy to Clipboard'; }, 2000);
+    }
+  };
+
   function renderDealsAdminList() {
     const list = document.getElementById('dealsList');
     if (!list) return;
@@ -3447,6 +3629,7 @@
         ${body}
         ${d.notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:6px">📝 ${d.notes}</div>` : ''}
         <div style="display:flex;gap:8px;margin-top:12px">
+          <button onclick="generateDealPost('${d.id}')" style="flex:1;padding:8px;background:transparent;color:#4caf7d;border:1px solid rgba(76,175,125,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">📱 Share</button>
           <button onclick="editDeal('${d.id}')" style="flex:1;padding:8px;background:transparent;color:var(--gold);border:1px solid rgba(245,200,66,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">✏️ Edit</button>
           <button onclick="deleteDeal('${d.id}')" style="flex:1;padding:8px;background:transparent;color:#e8402a;border:1px solid rgba(232,64,42,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🗑️ Delete</button>
         </div>
