@@ -3406,11 +3406,11 @@
       if (dishesList.length === 1) {
         const dd = dishesList[0];
         const dp = dd.price ? (dd.price.toString().startsWith('$') ? dd.price : '$' + dd.price) : 'FREE';
-        dealDesc = `${dd.dish} for ${dp}`;
+        dealDesc = dd.dish + ' for ' + dp;
       } else {
         dealDesc = dishesList.map(dd => {
           const dp = dd.price ? (dd.price.toString().startsWith('$') ? dd.price : '$' + dd.price) : 'FREE';
-          return `${dd.dish} (${dp})`;
+          return dd.dish + ' (' + dp + ')';
         }).join(', ');
       }
     } else if (d.type === 'weekly' && d.weeklyDishes) {
@@ -3419,27 +3419,31 @@
         const wd = d.weeklyDishes[k];
         if (!wd || !wd.dish) return null;
         const dp = wd.price ? (wd.price.toString().startsWith('$') ? wd.price : '$' + wd.price) : '';
-        return `${dayNames[k]}: ${wd.dish}${dp ? ' ' + dp : ''}`;
+        return dayNames[k] + ': ' + wd.dish + (dp ? ' ' + dp : '');
       }).filter(Boolean);
       dealDesc = 'different deals every day \u{1F440}\n' + items.join('\n');
     }
 
-    const notesLine = d.notes ? `\n${d.notes}` : '';
-    const dateLine = d.endDate ? `\n\u23F0 Don't sleep on it \u2014 ends ${d.endDate}` : '';
-    const sourceLine = d.source ? `\n\u{1F4F8} Pic courtesy of ${d.source}` : '';
+    const notesLine = d.notes ? '\n' + d.notes : '';
+    const dateLine = d.endDate ? '\n\u23F0 Don\'t sleep on it \u2014 ends ' + d.endDate : '';
+    const sourceLine = d.source ? '\n\u{1F4F8} Pic courtesy of ' + d.source : '';
     const cityMatch = address.match(/\b(Melbourne|Sydney|Brisbane|Perth|Adelaide|Hobart|Darwin|Canberra)\b/i);
     const city = cityMatch ? cityMatch[1].toLowerCase() : 'melbourne';
     const cuisineTag = cuisine ? cuisine.toLowerCase().replace(/[^a-z]/g, '') : '';
-    const tags = `#cheapbites #${city}eats #${city}fooddeals #cheapaets #budgetfood${cuisineTag ? ' #' + cuisineTag : ''}`;
+    const tags = '#cheapbites #' + city + 'eats #' + city + 'fooddeals #cheapaets #budgetfood' + (cuisineTag ? ' #' + cuisineTag : '');
+    const loc = suburb || address;
+
+    const A = pickRandom(['Yo look what we just found! \u{1F525}\u{1F525}', 'Ok this one\'s a steal \u{1F525}\u{1F525}', 'Budget eats alert! \u{1F6A8}\u{1F525}']);
+    const B = pickRandom(['You\'re gonna want to save this one \u{1F4CC}\u{1F525}', 'Stop scrolling. This is the one. \u{1F525}', 'Found one more! \u{1F525}\u{1F525}']);
 
     const templates = [
-      `${pickRandom(['Yo look what we just found! \u{1F525}\u{1F525}', 'Ok this one\'s a steal \u{1F525}\u{1F525}', 'Budget eats alert! \u{1F6A8}\u{1F525}'])}\n\n${rName} at ${suburb || address} \u2014 ${cat.emoji} ${dealDesc}. We obviously added them to cheapbites.com.au because that\'s what we do \u{1F624}${notesLine}${dateLine}\n\nSearch "${rName}" or "${suburb}" on the site and boom, deal\'s right there \u{1F449} cheapbites.com.au/?deal=true${sourceLine}\n\n${tags}`,
+      A + '\n\n' + rName + ' at ' + loc + ' \u2014 ' + cat.emoji + ' ' + dealDesc + '. We obviously added them to cheapbites.com.au because that\'s what we do \u{1F624}' + notesLine + dateLine + '\n\nSearch "' + rName + '" or "' + loc + '" on the site and boom, deal\'s right there \u{1F449} cheapbites.com.au/?deal=true' + sourceLine + '\n\n' + tags,
 
-      `So we were out hunting for cheap eats (as usual \u{1F605}) and stumbled on this...\n\n${rName} at ${suburb || address} \u2014 ${dealDesc}. ${cat.emoji} You read that right.${notesLine}${dateLine}\n\nAlready on cheapbites.com.au \u2014 just search ${rName} or the suburb and you\'ll see it pop up \u{1F449} cheapbites.com.au/?deal=true${sourceLine}\n\n${tags}`,
+      'So we were out hunting for cheap eats (as usual \u{1F605}) and stumbled on this...\n\n' + rName + ' at ' + loc + ' \u2014 ' + dealDesc + '. ' + cat.emoji + ' You read that right.' + notesLine + dateLine + '\n\nAlready on cheapbites.com.au \u2014 just search ' + rName + ' or the suburb and you\'ll see it pop up \u{1F449} cheapbites.com.au/?deal=true' + sourceLine + '\n\n' + tags,
 
-      `${dealDesc.toUpperCase()}. ${cat.emoji}\n\n${rName} at ${suburb || address} is doing this right now and we had to share it.${notesLine}${dateLine}\n\nWe\'ve added it to cheapbites.com.au \u2014 search "${rName}" or "${suburb}" and the deal\'s right there \u{1F449} cheapbites.com.au/?deal=true${sourceLine}\n\n${tags}`,
+      dealDesc.toUpperCase() + '. ' + cat.emoji + '\n\n' + rName + ' at ' + loc + ' is doing this right now and we had to share it.' + notesLine + dateLine + '\n\nWe\'ve added it to cheapbites.com.au \u2014 search "' + rName + '" or "' + loc + '" and the deal\'s right there \u{1F449} cheapbites.com.au/?deal=true' + sourceLine + '\n\n' + tags,
 
-      `${pickRandom(['You\'re gonna want to save this one \u{1F4CC}\u{1F525}', 'Stop scrolling. This is the one. \u{1F525}', 'Found one more! \u{1F525}\u{1F525}'])}\n\n${rName} at ${suburb || address}. ${cat.emoji} ${dealDesc}.${notesLine}${dateLine}\n\nWe added it to cheapbites.com.au because we can\'t keep this to ourselves \u{1F624} Search "${rName}" or "${suburb}" and boom \u{1F449} cheapbites.com.au/?deal=true${sourceLine}\n\n${tags}`
+      B + '\n\n' + rName + ' at ' + loc + '. ' + cat.emoji + ' ' + dealDesc + '.' + notesLine + dateLine + '\n\nWe added it to cheapbites.com.au because we can\'t keep this to ourselves \u{1F624} Search "' + rName + '" or "' + loc + '" and boom \u{1F449} cheapbites.com.au/?deal=true' + sourceLine + '\n\n' + tags
     ];
 
     return pickRandom(templates).trim();
@@ -3451,16 +3455,17 @@
     const addrParts = address.split(',').map(s => s.trim());
     const suburb = addrParts.length > 1 ? addrParts[1].replace(/\s*(VIC|NSW|QLD|WA|SA|TAS|NT|ACT)\s*\d*/i, '').trim() : (addrParts[0] || '');
     const tier = r.priceRange ? 'Under $' + r.priceRange : '';
+    const loc = suburb || address;
 
     let dishText = '';
     if (r.dishes && r.dishes.length > 0) {
       dishText = r.dishes.map(d => {
         const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
-        return `${d.name}${dp ? ' for ' + dp : ''}`;
+        return d.name + (dp ? ' for ' + dp : '');
       }).join(', ');
     } else if (r.dish) {
       const dp = r.exactPrice ? (r.exactPrice.toString().startsWith('$') ? r.exactPrice : '$' + r.exactPrice) : '';
-      dishText = `${r.dish}${dp ? ' for ' + dp : ''}`;
+      dishText = r.dish + (dp ? ' for ' + dp : '');
     }
 
     const dealInfo = getRestaurantActiveDeal(r.id);
@@ -3468,21 +3473,22 @@
     if (dealInfo) {
       const cat = getDealCategory(dealInfo.deal);
       const dp = dealInfo.active.price ? (dealInfo.active.price.toString().startsWith('$') ? dealInfo.active.price : '$' + dealInfo.active.price) : 'FREE';
-      dealLine = `\n\nOh and they\'ve got a ${cat.emoji} ${cat.label.toLowerCase()} going on right now \u2014 ${dealInfo.active.dish} for ${dp}! \u{1F64C}`;
+      dealLine = '\n\nOh and they\'ve got a ' + cat.emoji + ' ' + cat.label.toLowerCase() + ' going on right now \u2014 ' + dealInfo.active.dish + ' for ' + dp + '! \u{1F64C}';
     }
 
     const cityMatch = address.match(/\b(Melbourne|Sydney|Brisbane|Perth|Adelaide|Hobart|Darwin|Canberra)\b/i);
     const city = cityMatch ? cityMatch[1].toLowerCase() : 'melbourne';
     const cuisineTag = cuisine ? cuisine.toLowerCase().replace(/[^a-z]/g, '') : '';
-    const tags = `#cheapbites #${city}eats #${city}food #cheapaets #budgetfood${cuisineTag ? ' #' + cuisineTag : ''}`;
+    const tags = '#cheapbites #' + city + 'eats #' + city + 'food #cheapaets #budgetfood' + (cuisineTag ? ' #' + cuisineTag : '');
     const ownerLine = r.isOwner ? '\n\u2605 Owner verified listing!' : '';
+    const foodDesc = dishText ? dishText : 'cheap and tasty ' + cuisine.toLowerCase() + ' food';
 
     const templates = [
-      `${pickRandom(['Look what we found! \u{1F525}', 'Another cheap eat added to the collection \u{1F525}\u{1F525}', 'We just added this gem to cheapbites.com.au \u{1F525}'])}\n\n${r.name} at ${suburb || address} \u2014 ${dishText ? dishText : 'cheap and tasty ' + cuisine.toLowerCase() + ' food'}${tier ? '. ' + tier + ' too \u{1F4B0}' : ''}${dealLine}\n\nAlready on cheapbites.com.au \u2014 search "${r.name}" or "${suburb}" and it pops right up \u{1F449} cheapbites.com.au${ownerLine}\n\n${tags}`,
+      pickRandom(['Look what we found! \u{1F525}', 'Another cheap eat added to the collection \u{1F525}\u{1F525}', 'We just added this gem to cheapbites.com.au \u{1F525}']) + '\n\n' + r.name + ' at ' + loc + ' \u2014 ' + foodDesc + (tier ? '. ' + tier + ' too \u{1F4B0}' : '') + dealLine + '\n\nAlready on cheapbites.com.au \u2014 search "' + r.name + '" or "' + loc + '" and it pops right up \u{1F449} cheapbites.com.au' + ownerLine + '\n\n' + tags,
 
-      `${pickRandom(['Cheap eats spotted! \u{1F440}\u{1F525}', 'Your wallet is about to be very happy \u{1F4B0}\u{1F525}', 'Budget ' + cuisine.toLowerCase() + ' that actually slaps \u{1F525}'])}\n\n${r.name} at ${suburb || address}. ${dishText ? dishText + '.' : ''} ${tier ? tier + ' \u2014 ' : ''}we had to add this one to cheapbites.com.au \u{1F624}${dealLine}\n\nType "${r.name}" or "${suburb}" on the site and there it is \u{1F449} cheapbites.com.au${ownerLine}\n\n${tags}`,
+      pickRandom(['Cheap eats spotted! \u{1F440}\u{1F525}', 'Your wallet is about to be very happy \u{1F4B0}\u{1F525}', 'Budget ' + cuisine.toLowerCase() + ' that actually slaps \u{1F525}']) + '\n\n' + r.name + ' at ' + loc + '. ' + (dishText ? dishText + '.' : '') + ' ' + (tier ? tier + ' \u2014 ' : '') + 'we had to add this one to cheapbites.com.au \u{1F624}' + dealLine + '\n\nType "' + r.name + '" or "' + loc + '" on the site and there it is \u{1F449} cheapbites.com.au' + ownerLine + '\n\n' + tags,
 
-      `Found one more! \u{1F525}\n\n${r.name} at ${suburb || address}. ${dishText ? 'We tried the ' + dishText + ' and it hits different.' : 'Cheap and tasty ' + cuisine.toLowerCase() + ' eats.'} ${tier || ''}${dealLine}\n\nAdded to cheapbites.com.au because that\'s what we do \u{1F624} Search "${r.name}" or "${suburb}" \u{1F449} cheapbites.com.au${ownerLine}\n\n${tags}`
+      'Found one more! \u{1F525}\n\n' + r.name + ' at ' + loc + '. ' + (dishText ? 'We tried the ' + dishText + ' and it hits different.' : 'Cheap and tasty ' + cuisine.toLowerCase() + ' eats.') + ' ' + (tier || '') + dealLine + '\n\nAdded to cheapbites.com.au because that\'s what we do \u{1F624} Search "' + r.name + '" or "' + loc + '" \u{1F449} cheapbites.com.au' + ownerLine + '\n\n' + tags
     ];
 
     return pickRandom(templates).trim();
@@ -3500,6 +3506,67 @@
     if (!r) { showToast('Restaurant not found.', true); return; }
     const text = buildRestaurantPost(r);
     showSocialPostModal(text, () => buildRestaurantPost(r));
+  };
+
+  function showSocialPostModal(text, regenerateFn) {
+    let modal = document.getElementById('socialPostModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'socialPostModal';
+      modal.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px)';
+      modal.innerHTML = `
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;position:relative">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.2rem;margin:0">📱 Social Post</h3>
+            <button onclick="closeSocialPostModal()" style="background:var(--surface2);border:none;color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem">✕</button>
+          </div>
+          <p style="font-size:0.78rem;color:var(--muted);margin:0 0 12px">Edit the text below to your liking, then copy and paste into Facebook, Instagram, or X.</p>
+          <textarea id="socialPostText" style="width:100%;min-height:250px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:14px;outline:none;resize:vertical;line-height:1.6;box-sizing:border-box"></textarea>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <button id="socialRewriteBtn" onclick="rewriteSocialPost()" style="padding:12px 16px;background:transparent;color:var(--gold);border:1px solid rgba(245,200,66,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.88rem">🔄 Rewrite</button>
+            <button id="socialCopyBtn" onclick="copySocialPost()" style="flex:1;padding:12px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif;font-size:0.95rem">📋 Copy to Clipboard</button>
+            <button onclick="closeSocialPostModal()" style="padding:12px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">Close</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    modal.style.display = 'flex';
+    document.getElementById('socialPostText').value = text;
+    document.body.style.overflow = 'hidden';
+    window._socialPostRegenerate = regenerateFn || null;
+  }
+
+  window.rewriteSocialPost = () => {
+    if (typeof window._socialPostRegenerate === 'function') {
+      const newText = window._socialPostRegenerate();
+      document.getElementById('socialPostText').value = newText;
+      const btn = document.getElementById('socialRewriteBtn');
+      btn.textContent = '✨ Fresh version!';
+      setTimeout(() => { btn.textContent = '🔄 Rewrite'; }, 1200);
+    }
+  };
+
+  window.closeSocialPostModal = () => {
+    const modal = document.getElementById('socialPostModal');
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+  };
+
+  window.copySocialPost = async () => {
+    const text = document.getElementById('socialPostText').value;
+    const btn = document.getElementById('socialCopyBtn');
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => { btn.textContent = '📋 Copy to Clipboard'; }, 2000);
+    } catch (err) {
+      const textarea = document.getElementById('socialPostText');
+      textarea.select();
+      document.execCommand('copy');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => { btn.textContent = '📋 Copy to Clipboard'; }, 2000);
+    }
   };
 
   function renderDealsAdminList() {
