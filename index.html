@@ -2601,6 +2601,7 @@
     document.getElementById('pendingList').style.display = tab === 'submissions' ? 'block' : 'none';
     document.getElementById('pendingEdits').style.display = tab === 'edits' ? 'block' : 'none';
     document.getElementById('dealsAdmin').style.display = tab === 'deals' ? 'block' : 'none';
+    document.getElementById('dupesAdmin').style.display = tab === 'dupes' ? 'block' : 'none';
 
     const setTab = (id, active) => {
       const el = document.getElementById(id);
@@ -2613,9 +2614,144 @@
     setTab('tab-submissions', tab === 'submissions');
     setTab('tab-edits', tab === 'edits');
     setTab('tab-deals', tab === 'deals');
+    setTab('tab-dupes', tab === 'dupes');
 
     if (tab === 'edits') loadPendingEdits();
     if (tab === 'deals') initDealsAdmin();
+  };
+
+  // ── DUPLICATES ADMIN ──
+  let dupesToDelete = [];
+
+  window.scanDuplicates = async () => {
+    const btn = document.getElementById('scanDupesBtn');
+    const list = document.getElementById('dupesList');
+    const status = document.getElementById('dupesStatus');
+    const deleteBtn = document.getElementById('deleteDupesBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Scanning...';
+    list.innerHTML = '';
+    dupesToDelete = [];
+    deleteBtn.disabled = true;
+    deleteBtn.style.opacity = '0.4';
+
+    try {
+      const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+
+      // Group restaurants by normalised name
+      const groups = {};
+      restaurants.forEach(r => {
+        const key = (r.name || '').toLowerCase().trim()
+          .replace(/[''']/g, '')
+          .replace(/&/g, 'and')
+          .replace(/[^a-z0-9\s]/g, '')
+          .replace(/\s+/g, ' ');
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(r);
+      });
+
+      let dupGroupCount = 0;
+      let removeTotal = 0;
+
+      Object.keys(groups).sort().forEach(key => {
+        const entries = groups[key];
+        if (entries.length <= 1) return;
+        dupGroupCount++;
+
+        // Keep the one with the longest address (most detail)
+        entries.sort((a, b) => {
+          const aLen = (a.address || '').length;
+          const bLen = (b.address || '').length;
+          if (bLen !== aLen) return bLen - aLen;
+          const aGeo = (a.lat && a.lng) ? 1 : 0;
+          const bGeo = (b.lat && b.lng) ? 1 : 0;
+          return bGeo - aGeo;
+        });
+
+        const keep = entries[0];
+        const removes = entries.slice(1);
+        removes.forEach(r => {
+          dupesToDelete.push({ id: r.id, name: r.name });
+          removeTotal++;
+        });
+
+        const groupDiv = document.createElement('div');
+        groupDiv.style.cssText = 'background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px';
+        groupDiv.innerHTML = `<div style="font-family:Fraunces,serif;color:var(--gold);font-size:1rem;margin-bottom:10px">${keep.name} <span style="color:var(--muted);font-size:0.8rem;font-weight:400">(${entries.length} entries)</span></div>`;
+
+        // Keep entry
+        groupDiv.innerHTML += `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(76,175,125,0.08);border:1px solid rgba(76,175,125,0.2);border-radius:8px;margin-bottom:6px;font-size:0.8rem">
+          <span style="background:rgba(76,175,125,0.15);color:var(--green);padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:700">✅ KEEP</span>
+          <span style="color:var(--muted);flex:1">📍 ${keep.address || 'No address'}</span>
+          <span style="color:var(--muted);font-size:0.7rem;font-family:monospace">${keep.id.slice(0,8)}…</span>
+        </div>`;
+
+        removes.forEach(r => {
+          groupDiv.innerHTML += `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(232,64,42,0.08);border:1px solid rgba(232,64,42,0.2);border-radius:8px;margin-bottom:6px;font-size:0.8rem">
+            <span style="background:rgba(232,64,42,0.15);color:var(--red);padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:700">🗑️ REMOVE</span>
+            <span style="color:var(--muted);flex:1">📍 ${r.address || 'No address'}</span>
+            <span style="color:var(--muted);font-size:0.7rem;font-family:monospace">${r.id.slice(0,8)}…</span>
+          </div>`;
+        });
+
+        list.appendChild(groupDiv);
+      });
+
+      if (removeTotal > 0) {
+        status.textContent = `Found ${dupGroupCount} duplicate groups — ${removeTotal} to remove`;
+        status.style.color = 'var(--red)';
+        deleteBtn.disabled = false;
+        deleteBtn.style.opacity = '1';
+      } else {
+        list.innerHTML = '<p style="color:var(--green);text-align:center;padding:20px">✅ No duplicates found — your database is clean!</p>';
+        status.textContent = 'All clear!';
+        status.style.color = 'var(--green)';
+      }
+    } catch (err) {
+      list.innerHTML = `<p style="color:var(--red)">Error: ${err.message}</p>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🔍 Scan for Duplicates';
+    }
+  };
+
+  window.deleteAllDupes = async () => {
+    if (dupesToDelete.length === 0) return;
+    if (!confirm(`Permanently delete ${dupesToDelete.length} duplicate restaurant(s)? This cannot be undone.`)) return;
+
+    const btn = document.getElementById('deleteDupesBtn');
+    const status = document.getElementById('dupesStatus');
+    btn.disabled = true;
+    btn.textContent = '⏳ Deleting...';
+
+    let deleted = 0;
+    let errors = 0;
+
+    try {
+      const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+
+      for (const item of dupesToDelete) {
+        try {
+          await deleteDoc(doc(db, "restaurants", item.id));
+          deleted++;
+        } catch (err) {
+          errors++;
+          console.error('Delete error for', item.name, err);
+        }
+        await new Promise(r => setTimeout(r, 150));
+      }
+    } catch (err) {
+      console.error('Delete batch error:', err);
+    }
+
+    btn.textContent = `✅ Done — ${deleted} deleted`;
+    status.textContent = `${deleted} deleted, ${errors} errors`;
+    status.style.color = deleted > 0 ? 'var(--green)' : 'var(--red)';
+    dupesToDelete = [];
+
+    // Reload restaurants to reflect changes
+    await loadRestaurants();
+    showToast(`✅ ${deleted} duplicate(s) removed!`);
   };
 
   // ── DEALS ADMIN ──
@@ -3408,9 +3544,22 @@
         <button id="tab-submissions" onclick="switchAdminTab('submissions')" style="padding:8px 16px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:600;font-size:0.85rem">New Submissions</button>
         <button id="tab-edits" onclick="switchAdminTab('edits')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Edit Suggestions</button>
         <button id="tab-deals" onclick="switchAdminTab('deals')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🔥 Deals</button>
+        <button id="tab-dupes" onclick="switchAdminTab('dupes')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🔄 Duplicates</button>
       </div>
       <div id="pendingList"></div>
       <div id="pendingEdits" style="display:none"></div>
+      <div id="dupesAdmin" style="display:none">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px">
+          <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.2rem;margin:0 0 8px">Remove Duplicate Restaurants</h3>
+          <p style="color:var(--muted);font-size:0.82rem;margin:0 0 16px">Scans all restaurants, finds entries with the same name, and lets you delete the ones with less complete addresses.</p>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+            <button onclick="scanDuplicates()" id="scanDupesBtn" style="padding:10px 20px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif;font-size:0.85rem">🔍 Scan for Duplicates</button>
+            <button onclick="deleteAllDupes()" id="deleteDupesBtn" disabled style="padding:10px 20px;background:var(--red);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif;font-size:0.85rem;opacity:0.4">🗑️ Delete All Marked Duplicates</button>
+            <span id="dupesStatus" style="color:var(--muted);font-size:0.82rem"></span>
+          </div>
+          <div id="dupesList"></div>
+        </div>
+      </div>
       <div id="dealsAdmin" style="display:none">
         <!-- Deal form -->
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">
