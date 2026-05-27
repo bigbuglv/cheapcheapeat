@@ -756,29 +756,6 @@
     font-size: 0.82rem;
   }
   footer strong { color: var(--gold); }
-  .footer-socials {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 12px;
-  }
-  .footer-socials a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    transition: all 0.2s;
-  }
-  .footer-socials a:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    transform: translateY(-2px);
-  }
-  .footer-socials a svg { width: 18px; height: 18px; fill: currentColor; }
 
   /* ── MODAL ── */
   .modal-overlay {
@@ -1018,17 +995,7 @@
     <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.4rem;margin:0 0 8px">Where are you eating today?</h3>
     <p style="color:var(--muted);font-size:0.9rem;margin:0 0 24px">Search a suburb or use your location to find cheap eats near you</p>
     <button onclick="useMyLocation()" style="background:var(--gold);color:#0e0c09;border:none;padding:12px 24px;border-radius:10px;font-family:Fraunces,serif;font-size:1rem;font-weight:900;cursor:pointer;margin-bottom:24px;display:inline-flex;align-items:center;gap:8px">📍 Use my location</button>
-    <div>
-      <p style="color:var(--muted);font-size:0.8rem;margin:0 0 12px">Or try a popular suburb:</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
-        <button onclick="quickSearch('Melbourne CBD')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Melbourne CBD</button>
-        <button onclick="quickSearch('Box Hill')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Box Hill</button>
-        <button onclick="quickSearch('Springvale')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Springvale</button>
-        <button onclick="quickSearch('Footscray')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Footscray</button>
-        <button onclick="quickSearch('Mitcham')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Mitcham</button>
-        <button onclick="quickSearch('Richmond')" style="padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;cursor:pointer">Richmond</button>
-      </div>
-    </div>
+
   </div>
 
   <div class="cards-grid" id="cardsGrid" style="display:none"></div>
@@ -1182,7 +1149,7 @@
       <button type="button" id="addDishBtn" onclick="addDishRow()" style="background:transparent;border:1px dashed rgba(245,200,66,0.4);color:var(--gold);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.82rem;margin-bottom:16px;width:100%;transition:all 0.2s">+ Add another dish (up to 3)</button>
 
       <!-- Dish 2 -->
-      <div id="dish-row-2" class="dish-row" style="display:none;border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+      <div id="dish-row-2" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
         <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
           <input type="text" id="f_dish_2" placeholder="Dish 2 (optional)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
           <input type="text" id="f_price_2" placeholder="e.g. $12" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
@@ -1195,7 +1162,7 @@
       </div>
 
       <!-- Dish 3 -->
-      <div id="dish-row-3" class="dish-row" style="display:none;border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
+      <div id="dish-row-3" style="display:none" class="dish-row" style="border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface2)">
         <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
           <input type="text" id="f_dish_3" placeholder="Dish 3 (optional)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
           <input type="text" id="f_price_3" placeholder="e.g. $15" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 14px;outline:none">
@@ -1254,11 +1221,6 @@
 <!-- FOOTER -->
 <footer>
   <strong>CheapBites</strong> — Community powered. Always free. &nbsp;·&nbsp; Built with ❤️ for budget food lovers in Australia.
-  <div class="footer-socials">
-    <a href="https://www.facebook.com/cheapbites/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-    <a href="https://www.instagram.com/cheapbites_au/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
-    <a href="https://x.com/cheapbites_au" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-  </div>
 </footer>
 
 <!-- MODAL -->
@@ -1324,28 +1286,6 @@
   // ── DEAL HELPERS ──
   const DAY_KEYS = ['sun','mon','tue','wed','thu','fri','sat'];
   const DAY_LABELS = { sun:'Sun', mon:'Mon', tue:'Tue', wed:'Wed', thu:'Thu', fri:'Fri', sat:'Sat' };
-
-  const DEAL_CATEGORIES = {
-    fixed_price:  { emoji: '🏷️', label: 'Fixed Price Special',     short: 'FIXED PRICE SPECIAL' },
-    bogo:         { emoji: '🎁', label: 'Buy 1 Get 1 Free',        short: 'BUY 1 GET 1 FREE' },
-    free_gift:    { emoji: '🎁', label: 'Free Gift with Purchase', short: 'FREE GIFT WITH PURCHASE' },
-    percent_off:  { emoji: '💰', label: 'Percentage Discount',     short: 'DISCOUNT' },
-    dollar_off:   { emoji: '💰', label: 'Dollar Off',              short: 'DOLLAR OFF' },
-    set_menu:     { emoji: '🍽️', label: 'Set Menu / Combo',        short: 'SET MENU' },
-    happy_hour:   { emoji: '🍺', label: 'Happy Hour',              short: 'HAPPY HOUR' },
-    other:        { emoji: '🔥', label: 'Other Special',           short: 'SPECIAL' }
-  };
-
-  function getDealCategory(deal) {
-    if (deal && deal.category && DEAL_CATEGORIES[deal.category]) return DEAL_CATEGORIES[deal.category];
-    return DEAL_CATEGORIES.fixed_price; // default for old deals without category
-  }
-
-  function dealCategoryOptionsHtml(selectedValue) {
-    return Object.entries(DEAL_CATEGORIES).map(([k, v]) =>
-      `<option value="${k}" ${k === selectedValue ? 'selected' : ''}>${v.emoji} ${v.label}</option>`
-    ).join('');
-  }
 
   function todayKey() {
     return DAY_KEYS[new Date().getDay()];
@@ -1524,8 +1464,7 @@
       const dealInfo = getRestaurantActiveDeal(r.id);
       const dealStripHtml = dealInfo ? (() => {
         const dp = dealInfo.active.price ? (dealInfo.active.price.toString().startsWith('$') ? dealInfo.active.price : '$' + dealInfo.active.price) : '';
-        const cat = getDealCategory(dealInfo.deal);
-        const label = dealInfo.deal.type === 'weekly' ? `Today's special` : `${cat.emoji} ${cat.short}`;
+        const label = dealInfo.deal.type === 'weekly' ? `Today's special` : `Limited deal`;
         const extra = dealInfo.active.extraCount || 0;
         const extraHint = extra > 0 ? ` <span style="color:var(--muted);font-weight:400;font-size:0.78em">+${extra} more</span>` : '';
         return `<div class="deal-strip">
@@ -1547,7 +1486,7 @@
             </div>
             <div class="price-tag ${tier.cls}">${displayPrice}</div>
           </div>
-          ${dealInfo ? `<div style="margin-bottom:6px"><span class="deal-badge">${getDealCategory(dealInfo.deal).emoji} ${getDealCategory(dealInfo.deal).short}</span></div>` : ''}
+          ${dealInfo ? '<div style="margin-bottom:6px"><span class="deal-badge">🔥 On Deal</span></div>' : ''}
           ${r.isOwner ? '<div style="margin-bottom:4px"><span style="background:var(--gold);color:#0e0c09;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.05em">★ Owner Verified</span></div>' : ''}
           <div class="card-cuisine">${r.cuisineLabel || r.cuisine}</div>
           ${dealStripHtml}
@@ -1610,7 +1549,7 @@
 
     activeToday.forEach(({ r, info }) => {
       const dp = info.active.price ? (info.active.price.toString().startsWith('$') ? info.active.price : '$' + info.active.price) : '';
-      const label = info.deal.type === 'weekly' ? `Today's special` : `${getDealCategory(info.deal).emoji} ${getDealCategory(info.deal).short}`;
+      const label = info.deal.type === 'weekly' ? `Today's special` : 'Limited deal';
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
@@ -1852,8 +1791,7 @@
               </div>`;
             }).join('');
             return `<div style="background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.3);border-radius:10px;padding:14px;margin-bottom:12px">
-              <div style="font-size:0.72rem;color:#ff8b5e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:700">${(() => { const mc = getDealCategory(d); return mc.emoji + ' ' + mc.short; })()} · ${dateLine}</div>
-              ${d.source ? `<div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">📸 Spotted by ${d.source}</div>` : ''}
+              <div style="font-size:0.72rem;color:#ff8b5e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:700">🔥 Limited Deal · ${dateLine}</div>
               ${rows}
               ${d.notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:6px">${d.notes}</div>` : ''}
             </div>`;
@@ -1917,7 +1855,6 @@
       <a class="map-link" href="${mapsUrl}" target="_blank">📍 Open in Google Maps</a>
       ${r.website ? `<a class="map-link" href="${r.website}" target="_blank" style="margin-top:8px;background:var(--surface2);color:var(--cream);border:1px solid var(--border)">🌐 Visit Restaurant Website</a>` : ''}
       <button onclick="openEditForm(this.dataset.id)" data-id="${r.id}" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">✏️ Suggest an Edit</button>
-      ${(auth.currentUser && ADMIN_EMAILS.includes(auth.currentUser.email.toLowerCase())) ? `<button onclick="generateRestaurantPost('${r.id}')" style="width:100%;margin-top:6px;padding:10px;background:transparent;color:#4caf7d;border:1px solid rgba(76,175,125,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='#4caf7d';this.style.color='#4caf7d'" onmouseout="this.style.borderColor='rgba(76,175,125,0.4)';this.style.color='#4caf7d'">📱 Generate Social Post</button>` : ''}
     `;
     document.getElementById('modal').classList.add('open');
   };
@@ -2340,7 +2277,8 @@
       const d3n = document.getElementById('edit_dish_3').value.trim();
       if (d3n) editDishes.push({ name: d3n, price: document.getElementById('edit_price_3').value.trim(), tier: document.getElementById('edit_tier_3').value });
 
-      const editData = {
+      // Apply edit directly to the restaurant
+      await updateDoc(doc(db, "restaurants", id), {
         name: document.getElementById('edit_name').value.trim(),
         cuisine: cuisine,
         cuisineLabel: cuisineLabels[cuisine] || cuisine,
@@ -2352,35 +2290,11 @@
         phone: document.getElementById('edit_phone').value.trim() || null,
         hours: document.getElementById('edit_hours').value.trim() || null,
         website: document.getElementById('edit_website').value.trim() || null
-      };
+      });
 
-      // Apply edit directly to the restaurant (for any user)
-      await updateDoc(doc(db, "restaurants", id), editData);
-
-      // Notify admin via email — but only if a PUBLIC user made the edit (skip if admin is signed in)
-      const currentUser = auth.currentUser;
-      const isAdminEdit = currentUser && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
-      if (!isAdminEdit) {
-        try {
-          await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
-            restaurant_name: '✏️ EDIT: ' + editData.name,
-            cuisine: editData.cuisineLabel || editData.cuisine,
-            dish: editData.dish || '—',
-            price: editData.priceRange || '—',
-            address: editData.address || '—',
-            is_owner: '—',
-            phone: editData.phone || '—',
-            hours: editData.hours || '—',
-            notes: 'A public user edited this listing. Changes applied automatically.',
-            admin_url: ADMIN_URL
-          }, EMAILJS_PUBLIC_KEY);
-          console.log("Edit notification email sent!");
-        } catch (emailErr) {
-          console.warn("Edit notification email failed:", emailErr);
-        }
-      }
-
+      // Reload restaurants to show updated data
       await loadRestaurants();
+
       closeEditForm();
       showToast('✅ Listing updated successfully!');
     } catch(err) {
@@ -2687,7 +2601,6 @@
     document.getElementById('pendingList').style.display = tab === 'submissions' ? 'block' : 'none';
     document.getElementById('pendingEdits').style.display = tab === 'edits' ? 'block' : 'none';
     document.getElementById('dealsAdmin').style.display = tab === 'deals' ? 'block' : 'none';
-    document.getElementById('quickEntryAdmin').style.display = tab === 'quickentry' ? 'block' : 'none';
 
     const setTab = (id, active) => {
       const el = document.getElementById(id);
@@ -2700,11 +2613,9 @@
     setTab('tab-submissions', tab === 'submissions');
     setTab('tab-edits', tab === 'edits');
     setTab('tab-deals', tab === 'deals');
-    setTab('tab-quickentry', tab === 'quickentry');
 
     if (tab === 'edits') loadPendingEdits();
     if (tab === 'deals') initDealsAdmin();
-    if (tab === 'quickentry') initQuickEntry();
   };
 
   // ── DEALS ADMIN ──
@@ -2816,8 +2727,6 @@
     populateRestaurantPicker();
     buildWeeklyGrid();
     buildLimitedDishes();
-    const catSel = document.getElementById('deal_category');
-    if (catSel) catSel.innerHTML = dealCategoryOptionsHtml('fixed_price');
     setDealType(dealCurrentType);
     renderDealsAdminList();
   };
@@ -2957,8 +2866,6 @@
       if (p) p.value = '';
     });
     buildLimitedDishes(); // reset to single empty row
-    const catSel = document.getElementById('deal_category');
-    if (catSel) catSel.value = 'fixed_price';
     setDealType('limited');
   };
 
@@ -2979,13 +2886,10 @@
     const endDate = document.getElementById('deal_end').value || null;
     const notes = document.getElementById('deal_notes').value.trim() || null;
 
-    const category = document.getElementById('deal_category').value || 'fixed_price';
-
     const payload = {
       restaurantId,
       restaurantName: r.name,
       type: dealCurrentType,
-      category,
       startDate,
       endDate,
       notes
@@ -3056,8 +2960,6 @@
     document.getElementById('deal_end').value = d.endDate || '';
     document.getElementById('deal_notes').value = d.notes || '';
     setDealType(d.type || 'limited');
-    const catSel = document.getElementById('deal_category');
-    if (catSel) catSel.value = d.category || 'fixed_price';
     if (d.type === 'limited') {
       // New format: d.dishes array. Old format: d.dish + d.price single entry.
       let initialDishes;
@@ -3091,481 +2993,6 @@
     } catch (err) {
       console.error('Delete deal error:', err);
       showToast('Could not delete. Try again.', true);
-    }
-  };
-
-  // ── QUICK ENTRY ──
-  let qeDealType = 'limited';
-
-  window.initQuickEntry = () => {
-    buildQELimitedDishes();
-    buildQEWeeklyGrid();
-    const catSel = document.getElementById('qe_category');
-    if (catSel) catSel.innerHTML = dealCategoryOptionsHtml('fixed_price');
-    setQEDealType('limited');
-  };
-
-  window.setQEDealType = (t) => {
-    qeDealType = t;
-    document.getElementById('qe_limited_fields').style.display = t === 'limited' ? 'block' : 'none';
-    document.getElementById('qe_weekly_fields').style.display = t === 'weekly' ? 'block' : 'none';
-    const lim = document.getElementById('qe_type_limited');
-    const wk = document.getElementById('qe_type_weekly');
-    lim.style.background = t === 'limited' ? 'var(--gold)' : 'transparent';
-    lim.style.color = t === 'limited' ? '#0e0c09' : 'var(--muted)';
-    lim.style.border = t === 'limited' ? 'none' : '1px solid var(--border)';
-    lim.style.fontWeight = t === 'limited' ? '600' : 'normal';
-    wk.style.background = t === 'weekly' ? 'var(--gold)' : 'transparent';
-    wk.style.color = t === 'weekly' ? '#0e0c09' : 'var(--muted)';
-    wk.style.border = t === 'weekly' ? 'none' : '1px solid var(--border)';
-    wk.style.fontWeight = t === 'weekly' ? '600' : 'normal';
-  };
-
-  function makeQEDishRow(idx, dish = '', price = '') {
-    const removable = idx > 0;
-    return `<div class="qe-dish-row" data-idx="${idx}" style="display:grid;grid-template-columns:2fr 1fr ${removable ? '36px' : ''};gap:8px;align-items:center">
-      <input type="text" class="qe-d" placeholder="Dish name *" value="${dish.replace(/"/g, '&quot;')}" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
-      <input type="text" class="qe-p" placeholder="Price" value="${price.replace(/"/g, '&quot;')}" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none">
-      ${removable ? `<button type="button" onclick="removeQEDishRow(this)" title="Remove" style="background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px;cursor:pointer;font-family:DM Sans,sans-serif">×</button>` : ''}
-    </div>`;
-  }
-
-  function buildQELimitedDishes() {
-    const c = document.getElementById('qe_limited_dishes');
-    if (c) c.innerHTML = makeQEDishRow(0);
-    updateQEAddBtn();
-  }
-
-  function updateQEAddBtn() {
-    const btn = document.getElementById('qe_add_dish_btn');
-    if (!btn) return;
-    const rows = document.querySelectorAll('#qe_limited_dishes .qe-dish-row');
-    btn.style.display = rows.length >= 3 ? 'none' : 'inline-block';
-  }
-
-  window.addQEDishRow = () => {
-    const c = document.getElementById('qe_limited_dishes');
-    if (!c) return;
-    const rows = c.querySelectorAll('.qe-dish-row');
-    if (rows.length >= 3) return;
-    const tmp = document.createElement('div');
-    tmp.innerHTML = makeQEDishRow(rows.length);
-    c.appendChild(tmp.firstChild);
-    updateQEAddBtn();
-  };
-
-  window.removeQEDishRow = (btn) => {
-    const row = btn.closest('.qe-dish-row');
-    if (row) row.remove();
-    updateQEAddBtn();
-  };
-
-  function buildQEWeeklyGrid() {
-    const grid = document.getElementById('qe_weekly_grid');
-    if (!grid) return;
-    const days = [['mon','Mon'],['tue','Tue'],['wed','Wed'],['thu','Thu'],['fri','Fri']];
-    grid.innerHTML = days.map(([k, label]) => `
-      <div style="display:grid;grid-template-columns:60px 2fr 1fr;gap:8px;align-items:center">
-        <span style="font-size:0.82rem;color:var(--muted);font-weight:600">${label}</span>
-        <input type="text" id="qe_w_${k}_dish" placeholder="Dish (optional)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
-        <input type="text" id="qe_w_${k}_price" placeholder="$10" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:8px 12px;outline:none">
-      </div>
-    `).join('');
-  }
-
-  // Duplicate detection — check as user types restaurant name
-  let qeDuplicateMatch = null;
-  window.checkQuickEntryDuplicate = () => {
-    const name = (document.getElementById('qe_name').value || '').trim().toLowerCase();
-    const hint = document.getElementById('qe_duplicate_hint');
-    if (!hint) return;
-    if (name.length < 3) { hint.style.display = 'none'; qeDuplicateMatch = null; return; }
-    // Search existing restaurants for a close match
-    const match = restaurants.find(r => {
-      const rn = (r.name || '').toLowerCase();
-      return rn === name || rn.includes(name) || name.includes(rn);
-    });
-    if (match) {
-      qeDuplicateMatch = match;
-      hint.style.display = 'block';
-      hint.innerHTML = `⚠️ <strong>${match.name}</strong> already exists (${match.address || ''}). <button type="button" onclick="useExistingQE('${match.id}')" style="background:var(--gold);color:#0e0c09;border:none;border-radius:4px;padding:2px 8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.78rem;font-weight:600;margin-left:4px">Use existing → just add deal</button>`;
-    } else {
-      qeDuplicateMatch = null;
-      hint.style.display = 'none';
-    }
-  };
-
-  window.useExistingQE = (id) => {
-    const r = restaurants.find(x => x.id === id);
-    if (!r) return;
-    qeDuplicateMatch = r;
-    document.getElementById('qe_name').value = r.name;
-    document.getElementById('qe_address').value = r.address || '';
-    if (r.cuisine) document.getElementById('qe_cuisine').value = r.cuisine;
-    if (r.priceRange) document.getElementById('qe_tier').value = r.priceRange;
-    // Disable restaurant fields since we're using an existing one
-    document.getElementById('qe_address').disabled = true;
-    document.getElementById('qe_cuisine').disabled = true;
-    document.getElementById('qe_tier').disabled = true;
-    document.getElementById('qe_address').style.opacity = '0.5';
-    document.getElementById('qe_cuisine').style.opacity = '0.5';
-    document.getElementById('qe_tier').style.opacity = '0.5';
-    const hint = document.getElementById('qe_duplicate_hint');
-    hint.innerHTML = `✅ Using existing restaurant: <strong>${r.name}</strong>. Only the deal will be created.`;
-    hint.style.borderColor = 'rgba(76,175,125,0.4)';
-    hint.style.background = 'rgba(76,175,125,0.08)';
-    hint.style.color = '#4caf7d';
-  };
-
-  window.resetQuickEntry = () => {
-    qeDuplicateMatch = null;
-    ['qe_name','qe_address','qe_notes','qe_source'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) { el.value = ''; el.disabled = false; el.style.opacity = '1'; }
-    });
-    ['qe_cuisine','qe_tier'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) { el.selectedIndex = 0; el.disabled = false; el.style.opacity = '1'; }
-    });
-    document.getElementById('qe_start').value = '';
-    document.getElementById('qe_end').value = '';
-    const hint = document.getElementById('qe_duplicate_hint');
-    if (hint) { hint.style.display = 'none'; hint.style.borderColor = ''; hint.style.background = ''; hint.style.color = ''; }
-    ['mon','tue','wed','thu','fri'].forEach(k => {
-      const d = document.getElementById('qe_w_' + k + '_dish');
-      const p = document.getElementById('qe_w_' + k + '_price');
-      if (d) d.value = '';
-      if (p) p.value = '';
-    });
-    buildQELimitedDishes();
-    const qeCatSel = document.getElementById('qe_category');
-    if (qeCatSel) qeCatSel.value = 'fixed_price';
-    setQEDealType('limited');
-  };
-
-  window.saveQuickEntry = async () => {
-    const btn = document.getElementById('qeSaveBtn');
-    const name = document.getElementById('qe_name').value.trim();
-    const address = document.getElementById('qe_address').value.trim();
-    const cuisine = document.getElementById('qe_cuisine').value;
-    const tier = document.getElementById('qe_tier').value;
-
-    if (!name) { showToast('Restaurant name is required.', true); return; }
-
-    // If using existing restaurant, skip validation for restaurant fields
-    const useExisting = qeDuplicateMatch && qeDuplicateMatch.name.toLowerCase() === name.toLowerCase();
-
-    if (!useExisting) {
-      if (!address) { showToast('Address is required.', true); return; }
-      if (!cuisine) { showToast('Please pick a cuisine.', true); return; }
-      if (!tier) { showToast('Please pick a price tier.', true); return; }
-    }
-
-    // Validate deal
-    let dealPayload = {};
-    if (qeDealType === 'limited') {
-      const rows = document.querySelectorAll('#qe_limited_dishes .qe-dish-row');
-      const dishes = [];
-      rows.forEach(r => {
-        const d = r.querySelector('.qe-d').value.trim();
-        const p = r.querySelector('.qe-p').value.trim();
-        if (d) dishes.push({ dish: d, price: p || null });
-      });
-      if (dishes.length === 0) { showToast('At least one dish is required.', true); return; }
-      dealPayload.type = 'limited';
-      dealPayload.dishes = dishes;
-      dealPayload.dish = dishes[0].dish;
-      dealPayload.price = dishes[0].price;
-      dealPayload.weeklyDishes = null;
-    } else {
-      const weeklyDishes = {};
-      let any = false;
-      ['mon','tue','wed','thu','fri'].forEach(k => {
-        const d = document.getElementById('qe_w_' + k + '_dish').value.trim();
-        const p = document.getElementById('qe_w_' + k + '_price').value.trim();
-        if (d) { weeklyDishes[k] = { dish: d, price: p || null }; any = true; }
-      });
-      if (!any) { showToast('Add at least one weekday dish.', true); return; }
-      dealPayload.type = 'weekly';
-      dealPayload.weeklyDishes = weeklyDishes;
-      dealPayload.dishes = null;
-      dealPayload.dish = null;
-      dealPayload.price = null;
-    }
-
-    dealPayload.startDate = document.getElementById('qe_start').value || null;
-    dealPayload.endDate = document.getElementById('qe_end').value || null;
-    dealPayload.notes = document.getElementById('qe_notes').value.trim() || null;
-    dealPayload.source = document.getElementById('qe_source').value.trim() || null;
-    dealPayload.category = document.getElementById('qe_category').value || 'fixed_price';
-    dealPayload.createdAt = serverTimestamp();
-
-    btn.disabled = true;
-    const orig = btn.textContent;
-    btn.textContent = 'Saving...';
-
-    try {
-      let restaurantId;
-      let restaurantName = name;
-
-      if (useExisting) {
-        // Use existing restaurant
-        restaurantId = qeDuplicateMatch.id;
-        restaurantName = qeDuplicateMatch.name;
-      } else {
-        // Create new restaurant
-        const cuisineLabels = {
-          malaysian: 'Malaysian', vietnamese: 'Vietnamese', thai: 'Thai',
-          chinese: 'Chinese', japanese: 'Japanese', korean: 'Korean',
-          indonesian: 'Indonesian', asian: 'Asian', indian: 'Indian',
-          filipino: 'Filipino', nepalese: 'Nepalese', srilankan: 'Sri Lankan',
-          afghan: 'Afghan', middleeastern: 'Middle Eastern', lebanese: 'Lebanese',
-          turkish: 'Turkish', greek: 'Greek',
-          italian: 'Italian', french: 'French', mexican: 'Mexican',
-          american: 'American', burgers: 'Burgers', seafood: 'Seafood',
-          vegetarian: 'Vegetarian', bakery: 'Bakery', cafe: 'Cafe', dessert: 'Dessert',
-          'middle-eastern': 'Middle Eastern', other: 'Other'
-        };
-
-        // Geocode
-        let lat = null, lng = null;
-        try {
-          await new Promise((resolve) => {
-            const waitForGoogle = setInterval(() => {
-              if (window.google && window.google.maps) {
-                clearInterval(waitForGoogle);
-                const geocoder = new google.maps.Geocoder();
-                geocoder.geocode({ address: address + ', Australia' }, (results, status) => {
-                  if (status === 'OK' && results.length > 0) {
-                    lat = results[0].geometry.location.lat();
-                    lng = results[0].geometry.location.lng();
-                  }
-                  resolve();
-                });
-              }
-            }, 100);
-            setTimeout(() => { clearInterval(waitForGoogle); resolve(); }, 5000);
-          });
-        } catch (e) { console.warn('Geocode error:', e); }
-
-        const newRest = {
-          name, cuisine,
-          cuisineLabel: cuisineLabels[cuisine] || cuisine,
-          address, priceRange: tier,
-          dishes: [], dish: null, exactPrice: null,
-          phone: null, hours: null, notes: null, website: null,
-          isOwner: false, stars: 4, lat, lng,
-          status: 'approved', createdAt: serverTimestamp(),
-          createdVia: 'admin-quickentry'
-        };
-        const docRef = await addDoc(collection(db, "restaurants"), newRest);
-        restaurantId = docRef.id;
-        restaurants.push({ id: docRef.id, ...newRest });
-      }
-
-      // Create deal
-      dealPayload.restaurantId = restaurantId;
-      dealPayload.restaurantName = restaurantName;
-      await addDoc(collection(db, "deals"), dealPayload);
-
-      // Refresh data
-      await loadDeals();
-      renderCards(getFiltered());
-      if (map) updateMapPins(getFiltered());
-      renderTodaysDeals();
-
-      showToast(`✅ ${useExisting ? 'Deal added to' : 'Restaurant + deal created for'} ${restaurantName}`);
-      resetQuickEntry();
-    } catch (err) {
-      console.error('Quick entry error:', err);
-      showToast('Something went wrong. Check console for details.', true);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = orig;
-    }
-  };
-
-  // ── SOCIAL POST GENERATOR ──
-
-  function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-  function buildDealPost(d) {
-    const r = restaurants.find(x => x.id === d.restaurantId);
-    const cat = getDealCategory(d);
-    const rName = d.restaurantName || (r && r.name) || 'Unknown';
-    const cuisine = r ? (r.cuisineLabel || r.cuisine || '') : '';
-    const address = r ? (r.address || '') : '';
-    const addrParts = address.split(',').map(s => s.trim());
-    const suburb = addrParts.length > 1 ? addrParts[1].replace(/\s*(VIC|NSW|QLD|WA|SA|TAS|NT|ACT)\s*\d*/i, '').trim() : (addrParts[0] || '');
-
-    let dealDesc = '';
-    if (d.type === 'limited') {
-      const dishesList = (Array.isArray(d.dishes) && d.dishes.length > 0)
-        ? d.dishes
-        : (d.dish ? [{ dish: d.dish, price: d.price || '' }] : []);
-      if (dishesList.length === 1) {
-        const dd = dishesList[0];
-        const dp = dd.price ? (dd.price.toString().startsWith('$') ? dd.price : '$' + dd.price) : 'FREE';
-        dealDesc = dd.dish + ' for ' + dp;
-      } else {
-        dealDesc = dishesList.map(dd => {
-          const dp = dd.price ? (dd.price.toString().startsWith('$') ? dd.price : '$' + dd.price) : 'FREE';
-          return dd.dish + ' (' + dp + ')';
-        }).join(', ');
-      }
-    } else if (d.type === 'weekly' && d.weeklyDishes) {
-      const dayNames = { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri' };
-      const items = ['mon','tue','wed','thu','fri'].map(k => {
-        const wd = d.weeklyDishes[k];
-        if (!wd || !wd.dish) return null;
-        const dp = wd.price ? (wd.price.toString().startsWith('$') ? wd.price : '$' + wd.price) : '';
-        return dayNames[k] + ': ' + wd.dish + (dp ? ' ' + dp : '');
-      }).filter(Boolean);
-      dealDesc = 'different deals every day \u{1F440}\n' + items.join('\n');
-    }
-
-    const notesLine = d.notes ? '\n' + d.notes : '';
-    const dateLine = d.endDate ? '\n\u23F0 Don\'t sleep on it \u2014 ends ' + d.endDate : '';
-    const sourceLine = d.source ? '\n\u{1F4F8} Pic courtesy of ' + d.source : '';
-    const cityMatch = address.match(/\b(Melbourne|Sydney|Brisbane|Perth|Adelaide|Hobart|Darwin|Canberra)\b/i);
-    const city = cityMatch ? cityMatch[1].toLowerCase() : 'melbourne';
-    const cuisineTag = cuisine ? cuisine.toLowerCase().replace(/[^a-z]/g, '') : '';
-    const tags = '#cheapbites #' + city + 'eats #' + city + 'fooddeals #cheapaets #budgetfood' + (cuisineTag ? ' #' + cuisineTag : '');
-    const loc = suburb || address;
-
-    const A = pickRandom(['Yo look what we just found! \u{1F525}\u{1F525}', 'Ok this one\'s a steal \u{1F525}\u{1F525}', 'Budget eats alert! \u{1F6A8}\u{1F525}']);
-    const B = pickRandom(['You\'re gonna want to save this one \u{1F4CC}\u{1F525}', 'Stop scrolling. This is the one. \u{1F525}', 'Found one more! \u{1F525}\u{1F525}']);
-
-    const templates = [
-      A + '\n\n' + rName + ' at ' + loc + ' \u2014 ' + cat.emoji + ' ' + dealDesc + '. We obviously added them to cheapbites.com.au because that\'s what we do \u{1F624}' + notesLine + dateLine + '\n\nSearch "' + rName + '" or "' + loc + '" on the site and boom, deal\'s right there \u{1F449} cheapbites.com.au/?deal=true' + sourceLine + '\n\n' + tags,
-
-      'So we were out hunting for cheap eats (as usual \u{1F605}) and stumbled on this...\n\n' + rName + ' at ' + loc + ' \u2014 ' + dealDesc + '. ' + cat.emoji + ' You read that right.' + notesLine + dateLine + '\n\nAlready on cheapbites.com.au \u2014 just search ' + rName + ' or the suburb and you\'ll see it pop up \u{1F449} cheapbites.com.au/?deal=true' + sourceLine + '\n\n' + tags,
-
-      dealDesc.toUpperCase() + '. ' + cat.emoji + '\n\n' + rName + ' at ' + loc + ' is doing this right now and we had to share it.' + notesLine + dateLine + '\n\nWe\'ve added it to cheapbites.com.au \u2014 search "' + rName + '" or "' + loc + '" and the deal\'s right there \u{1F449} cheapbites.com.au/?deal=true' + sourceLine + '\n\n' + tags,
-
-      B + '\n\n' + rName + ' at ' + loc + '. ' + cat.emoji + ' ' + dealDesc + '.' + notesLine + dateLine + '\n\nWe added it to cheapbites.com.au because we can\'t keep this to ourselves \u{1F624} Search "' + rName + '" or "' + loc + '" and boom \u{1F449} cheapbites.com.au/?deal=true' + sourceLine + '\n\n' + tags
-    ];
-
-    return pickRandom(templates).trim();
-  }
-
-  function buildRestaurantPost(r) {
-    const cuisine = r.cuisineLabel || r.cuisine || '';
-    const address = r.address || '';
-    const addrParts = address.split(',').map(s => s.trim());
-    const suburb = addrParts.length > 1 ? addrParts[1].replace(/\s*(VIC|NSW|QLD|WA|SA|TAS|NT|ACT)\s*\d*/i, '').trim() : (addrParts[0] || '');
-    const tier = r.priceRange ? 'Under $' + r.priceRange : '';
-    const loc = suburb || address;
-
-    let dishText = '';
-    if (r.dishes && r.dishes.length > 0) {
-      dishText = r.dishes.map(d => {
-        const dp = d.price ? (d.price.toString().startsWith('$') ? d.price : '$' + d.price) : '';
-        return d.name + (dp ? ' for ' + dp : '');
-      }).join(', ');
-    } else if (r.dish) {
-      const dp = r.exactPrice ? (r.exactPrice.toString().startsWith('$') ? r.exactPrice : '$' + r.exactPrice) : '';
-      dishText = r.dish + (dp ? ' for ' + dp : '');
-    }
-
-    const dealInfo = getRestaurantActiveDeal(r.id);
-    let dealLine = '';
-    if (dealInfo) {
-      const cat = getDealCategory(dealInfo.deal);
-      const dp = dealInfo.active.price ? (dealInfo.active.price.toString().startsWith('$') ? dealInfo.active.price : '$' + dealInfo.active.price) : 'FREE';
-      dealLine = '\n\nOh and they\'ve got a ' + cat.emoji + ' ' + cat.label.toLowerCase() + ' going on right now \u2014 ' + dealInfo.active.dish + ' for ' + dp + '! \u{1F64C}';
-    }
-
-    const cityMatch = address.match(/\b(Melbourne|Sydney|Brisbane|Perth|Adelaide|Hobart|Darwin|Canberra)\b/i);
-    const city = cityMatch ? cityMatch[1].toLowerCase() : 'melbourne';
-    const cuisineTag = cuisine ? cuisine.toLowerCase().replace(/[^a-z]/g, '') : '';
-    const tags = '#cheapbites #' + city + 'eats #' + city + 'food #cheapaets #budgetfood' + (cuisineTag ? ' #' + cuisineTag : '');
-    const ownerLine = r.isOwner ? '\n\u2605 Owner verified listing!' : '';
-    const foodDesc = dishText ? dishText : 'cheap and tasty ' + cuisine.toLowerCase() + ' food';
-
-    const templates = [
-      pickRandom(['Look what we found! \u{1F525}', 'Another cheap eat added to the collection \u{1F525}\u{1F525}', 'We just added this gem to cheapbites.com.au \u{1F525}']) + '\n\n' + r.name + ' at ' + loc + ' \u2014 ' + foodDesc + (tier ? '. ' + tier + ' too \u{1F4B0}' : '') + dealLine + '\n\nAlready on cheapbites.com.au \u2014 search "' + r.name + '" or "' + loc + '" and it pops right up \u{1F449} cheapbites.com.au' + ownerLine + '\n\n' + tags,
-
-      pickRandom(['Cheap eats spotted! \u{1F440}\u{1F525}', 'Your wallet is about to be very happy \u{1F4B0}\u{1F525}', 'Budget ' + cuisine.toLowerCase() + ' that actually slaps \u{1F525}']) + '\n\n' + r.name + ' at ' + loc + '. ' + (dishText ? dishText + '.' : '') + ' ' + (tier ? tier + ' \u2014 ' : '') + 'we had to add this one to cheapbites.com.au \u{1F624}' + dealLine + '\n\nType "' + r.name + '" or "' + loc + '" on the site and there it is \u{1F449} cheapbites.com.au' + ownerLine + '\n\n' + tags,
-
-      'Found one more! \u{1F525}\n\n' + r.name + ' at ' + loc + '. ' + (dishText ? 'We tried the ' + dishText + ' and it hits different.' : 'Cheap and tasty ' + cuisine.toLowerCase() + ' eats.') + ' ' + (tier || '') + dealLine + '\n\nAdded to cheapbites.com.au because that\'s what we do \u{1F624} Search "' + r.name + '" or "' + loc + '" \u{1F449} cheapbites.com.au' + ownerLine + '\n\n' + tags
-    ];
-
-    return pickRandom(templates).trim();
-  }
-
-  window.generateDealPost = (dealId) => {
-    const d = deals.find(x => x.id === dealId);
-    if (!d) { showToast('Deal not found.', true); return; }
-    const text = buildDealPost(d);
-    showSocialPostModal(text, () => buildDealPost(d));
-  };
-
-  window.generateRestaurantPost = (restaurantId) => {
-    const r = restaurants.find(x => x.id === restaurantId);
-    if (!r) { showToast('Restaurant not found.', true); return; }
-    const text = buildRestaurantPost(r);
-    showSocialPostModal(text, () => buildRestaurantPost(r));
-  };
-
-  function showSocialPostModal(text, regenerateFn) {
-    let modal = document.getElementById('socialPostModal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'socialPostModal';
-      modal.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px)';
-      modal.innerHTML = `
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;position:relative">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-            <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.2rem;margin:0">📱 Social Post</h3>
-            <button onclick="closeSocialPostModal()" style="background:var(--surface2);border:none;color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem">✕</button>
-          </div>
-          <p style="font-size:0.78rem;color:var(--muted);margin:0 0 12px">Edit the text below to your liking, then copy and paste into Facebook, Instagram, or X.</p>
-          <textarea id="socialPostText" style="width:100%;min-height:250px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:14px;outline:none;resize:vertical;line-height:1.6;box-sizing:border-box"></textarea>
-          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-            <button id="socialRewriteBtn" onclick="rewriteSocialPost()" style="padding:12px 16px;background:transparent;color:var(--gold);border:1px solid rgba(245,200,66,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.88rem">🔄 Rewrite</button>
-            <button id="socialCopyBtn" onclick="copySocialPost()" style="flex:1;padding:12px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif;font-size:0.95rem">📋 Copy to Clipboard</button>
-            <button onclick="closeSocialPostModal()" style="padding:12px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">Close</button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-    }
-    modal.style.display = 'flex';
-    document.getElementById('socialPostText').value = text;
-    document.body.style.overflow = 'hidden';
-    window._socialPostRegenerate = regenerateFn || null;
-  }
-
-  window.rewriteSocialPost = () => {
-    if (typeof window._socialPostRegenerate === 'function') {
-      const newText = window._socialPostRegenerate();
-      document.getElementById('socialPostText').value = newText;
-      const btn = document.getElementById('socialRewriteBtn');
-      btn.textContent = '✨ Fresh version!';
-      setTimeout(() => { btn.textContent = '🔄 Rewrite'; }, 1200);
-    }
-  };
-
-  window.closeSocialPostModal = () => {
-    const modal = document.getElementById('socialPostModal');
-    if (modal) modal.style.display = 'none';
-    document.body.style.overflow = '';
-  };
-
-  window.copySocialPost = async () => {
-    const text = document.getElementById('socialPostText').value;
-    const btn = document.getElementById('socialCopyBtn');
-    try {
-      await navigator.clipboard.writeText(text);
-      btn.textContent = '✅ Copied!';
-      setTimeout(() => { btn.textContent = '📋 Copy to Clipboard'; }, 2000);
-    } catch (err) {
-      const textarea = document.getElementById('socialPostText');
-      textarea.select();
-      document.execCommand('copy');
-      btn.textContent = '✅ Copied!';
-      setTimeout(() => { btn.textContent = '📋 Copy to Clipboard'; }, 2000);
     }
   };
 
@@ -3625,14 +3052,13 @@
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px">
           <div>
             <strong style="font-family:Fraunces,serif;font-size:1.05rem;color:var(--cream)">${d.restaurantName || '(unknown)'}</strong>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">${d.type === 'weekly' ? 'Weekly' : 'Limited'} · ${getDealCategory(d).emoji} ${getDealCategory(d).label} · ${dateLine}</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">${d.type === 'weekly' ? 'Weekly' : 'Limited'} · ${dateLine}</div>
           </div>
           ${statusBadge}
         </div>
         ${body}
         ${d.notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:6px">📝 ${d.notes}</div>` : ''}
         <div style="display:flex;gap:8px;margin-top:12px">
-          <button onclick="generateDealPost('${d.id}')" style="flex:1;padding:8px;background:transparent;color:#4caf7d;border:1px solid rgba(76,175,125,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">📱 Share</button>
           <button onclick="editDeal('${d.id}')" style="flex:1;padding:8px;background:transparent;color:var(--gold);border:1px solid rgba(245,200,66,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">✏️ Edit</button>
           <button onclick="deleteDeal('${d.id}')" style="flex:1;padding:8px;background:transparent;color:#e8402a;border:1px solid rgba(232,64,42,0.4);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🗑️ Delete</button>
         </div>
@@ -3982,7 +3408,6 @@
         <button id="tab-submissions" onclick="switchAdminTab('submissions')" style="padding:8px 16px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:600;font-size:0.85rem">New Submissions</button>
         <button id="tab-edits" onclick="switchAdminTab('edits')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Edit Suggestions</button>
         <button id="tab-deals" onclick="switchAdminTab('deals')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🔥 Deals</button>
-        <button id="tab-quickentry" onclick="switchAdminTab('quickentry')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">⚡ Quick Entry</button>
       </div>
       <div id="pendingList"></div>
       <div id="pendingEdits" style="display:none"></div>
@@ -4075,12 +3500,6 @@
             </div>
           </div>
 
-          <!-- Deal category -->
-          <div style="margin-bottom:12px">
-            <label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Deal category</label>
-            <select id="deal_category" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none"></select>
-          </div>
-
           <!-- Limited fields -->
           <div id="deal_limited_fields">
             <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Add up to 3 dishes on the same deal.</p>
@@ -4123,114 +3542,6 @@
         <!-- Existing deals list -->
         <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.1rem;margin:0 0 12px">Active &amp; Upcoming Deals</h3>
         <div id="dealsList"></div>
-      </div>
-
-      <!-- QUICK ENTRY -->
-      <div id="quickEntryAdmin" style="display:none">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px">
-          <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.2rem;margin:0 0 4px">⚡ Quick Entry</h3>
-          <p style="color:var(--muted);font-size:0.82rem;margin:0 0 18px">Spot a deal on socials? Add the restaurant and deal in one save.</p>
-
-          <!-- Restaurant section -->
-          <div style="font-size:0.72rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;font-weight:700">Restaurant</div>
-
-          <input type="text" id="qe_name" placeholder="Restaurant name *" autocomplete="off" oninput="checkQuickEntryDuplicate()" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none;margin-bottom:4px;box-sizing:border-box">
-          <div id="qe_duplicate_hint" style="display:none;font-size:0.78rem;color:var(--gold);margin-bottom:8px;padding:6px 10px;background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.25);border-radius:6px"></div>
-
-          <input type="text" id="qe_address" placeholder="Address * e.g. 123 Smith St, Fitzroy VIC 3065" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none;margin-bottom:8px;box-sizing:border-box">
-
-          <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-bottom:16px">
-            <select id="qe_cuisine" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:9px 12px;outline:none">
-              <option value="">Cuisine *</option>
-              <optgroup label="🌏 Asian">
-                <option value="asian">Asian (Other)</option>
-                <option value="chinese">Chinese</option>
-                <option value="japanese">Japanese</option>
-                <option value="korean">Korean</option>
-                <option value="malaysian">Malaysian</option>
-                <option value="vietnamese">Vietnamese</option>
-                <option value="thai">Thai</option>
-                <option value="indonesian">Indonesian</option>
-                <option value="filipino">Filipino</option>
-                <option value="nepalese">Nepalese</option>
-                <option value="srilankan">Sri Lankan</option>
-                <option value="indian">Indian</option>
-                <option value="afghan">Afghan</option>
-              </optgroup>
-              <optgroup label="🥙 Middle East &amp; Mediterranean">
-                <option value="middleeastern">Middle Eastern</option>
-                <option value="lebanese">Lebanese</option>
-                <option value="turkish">Turkish</option>
-                <option value="greek">Greek</option>
-              </optgroup>
-              <optgroup label="🍕 Western">
-                <option value="italian">Italian</option>
-                <option value="french">French</option>
-                <option value="mexican">Mexican</option>
-                <option value="american">American</option>
-                <option value="burgers">Burgers</option>
-                <option value="seafood">Seafood</option>
-              </optgroup>
-              <optgroup label="🍰 Other">
-                <option value="vegetarian">Vegetarian</option>
-                <option value="bakery">Bakery</option>
-                <option value="cafe">Cafe</option>
-                <option value="dessert">Dessert</option>
-                <option value="other">Other</option>
-              </optgroup>
-            </select>
-            <select id="qe_tier" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:9px 12px;outline:none">
-              <option value="">Price tier *</option>
-              <option value="10">Under $10</option>
-              <option value="15">Under $15</option>
-              <option value="20">Under $20</option>
-            </select>
-          </div>
-
-          <!-- Deal section -->
-          <div style="font-size:0.72rem;color:#ff8b5e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;font-weight:700">Deal</div>
-
-          <div style="display:flex;gap:8px;margin-bottom:12px">
-            <button type="button" id="qe_type_limited" onclick="setQEDealType('limited')" style="flex:1;padding:10px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:600;font-size:0.85rem">Limited time</button>
-            <button type="button" id="qe_type_weekly" onclick="setQEDealType('weekly')" style="flex:1;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Weekly (Mon–Fri)</button>
-          </div>
-
-          <div style="margin-bottom:12px">
-            <select id="qe_category" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none"></select>
-          </div>
-          <div id="qe_limited_fields">
-            <div id="qe_limited_dishes" style="display:flex;flex-direction:column;gap:6px"></div>
-            <button type="button" id="qe_add_dish_btn" onclick="addQEDishRow()" style="background:transparent;color:var(--gold);border:1px solid rgba(245,200,66,0.4);border-radius:8px;padding:6px 12px;font-size:0.78rem;cursor:pointer;font-family:DM Sans,sans-serif;margin-top:6px;margin-bottom:12px">+ Add another dish</button>
-          </div>
-
-          <!-- Weekly dishes -->
-          <div id="qe_weekly_fields" style="display:none;margin-bottom:12px">
-            <div id="qe_weekly_grid" style="display:flex;flex-direction:column;gap:6px"></div>
-          </div>
-
-          <!-- Date range -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-            <div>
-              <label style="display:block;font-size:0.72rem;color:var(--muted);margin-bottom:4px">Start date (optional)</label>
-              <input type="date" id="qe_start" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:9px 12px;outline:none;box-sizing:border-box">
-            </div>
-            <div>
-              <label style="display:block;font-size:0.72rem;color:var(--muted);margin-bottom:4px">End date (optional)</label>
-              <input type="date" id="qe_end" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.88rem;padding:9px 12px;outline:none;box-sizing:border-box">
-            </div>
-          </div>
-
-          <input type="text" id="qe_notes" placeholder="Notes (optional) e.g. Dine-in only, lunch 11am-3pm" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none;margin-bottom:10px;box-sizing:border-box">
-
-          <!-- Source -->
-          <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:600">Source (optional)</div>
-          <input type="text" id="qe_source" placeholder="e.g. @sydneyfoodie or link to post" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.9rem;padding:10px 12px;outline:none;margin-bottom:14px;box-sizing:border-box">
-
-          <div style="display:flex;gap:8px">
-            <button type="button" id="qeSaveBtn" onclick="saveQuickEntry()" style="flex:1;padding:12px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif;font-size:0.95rem">⚡ Save Restaurant + Deal</button>
-            <button type="button" onclick="resetQuickEntry()" style="padding:12px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">Clear</button>
-          </div>
-        </div>
       </div>
     </div>
 
