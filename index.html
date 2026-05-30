@@ -74,34 +74,34 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Where can I find cheap food near me in Australia?",
+        "name": "What is CheapBites?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "CheapBites is a free community-powered directory of cheap meals under $20 across Australia. Search by your suburb, cuisine type, or budget (under $10, $15, or $20) to find affordable restaurants, cafes and eateries near you in Melbourne, Sydney, Brisbane and more."
+          "text": "CheapBites is a free directory of restaurants, cafes and eateries across Australia where you can get a meal for under $20. It's community-driven — anyone can submit a place they know about. No ads, no sign-up, no sponsored listings."
         }
       },
       {
         "@type": "Question",
-        "name": "What are the cheapest places to eat in Sydney?",
+        "name": "Which cities does CheapBites cover?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Sydney's cheapest suburbs for eating out include Cabramatta (Vietnamese pho from $11, skewers from $1.10), Marrickville (banh mi under $11, souvlaki $15), Harris Park (Indian street food under $15), Haymarket/Chinatown (udon from $5), and Burwood (Chinese dumplings under $10). CheapBites lists 30+ Sydney restaurants with meals under $20."
+          "text": "We currently have listings in Melbourne, Sydney, Brisbane, and Adelaide, with more cities being added. If your city or suburb isn't listed yet, you can submit a restaurant and help us grow."
         }
       },
       {
         "@type": "Question",
-        "name": "What are the cheapest places to eat in Melbourne?",
+        "name": "How do I find cheap food near me?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Melbourne's best cheap eats suburbs include Footscray (Vietnamese, African), Springvale (Asian hawker-style), Box Hill (Chinese food courts), Richmond (Vietnamese on Victoria St), and Melbourne CBD (student meal deals). CheapBites lists hundreds of Melbourne restaurants with meals under $20."
+          "text": "Type your suburb into the search bar, or tap Use my location to see what's nearby. You can also filter by cuisine type or price — under $10, under $15, or under $20."
         }
       },
       {
         "@type": "Question",
-        "name": "How does CheapBites work?",
+        "name": "Can I add a restaurant to CheapBites?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "CheapBites is a free, community-driven directory. Anyone can submit a restaurant with meals under $20. Search by suburb name, cuisine type, or use your phone's location to find cheap eats nearby. Filter by price tier: under $10 (green), under $15 (gold), or under $20 (red). No sign-up required."
+          "text": "Yes. Tap the Know a cheap spot button and fill in the details — restaurant name, suburb, cuisine, a dish and its price. Submissions are reviewed before they go live. You don't need an account."
         }
       }
     ]
@@ -3770,62 +3770,73 @@
 <!-- ══════════════════════════════════════════════════════════════════ -->
 <!-- SEO CONTENT — visible to Google crawlers, rendered at page bottom -->
 <!-- ══════════════════════════════════════════════════════════════════ -->
-<section id="seoContent" style="max-width:900px;margin:0 auto;padding:64px 24px 80px;border-top:1px solid rgba(245,200,66,0.1)">
-  <h2 style="font-family:Fraunces,serif;font-size:1.6rem;font-weight:700;color:var(--cream);margin:0 0 12px">Find Cheap Eats Across Australia</h2>
-  <p style="color:var(--muted);font-size:0.9rem;line-height:1.7;margin:0 0 24px">
-    CheapBites is Australia's free community-powered directory for finding cheap meals under $20. Whether you're a student on a budget, a family looking for affordable dinner options, or a foodie hunting for hidden gems — we help you discover the best budget restaurants, cafes and eateries near you. Search by suburb, cuisine type, or price tier.
-  </p>
+<section id="seoContent" style="max-width:900px;margin:0 auto;padding:48px 24px 80px;border-top:1px solid rgba(245,200,66,0.1)">
+  <h2 style="font-family:Fraunces,serif;font-size:1.3rem;font-weight:700;color:var(--cream);margin:0 0 20px;text-align:center">Frequently Asked Questions</h2>
 
-  <h3 style="font-family:Fraunces,serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin:0 0 10px">Cheap Eats in Melbourne</h3>
-  <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;margin:0 0 20px">
-    Melbourne is famous for its diverse food scene, and you don't need to spend big to eat well. Explore budget meals in suburbs like <strong style="color:var(--cream)">Footscray</strong> (Vietnamese, Ethiopian, and African cuisines), <strong style="color:var(--cream)">Springvale</strong> (Asian hawker-style food courts), <strong style="color:var(--cream)">Box Hill</strong> (Chinese dumplings and noodles), <strong style="color:var(--cream)">Richmond</strong> (Victoria Street's Vietnamese restaurants), <strong style="color:var(--cream)">Melbourne CBD</strong> (student meal deals and pub specials), and <strong style="color:var(--cream)">Mitcham</strong>. From $5 banh mi to $15 pub schnitzels, CheapBites lists hundreds of affordable options across greater Melbourne.
-  </p>
+  <style>
+    .faq-item { border-bottom: 1px solid rgba(245,200,66,0.1); }
+    .faq-item summary {
+      padding: 14px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--cream);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { content: '+'; color: var(--gold); font-size: 1.2rem; font-weight: 400; transition: transform 0.2s; }
+    .faq-item[open] summary::after { content: '−'; }
+    .faq-item .faq-body {
+      padding: 0 0 16px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.7;
+    }
+  </style>
 
-  <h3 style="font-family:Fraunces,serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin:0 0 10px">Cheap Eats in Sydney</h3>
-  <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;margin:0 0 20px">
-    Sydney's multicultural suburbs are packed with incredible cheap food. Find budget meals in <strong style="color:var(--cream)">Cabramatta</strong> (Vietnamese pho from $11, BBQ skewers from $1.10), <strong style="color:var(--cream)">Marrickville</strong> (banh mi under $11, Greek souvlaki $15), <strong style="color:var(--cream)">Harris Park</strong> (Indian street food and curry under $15), <strong style="color:var(--cream)">Haymarket & Chinatown</strong> (udon from $5, Malaysian roti, Indonesian nasi kuning), <strong style="color:var(--cream)">Burwood</strong> (Chinese dumplings and bao under $10), <strong style="color:var(--cream)">Newtown</strong> (eclectic student-friendly eats), <strong style="color:var(--cream)">Punchbowl</strong> (Lebanese mixed grills), and <strong style="color:var(--cream)">Surry Hills</strong> ($4 taco nights, $1 dumpling specials). CheapBites covers 30+ Sydney restaurants across 12+ suburbs.
-  </p>
+  <details class="faq-item">
+    <summary>What is CheapBites?</summary>
+    <div class="faq-body">CheapBites is a free directory of restaurants, cafes and eateries across Australia where you can get a meal for under $20. It's community-driven — anyone can submit a place they know about, and we verify and add it. No ads, no sign-up, no sponsored listings.</div>
+  </details>
 
-  <h3 style="font-family:Fraunces,serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin:0 0 10px">Cheap Eats in Brisbane</h3>
-  <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;margin:0 0 20px">
-    Brisbane offers incredible value dining across its vibrant suburbs. <strong style="color:var(--cream)">Fortitude Valley</strong> is the hub for cheap dumplings, ramen and late-night kebabs — try Fat Dumpling on Brunswick Street or Gung Ho! Dumpling Ramen in Bakery Lane. <strong style="color:var(--cream)">West End</strong> has $5 tacos at El Torito and $12 Greek pitas at Little Greek Taverna. <strong style="color:var(--cream)">Sunnybank</strong> is Brisbane's Asian food capital with $10 wagyu burgers, yum cha under $10, and dumpling spots galore. <strong style="color:var(--cream)">South Brisbane</strong> has Brooklyn Depot's $10 burger Fridays and Fritzenberger's Monday deals. For cheap pub meals, look for $14 schnitzels and $15 steak nights across the CBD. CheapBites lists 30+ Brisbane restaurants from Fortitude Valley to Banyo.
-  </p>
+  <details class="faq-item">
+    <summary>Which cities does CheapBites cover?</summary>
+    <div class="faq-body">We currently have listings in Melbourne, Sydney, Brisbane, and Adelaide, with more cities being added. Our goal is to cover all of Australia — if your city or suburb isn't listed yet, you can submit a restaurant and help us grow.</div>
+  </details>
 
-  <h3 style="font-family:Fraunces,serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin:0 0 10px">Cheap Eats in Adelaide</h3>
-  <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;margin:0 0 20px">
-    Adelaide's <strong style="color:var(--cream)">Chinatown on Gouger Street</strong> is one of Australia's best cheap eats strips — dumplings from $12, laksa from $16, and Vietnamese rolls for $10. The <strong style="color:var(--cream)">Adelaide Central Market</strong> is a haven for budget lunches with Lucia's pasta from $13.50, Real Falafel wraps under $15, and food court stalls from $10. <strong style="color:var(--cream)">Norwood</strong> has cheap Thai, <strong style="color:var(--cream)">Torrensville</strong> has the legendary Parwana Afghan Kitchen with dishes under $20, and <strong style="color:var(--cream)">Rundle Street</strong> has Indian curries from $10.90. The CBD is full of hidden gems like Sit Lo for $10 banh mi on Bank Street and Two Bit Villains for vegan burgers in Rundle Mall. CheapBites covers 20+ Adelaide restaurants across the city and suburbs.
-  </p>
+  <details class="faq-item">
+    <summary>How do I find cheap food near me?</summary>
+    <div class="faq-body">Type your suburb into the search bar, or tap "Use my location" to see what's nearby. You can also filter by cuisine type or price — under $10, under $15, or under $20.</div>
+  </details>
 
-  <h3 style="font-family:Fraunces,serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin:0 0 10px">Why Use CheapBites?</h3>
-  <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;margin:0 0 20px">
-    With the cost of living rising across Australia, eating out can feel like a luxury. CheapBites was created to prove that you can still enjoy amazing restaurant food without spending a fortune. Every restaurant on our platform serves at least one meal under $20, and many have dishes under $10. Unlike other food directories that focus on fine dining and expensive restaurants, CheapBites is built specifically for budget-conscious diners. We cover everything from $1 dumpling specials and $5 taco nights to $15 steak deals and $18 mixed grill platters. Our community-driven model means the listings come from real people who know their local area — not paid advertisers or sponsored reviews.
-  </p>
+  <details class="faq-item">
+    <summary>What do the price colours mean?</summary>
+    <div class="faq-body">Every listing is colour-coded so you can tell the price at a glance. Green means under $10, gold means under $15, and red means under $20.</div>
+  </details>
 
-  <h3 style="font-family:Fraunces,serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin:0 0 10px">Tips for Eating Cheap in Australia</h3>
-  <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;margin:0 0 20px">
-    The best way to eat cheaply in Australia is to explore multicultural suburbs. Vietnamese, Chinese, Indian, Lebanese, and Korean restaurants consistently offer the most generous portions at the lowest prices. Look for lunch specials — many restaurants offer significantly cheaper meals between 11am and 3pm. Weeknight deals are another goldmine: $10 schnitzel Mondays, $1 wing Tuesdays, $5 taco Wednesdays and steak nights are common across Australian pubs. Food courts in shopping centres and markets like Adelaide Central Market, Queen Victoria Market in Melbourne, and Paddy's Markets in Sydney also offer cheap meals. Use CheapBites to find these deals near you — just search your suburb or tap "Use my location" to discover what's nearby.
-  </p>
+  <details class="faq-item">
+    <summary>Can I add a restaurant?</summary>
+    <div class="faq-body">Yes. Tap the "Know a cheap spot?" button and fill in the details — restaurant name, suburb, cuisine, a dish and its price. Submissions are reviewed before they go live. You don't need an account.</div>
+  </details>
 
-  <h3 style="font-family:Fraunces,serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin:0 0 10px">How CheapBites Works</h3>
-  <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;margin:0 0 20px">
-    CheapBites is 100% free and community-driven. Anyone can submit a restaurant with meals under $20 — no sign-up required. Search by typing your suburb name, filter by cuisine type (Vietnamese, Chinese, Indian, Lebanese, Japanese, Korean, Greek, Italian, Mexican and more), or use your phone's GPS to find cheap eats nearby. Every listing is colour-coded by price: <strong style="color:#4caf7d">green for under $10</strong>, <strong style="color:var(--gold)">gold for under $15</strong>, and <strong style="color:var(--red)">red for under $20</strong>. We also feature daily deals, weekly specials, and limited-time offers from restaurants across Australia.
-  </p>
+  <details class="faq-item">
+    <summary>Is CheapBites free?</summary>
+    <div class="faq-body">Completely free. There are no charges for users or for restaurants. We don't run ads or accept payment for listings.</div>
+  </details>
 
-  <h3 style="font-family:Fraunces,serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin:0 0 10px">Popular Cuisines</h3>
-  <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;margin:0 0 20px">
-    Browse cheap meals by cuisine: Vietnamese cheap eats, Chinese cheap eats, Indian cheap eats, Japanese cheap eats, Korean cheap eats, Lebanese cheap eats, Greek cheap eats, Italian cheap eats, Mexican cheap eats, Malaysian cheap eats, Thai cheap eats, Indonesian cheap eats, and Australian pub meals. Whether you're craving a $7 pork roll, $1 dumplings, $10 chicken schnitzel, $12 butter chicken, or $5 udon noodles — CheapBites helps you find it.
-  </p>
+  <details class="faq-item">
+    <summary>How accurate are the prices?</summary>
+    <div class="faq-body">Prices are based on what was reported when the listing was submitted and may change over time. If you notice a price that's out of date, you can suggest an edit on any listing and we'll update it.</div>
+  </details>
 
-  <h3 style="font-family:Fraunces,serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin:0 0 10px">Browse by Price</h3>
-  <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;margin:0 0 8px">
-    <strong style="color:#4caf7d">Under $10:</strong> Banh mi, dumplings, skewers, sugar cane juice, pork buns, wings specials, tacos, jianbing crepes, basic pub meals on special nights.
-  </p>
-  <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;margin:0 0 8px">
-    <strong style="color:var(--gold)">Under $15:</strong> Pho, bun cha, rice noodle rolls, souvlaki wraps, Indian street food, fried chicken meals, udon bowls, pizza, steaks on special, tamales, pasta deals.
-  </p>
-  <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;margin:0 0 0">
-    <strong style="color:var(--red)">Under $20:</strong> Mixed grill platters, Malaysian roti & satay combos, burgers, bistro mains, hot pot rice, half chicken meals, rump steak with chips and salad.
-  </p>
+  <details class="faq-item">
+    <summary>I own a restaurant — can I list it?</summary>
+    <div class="faq-body">Absolutely. Use the submit form and tick "I'm the owner or work here" so we know. As long as you have at least one meal under $20, your restaurant is welcome on CheapBites.</div>
+  </details>
 </section>
 
 </body>
