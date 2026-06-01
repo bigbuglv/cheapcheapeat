@@ -3795,7 +3795,8 @@
     if (approved.length === 0) {
       modal.style.display = 'flex';
       document.getElementById('diceResult').style.display = 'none';
-      emojiEl.textContent = '⏳';
+      var c2 = document.getElementById('diceCube'); if(c2) c2.className = 'dice-cube rolling';
+      emojiEl.textContent = '';
       titleEl.textContent = 'Loading restaurants...';
       subtitleEl.textContent = 'Hang on, fetching the menu';
       setTimeout(function() {
@@ -3816,19 +3817,18 @@
     titleEl.textContent = 'Rolling...';
     subtitleEl.textContent = 'Finding you something tasty nearby';
 
-    // Show rolling dice
-    emojiEl.innerHTML = '<span class="dice-spin" style="font-size:4rem">🎲</span>';
+    // Start rolling animation
+    var cube = document.getElementById('diceCube');
+    cube.className = 'dice-cube rolling';
+    emojiEl.style.fontSize = '';
 
-    var diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
     var rolls = 0;
     var maxRolls = 18;
     var rollInterval = setInterval(function() {
-      var face = diceFaces[Math.floor(Math.random() * diceFaces.length)];
-      emojiEl.innerHTML = '<span class="dice-spin" style="font-size:4rem">🎲</span>';
       rolls++;
       if (rolls >= maxRolls) {
         clearInterval(rollInterval);
-        emojiEl.innerHTML = '<span class="dice-land" style="font-size:4rem">🎲</span>';
+        var c = document.getElementById('diceCube'); if(c){ c.className = 'dice-cube landed'; }
       }
     }, 100);
 
@@ -3836,7 +3836,7 @@
     if (window.userLat && window.userLng) {
       setTimeout(function() {
         clearInterval(rollInterval);
-        emojiEl.innerHTML = '<span class="dice-land" style="font-size:4rem">🎲</span>';
+        var c = document.getElementById('diceCube'); if(c){ c.className = 'dice-cube landed'; }
         showDiceResult();
       }, maxRolls * 100);
       return;
@@ -3853,7 +3853,7 @@
           var remaining = Math.max(0, (maxRolls * 100) - elapsed);
           setTimeout(function() {
             clearInterval(rollInterval);
-            emojiEl.innerHTML = '<span class="dice-land" style="font-size:4rem">🎲</span>';
+            var c = document.getElementById('diceCube'); if(c){ c.className = 'dice-cube landed'; }
             showDiceResult();
           }, remaining);
         },
@@ -3863,7 +3863,7 @@
           var remaining = Math.max(0, (maxRolls * 100) - elapsed);
           setTimeout(function() {
             clearInterval(rollInterval);
-            emojiEl.innerHTML = '<span class="dice-land" style="font-size:4rem">🎲</span>';
+            var c = document.getElementById('diceCube'); if(c){ c.className = 'dice-cube landed'; }
             showDiceResult();
           }, remaining);
         },
@@ -3873,7 +3873,7 @@
       // No geolocation support — just show any result after animation
       setTimeout(function() {
         clearInterval(rollInterval);
-        emojiEl.innerHTML = '<span class="dice-land" style="font-size:4rem">🎲</span>';
+        var c = document.getElementById('diceCube'); if(c){ c.className = 'dice-cube landed'; }
         showDiceResult();
       }, maxRolls * 100);
     }
@@ -3925,7 +3925,7 @@
     };
     var emoji = cuisineEmojis[pick.cuisine] || '🍽️';
 
-    document.getElementById('diceEmoji').innerHTML = '<div style="font-size:3.5rem">' + emoji + '</div>';
+    document.getElementById('diceEmoji').innerHTML = '<div style="font-size:3.5rem;margin-bottom:0">' + emoji + '</div>';
     document.getElementById('diceTitle').textContent = 'You should try...';
     document.getElementById('diceSubtitle').textContent = isNearby ? '📍 Based on your location' : '';
 
@@ -3960,30 +3960,58 @@
 <div id="diceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;justify-content:center;align-items:center;padding:24px" onclick="if(event.target===this)closeDice()">
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:400px;width:100%;text-align:center;position:relative">
     <button onclick="closeDice()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer">&times;</button>
-    <div id="diceEmoji" style="font-size:4rem;margin-bottom:16px">🎲</div>
+    <div id="diceEmoji" style="height:90px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;perspective:300px">
+      <div id="diceCube" class="dice-cube">
+        <div class="face front">⚀</div>
+        <div class="face back">⚅</div>
+        <div class="face right">⚂</div>
+        <div class="face left">⚃</div>
+        <div class="face top">⚄</div>
+        <div class="face bottom">⚁</div>
+      </div>
+    </div>
     <style>
-      @keyframes diceRoll {
-        0% { transform: translateY(0) rotate3d(1,1,0,0deg); }
-        10% { transform: translateY(-30px) rotate3d(1,0.5,0.5,72deg); }
-        20% { transform: translateY(-10px) rotate3d(0.5,1,0,144deg); }
-        30% { transform: translateY(-40px) rotate3d(1,1,1,216deg); }
-        40% { transform: translateY(-5px) rotate3d(0,1,0.5,288deg); }
-        50% { transform: translateY(-35px) rotate3d(1,0,1,360deg); }
-        60% { transform: translateY(-8px) rotate3d(0.5,1,0.5,432deg); }
-        70% { transform: translateY(-25px) rotate3d(1,1,0,504deg); }
-        80% { transform: translateY(-3px) rotate3d(0,0.5,1,576deg); }
-        90% { transform: translateY(-15px) rotate3d(1,0.5,0,648deg); }
-        100% { transform: translateY(0) rotate3d(1,1,1,720deg); }
+      .dice-cube {
+        width: 70px;
+        height: 70px;
+        position: relative;
+        transform-style: preserve-3d;
+        transform: rotateX(0deg) rotateY(0deg);
       }
-      .dice-spin {
-        display: inline-block;
-        animation: diceRoll 1.2s ease-in-out infinite;
-        filter: drop-shadow(0 4px 12px rgba(232, 64, 42, 0.5));
+      .face {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #e8402a, #c0301e);
+        border: 2px solid rgba(255,255,255,0.2);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
       }
-      .dice-land {
-        display: inline-block;
+      .front  { transform: translateZ(35px); }
+      .back   { transform: rotateY(180deg) translateZ(35px); }
+      .right  { transform: rotateY(90deg) translateZ(35px); }
+      .left   { transform: rotateY(-90deg) translateZ(35px); }
+      .top    { transform: rotateX(90deg) translateZ(35px); }
+      .bottom { transform: rotateX(-90deg) translateZ(35px); }
+
+      @keyframes rollForward {
+        0%   { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+        25%  { transform: rotateX(180deg) rotateY(90deg) rotateZ(45deg); }
+        50%  { transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg); }
+        75%  { transform: rotateX(540deg) rotateY(270deg) rotateZ(135deg); }
+        100% { transform: rotateX(720deg) rotateY(360deg) rotateZ(180deg); }
+      }
+      .rolling {
+        animation: rollForward 0.8s cubic-bezier(0.4,0,0.6,1) infinite;
+      }
+      .landed {
         animation: none;
-        transform: translateY(0) rotate(0deg);
+        transition: transform 0.3s ease;
       }
     </style>
     <h3 id="diceTitle" style="font-family:Fraunces,serif;color:var(--cream);font-size:1.3rem;margin:0 0 8px">Rolling...</h3>
