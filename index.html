@@ -3788,6 +3788,17 @@
     var titleEl = document.getElementById('diceTitle');
     var subtitleEl = document.getElementById('diceSubtitle');
 
+    // Always restore the cube HTML first (it may have been replaced by food emoji)
+    emojiEl.innerHTML = '\
+      <div id="diceCube" class="dice-cube rolling">\
+        <div class="face front">⚀</div>\
+        <div class="face back">⚅</div>\
+        <div class="face right">⚂</div>\
+        <div class="face left">⚃</div>\
+        <div class="face top">⚄</div>\
+        <div class="face bottom">⚁</div>\
+      </div>';
+
     // Check if restaurants have loaded yet
     var allR = window.restaurants || [];
     var approved = allR.filter(function(r) { return r.status === 'approved'; });
@@ -3819,8 +3830,7 @@
 
     // Start rolling animation
     var cube = document.getElementById('diceCube');
-    cube.className = 'dice-cube rolling';
-    emojiEl.style.fontSize = '';
+    if (cube) cube.className = 'dice-cube rolling';
 
     var rolls = 0;
     var maxRolls = 18;
@@ -3828,7 +3838,7 @@
       rolls++;
       if (rolls >= maxRolls) {
         clearInterval(rollInterval);
-        var c = document.getElementById('diceCube'); if(c){ c.className = 'dice-cube landed'; }
+        var _c = document.getElementById('diceCube'); if(_c) _c.className = 'dice-cube landed';
       }
     }, 100);
 
@@ -3836,7 +3846,7 @@
     if (window.userLat && window.userLng) {
       setTimeout(function() {
         clearInterval(rollInterval);
-        var c = document.getElementById('diceCube'); if(c){ c.className = 'dice-cube landed'; }
+        var _c = document.getElementById('diceCube'); if(_c) _c.className = 'dice-cube landed';
         showDiceResult();
       }, maxRolls * 100);
       return;
@@ -3853,7 +3863,7 @@
           var remaining = Math.max(0, (maxRolls * 100) - elapsed);
           setTimeout(function() {
             clearInterval(rollInterval);
-            var c = document.getElementById('diceCube'); if(c){ c.className = 'dice-cube landed'; }
+            var _c = document.getElementById('diceCube'); if(_c) _c.className = 'dice-cube landed';
             showDiceResult();
           }, remaining);
         },
@@ -3863,7 +3873,7 @@
           var remaining = Math.max(0, (maxRolls * 100) - elapsed);
           setTimeout(function() {
             clearInterval(rollInterval);
-            var c = document.getElementById('diceCube'); if(c){ c.className = 'dice-cube landed'; }
+            var _c = document.getElementById('diceCube'); if(_c) _c.className = 'dice-cube landed';
             showDiceResult();
           }, remaining);
         },
@@ -3873,7 +3883,7 @@
       // No geolocation support — just show any result after animation
       setTimeout(function() {
         clearInterval(rollInterval);
-        var c = document.getElementById('diceCube'); if(c){ c.className = 'dice-cube landed'; }
+        var _c = document.getElementById('diceCube'); if(_c) _c.className = 'dice-cube landed';
         showDiceResult();
       }, maxRolls * 100);
     }
