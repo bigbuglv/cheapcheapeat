@@ -1056,7 +1056,9 @@
     <div style="font-size:2.5rem;margin-bottom:16px">🍜</div>
     <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.4rem;margin:0 0 8px">Where are you eating today?</h3>
     <p style="color:var(--muted);font-size:0.9rem;margin:0 0 24px">Search a suburb or use your location to find cheap eats near you</p>
-    <button onclick="useMyLocation()" style="background:var(--gold);color:#0e0c09;border:none;padding:12px 24px;border-radius:10px;font-family:Fraunces,serif;font-size:1rem;font-weight:900;cursor:pointer;margin-bottom:24px;display:inline-flex;align-items:center;gap:8px">📍 Use my location</button>
+    <button onclick="useMyLocation()" style="background:var(--gold);color:#0e0c09;border:none;padding:12px 24px;border-radius:10px;font-family:Fraunces,serif;font-size:1rem;font-weight:900;cursor:pointer;margin-bottom:16px;display:inline-flex;align-items:center;gap:8px">📍 Use my location</button>
+    <br>
+    <button onclick="rollTheDice()" style="background:var(--surface2);color:var(--cream);border:1px solid var(--border);padding:10px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s" onmouseenter="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--cream)'">🎲 Don't know what to eat? Roll the dice</button>
 
   </div>
 
@@ -1337,7 +1339,7 @@
 
 
   // ── STATE ──
-  let restaurants = [];
+  let restaurants = []; window.restaurants = restaurants;
   let nearbyRestaurants = null; // null means no location filter active
   let activeCuisineFilter = 'all';
   let activePriceFilter = 'all';
@@ -1449,6 +1451,7 @@
       );
       const snapshot = await getDocs(q);
       restaurants = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      window.restaurants = restaurants;
       renderCards(getFiltered());
       // Update live counter
       updateLiveCounter();
@@ -2111,6 +2114,8 @@
       (pos) => {
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
+        userLat = lat; userLng = lng;
+        window.userLat = lat; window.userLng = lng;
 
         // Sort by distance
         restaurants.forEach(r => {
@@ -2229,7 +2234,7 @@
   autoDetectTier('edit_price_3', 'edit_tier_3');
 
   // ── GEOLOCATION ──
-  let userLat = null, userLng = null;
+  let userLat = null, userLng = null; window.userLat = null; window.userLng = null;
 
   function calcDistance(lat1, lng1, lat2, lng2) {
     const R = 6371;
@@ -3773,6 +3778,167 @@
 <!-- ══════════════════════════════════════════════════════════════════ -->
 <!-- SEO CONTENT — visible to Google crawlers, rendered at page bottom -->
 <!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- DICE FEATURE -->
+<script>
+  var foodEmojis = ['🍜','🍛','🍝','🍔','🌮','🥟','🍱','🍲','🥙','🍕','🥘','🍗','🥗','🍣'];
+
+  function rollTheDice() {
+    var modal = document.getElementById('diceModal');
+    var result = document.getElementById('diceResult');
+    var emojiEl = document.getElementById('diceEmoji');
+    var titleEl = document.getElementById('diceTitle');
+    var subtitleEl = document.getElementById('diceSubtitle');
+
+    // Check if restaurants have loaded yet
+    var allR = window.restaurants || [];
+    var approved = allR.filter(function(r) { return r.status === 'approved'; });
+
+    if (approved.length === 0) {
+      modal.style.display = 'flex';
+      result.style.display = 'none';
+      emojiEl.textContent = '⏳';
+      titleEl.textContent = 'Loading restaurants...';
+      subtitleEl.textContent = 'Hang on, fetching the menu';
+      // Retry after 2 seconds
+      setTimeout(function() {
+        var retry = (window.restaurants || []).filter(function(r) { return r.status === 'approved'; });
+        if (retry.length > 0) {
+          doRollAnimation();
+        } else {
+          titleEl.textContent = 'No restaurants found';
+          subtitleEl.textContent = 'Try searching a suburb first to load restaurants';
+        }
+      }, 2000);
+      return;
+    }
+
+    doRollAnimation();
+  }
+
+  function doRollAnimation() {
+    var modal = document.getElementById('diceModal');
+    var emojiEl = document.getElementById('diceEmoji');
+    var titleEl = document.getElementById('diceTitle');
+    var subtitleEl = document.getElementById('diceSubtitle');
+    modal.style.display = 'flex';
+    document.getElementById('diceResult').style.display = 'none';
+    titleEl.textContent = 'Rolling...';
+    subtitleEl.textContent = 'Finding you something tasty';
+
+    var rolls = 0;
+    var maxRolls = 15;
+    var rollInterval = setInterval(function() {
+      emojiEl.textContent = foodEmojis[Math.floor(Math.random() * foodEmojis.length)];
+      emojiEl.style.transform = 'rotate(' + (Math.random() * 40 - 20) + 'deg) scale(' + (0.9 + Math.random() * 0.3) + ')';
+      rolls++;
+      if (rolls >= maxRolls) {
+        clearInterval(rollInterval);
+        emojiEl.style.transform = 'rotate(0deg) scale(1)';
+        showDiceResult();
+      }
+    }, 100);
+  }
+
+  function getDistanceKm(lat1, lng1, lat2, lng2) {
+    var R = 6371;
+    var dLat = (lat2 - lat1) * Math.PI / 180;
+    var dLng = (lng2 - lng1) * Math.PI / 180;
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+      Math.sin(dLng/2) * Math.sin(dLng/2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  function showDiceResult() {
+    // restaurants is defined in the module script as a global-ish var
+    var allR = (typeof restaurants !== 'undefined') ? restaurants : [];
+    var approved = allR.filter(function(r) { return r.status === 'approved'; });
+
+    if (approved.length === 0) {
+      document.getElementById('diceTitle').textContent = 'No restaurants loaded yet!';
+      document.getElementById('diceSubtitle').textContent = 'Wait a moment and try again';
+      return;
+    }
+
+    // If user has shared location, prefer nearby restaurants (within 20km)
+    var pool = approved;
+    var isNearby = false;
+    if (typeof userLat !== 'undefined' && userLat && typeof userLng !== 'undefined' && userLng) {
+      var nearby = approved.filter(function(r) {
+        if (!r.lat || !r.lng) return false;
+        return getDistanceKm(userLat, userLng, r.lat, r.lng) <= 20;
+      });
+      if (nearby.length >= 3) {
+        pool = nearby;
+        isNearby = true;
+      }
+    }
+
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    var cuisineEmojis = {
+      vietnamese: '🍜', chinese: '🥟', japanese: '🍣', indian: '🍛',
+      thai: '🍲', korean: '🥘', mexican: '🌮', italian: '🍝',
+      greek: '🥙', american: '🍔', lebanese: '🥙', malaysian: '🍜',
+      indonesian: '🍛', cafe: '☕'
+    };
+    var emoji = cuisineEmojis[pick.cuisine] || '🍽️';
+
+    document.getElementById('diceEmoji').textContent = emoji;
+    document.getElementById('diceTitle').textContent = 'You should try...';
+    document.getElementById('diceSubtitle').textContent = isNearby ? '📍 Based on your location' : '🌏 From across Australia';
+
+    document.getElementById('diceName').textContent = pick.name;
+    document.getElementById('diceDish').textContent = pick.dish || (pick.dishes && pick.dishes[0] ? pick.dishes[0].name : '');
+    document.getElementById('diceCuisine').textContent = (pick.cuisineLabel || pick.cuisine || '') + (pick.exactPrice ? ' · ' + pick.exactPrice : '');
+    document.getElementById('diceAddress').textContent = '📍 ' + (pick.address || 'Address not listed');
+
+    // Distance if available
+    var distText = '';
+    if (isNearby && pick.lat && pick.lng) {
+      var dist = getDistanceKm(userLat, userLng, pick.lat, pick.lng);
+      distText = ' · ' + dist.toFixed(1) + ' km away';
+    }
+    document.getElementById('diceCuisine').textContent += distText;
+
+    var badge = document.getElementById('dicePriceBadge');
+    var tier = pick.priceRange || '20';
+    badge.textContent = 'Under $' + tier;
+    badge.style.background = tier === '10' ? 'rgba(76,175,125,0.15)' : tier === '15' ? 'rgba(245,200,66,0.15)' : 'rgba(232,64,42,0.15)';
+    badge.style.color = tier === '10' ? '#4caf7d' : tier === '15' ? '#f5c842' : '#e8402a';
+
+    document.getElementById('diceResult').style.display = 'block';
+  }
+
+  function closeDice() {
+    document.getElementById('diceModal').style.display = 'none';
+  }
+</script>
+
+<!-- DICE MODAL -->
+<div id="diceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;justify-content:center;align-items:center;padding:24px" onclick="if(event.target===this)closeDice()">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:400px;width:100%;text-align:center;position:relative">
+    <button onclick="closeDice()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer">&times;</button>
+    <div id="diceEmoji" style="font-size:4rem;margin-bottom:16px;transition:transform 0.1s">🎲</div>
+    <h3 id="diceTitle" style="font-family:Fraunces,serif;color:var(--cream);font-size:1.3rem;margin:0 0 8px">Rolling...</h3>
+    <p id="diceSubtitle" style="color:var(--muted);font-size:0.85rem;margin:0 0 24px">Finding you something tasty</p>
+    <div id="diceResult" style="display:none">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;text-align:left">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+          <h4 id="diceName" style="font-family:Fraunces,serif;color:var(--cream);font-size:1.1rem;margin:0"></h4>
+          <span id="dicePriceBadge" style="padding:3px 10px;border-radius:6px;font-size:0.75rem;font-weight:700"></span>
+        </div>
+        <p id="diceDish" style="color:var(--gold);font-size:0.9rem;margin:0 0 6px"></p>
+        <p id="diceCuisine" style="color:var(--muted);font-size:0.8rem;margin:0 0 4px"></p>
+        <p id="diceAddress" style="color:var(--muted);font-size:0.78rem;margin:0"></p>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button onclick="rollTheDice()" style="background:var(--gold);color:#0e0c09;border:none;padding:10px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer">🎲 Roll again</button>
+        <button onclick="closeDice()" style="background:var(--surface2);color:var(--cream);border:1px solid var(--border);padding:10px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.85rem;cursor:pointer">Got it!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <section id="seoContent" style="max-width:900px;margin:0 auto;padding:48px 24px 80px;border-top:1px solid rgba(245,200,66,0.1)">
   <h2 style="font-family:Fraunces,serif;font-size:1.3rem;font-weight:700;color:var(--cream);margin:0 0 8px;text-align:center">Frequently Asked Questions</h2>
   <p style="color:var(--muted);font-size:0.82rem;text-align:center;margin:0 0 24px">Everything you need to know about finding cheap meals on CheapBites.</p>
