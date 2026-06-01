@@ -3816,22 +3816,19 @@
     titleEl.textContent = 'Rolling...';
     subtitleEl.textContent = 'Finding you something tasty nearby';
 
-    var diceFaces = [
-      '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'
-    ];
+    // Show rolling dice
+    emojiEl.innerHTML = '<span class="dice-spin" style="font-size:4rem">🎲</span>';
 
-    // Show rolling red dice
-    emojiEl.innerHTML = '<div class="dice-red dice-rolling"><span style="font-size:2.5rem">⚃</span></div>';
-
+    var diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
     var rolls = 0;
     var maxRolls = 18;
     var rollInterval = setInterval(function() {
       var face = diceFaces[Math.floor(Math.random() * diceFaces.length)];
-      emojiEl.innerHTML = '<div class="dice-red dice-rolling"><span style="font-size:2.5rem">' + face + '</span></div>';
+      emojiEl.innerHTML = '<span class="dice-spin" style="font-size:4rem">🎲</span>';
       rolls++;
       if (rolls >= maxRolls) {
         clearInterval(rollInterval);
-        emojiEl.innerHTML = '<div class="dice-red dice-landed"><span style="font-size:2.5rem">⚅</span></div>';
+        emojiEl.innerHTML = '<span class="dice-land" style="font-size:4rem">🎲</span>';
       }
     }, 100);
 
@@ -3839,7 +3836,7 @@
     if (window.userLat && window.userLng) {
       setTimeout(function() {
         clearInterval(rollInterval);
-        emojiEl.innerHTML = '<div class="dice-red dice-landed"><span style="font-size:2.5rem">⚅</span></div>';
+        emojiEl.innerHTML = '<span class="dice-land" style="font-size:4rem">🎲</span>';
         showDiceResult();
       }, maxRolls * 100);
       return;
@@ -3856,7 +3853,7 @@
           var remaining = Math.max(0, (maxRolls * 100) - elapsed);
           setTimeout(function() {
             clearInterval(rollInterval);
-            emojiEl.innerHTML = '<div class="dice-red dice-landed"><span style="font-size:2.5rem">⚅</span></div>';
+            emojiEl.innerHTML = '<span class="dice-land" style="font-size:4rem">🎲</span>';
             showDiceResult();
           }, remaining);
         },
@@ -3866,7 +3863,7 @@
           var remaining = Math.max(0, (maxRolls * 100) - elapsed);
           setTimeout(function() {
             clearInterval(rollInterval);
-            emojiEl.innerHTML = '<div class="dice-red dice-landed"><span style="font-size:2.5rem">⚅</span></div>';
+            emojiEl.innerHTML = '<span class="dice-land" style="font-size:4rem">🎲</span>';
             showDiceResult();
           }, remaining);
         },
@@ -3876,7 +3873,7 @@
       // No geolocation support — just show any result after animation
       setTimeout(function() {
         clearInterval(rollInterval);
-        emojiEl.innerHTML = '<div class="dice-red dice-landed"><span style="font-size:2.5rem">⚅</span></div>';
+        emojiEl.innerHTML = '<span class="dice-land" style="font-size:4rem">🎲</span>';
         showDiceResult();
       }, maxRolls * 100);
     }
@@ -3966,53 +3963,27 @@
     <div id="diceEmoji" style="font-size:4rem;margin-bottom:16px">🎲</div>
     <style>
       @keyframes diceRoll {
-        0% { transform: rotate(0deg) scale(1); }
-        10% { transform: rotate(36deg) scale(1.1); }
-        20% { transform: rotate(72deg) scale(0.9); }
-        30% { transform: rotate(108deg) scale(1.15); }
-        40% { transform: rotate(180deg) scale(0.85); }
-        50% { transform: rotate(252deg) scale(1.2); }
-        60% { transform: rotate(324deg) scale(0.9); }
-        70% { transform: rotate(396deg) scale(1.1); }
-        80% { transform: rotate(468deg) scale(0.95); }
-        90% { transform: rotate(540deg) scale(1.05); }
-        100% { transform: rotate(720deg) scale(1); }
+        0% { transform: translateY(0) rotate3d(1,1,0,0deg); }
+        10% { transform: translateY(-30px) rotate3d(1,0.5,0.5,72deg); }
+        20% { transform: translateY(-10px) rotate3d(0.5,1,0,144deg); }
+        30% { transform: translateY(-40px) rotate3d(1,1,1,216deg); }
+        40% { transform: translateY(-5px) rotate3d(0,1,0.5,288deg); }
+        50% { transform: translateY(-35px) rotate3d(1,0,1,360deg); }
+        60% { transform: translateY(-8px) rotate3d(0.5,1,0.5,432deg); }
+        70% { transform: translateY(-25px) rotate3d(1,1,0,504deg); }
+        80% { transform: translateY(-3px) rotate3d(0,0.5,1,576deg); }
+        90% { transform: translateY(-15px) rotate3d(1,0.5,0,648deg); }
+        100% { transform: translateY(0) rotate3d(1,1,1,720deg); }
       }
-      @keyframes diceBounce {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        15% { transform: translateY(-18px) rotate(45deg); }
-        30% { transform: translateY(0) rotate(90deg); }
-        45% { transform: translateY(-12px) rotate(180deg); }
-        60% { transform: translateY(0) rotate(270deg); }
-        75% { transform: translateY(-6px) rotate(330deg); }
-        90% { transform: translateY(0) rotate(350deg); }
+      .dice-spin {
+        display: inline-block;
+        animation: diceRoll 1.2s ease-in-out infinite;
+        filter: drop-shadow(0 4px 12px rgba(232, 64, 42, 0.5));
       }
-      .dice-rolling {
-        animation: diceBounce 0.6s ease-in-out infinite;
-      }
-      .dice-landed {
+      .dice-land {
+        display: inline-block;
         animation: none;
-        transform: rotate(0deg) scale(1);
-      }
-      .dice-red {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 72px;
-        height: 72px;
-        background: linear-gradient(135deg, #e8402a, #c0301e);
-        border-radius: 14px;
-        font-size: 2.2rem;
-        color: #fff;
-        box-shadow: 0 4px 16px rgba(232, 64, 42, 0.4);
-        position: relative;
-      }
-      .dice-red .dot {
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        background: #fff;
-        border-radius: 50%;
+        transform: translateY(0) rotate(0deg);
       }
     </style>
     <h3 id="diceTitle" style="font-family:Fraunces,serif;color:var(--cream);font-size:1.3rem;margin:0 0 8px">Rolling...</h3>
