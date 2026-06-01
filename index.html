@@ -3784,7 +3784,6 @@
 
   function rollTheDice() {
     var modal = document.getElementById('diceModal');
-    var result = document.getElementById('diceResult');
     var emojiEl = document.getElementById('diceEmoji');
     var titleEl = document.getElementById('diceTitle');
     var subtitleEl = document.getElementById('diceSubtitle');
@@ -3795,48 +3794,92 @@
 
     if (approved.length === 0) {
       modal.style.display = 'flex';
-      result.style.display = 'none';
+      document.getElementById('diceResult').style.display = 'none';
       emojiEl.textContent = '⏳';
       titleEl.textContent = 'Loading restaurants...';
       subtitleEl.textContent = 'Hang on, fetching the menu';
-      // Retry after 2 seconds
       setTimeout(function() {
         var retry = (window.restaurants || []).filter(function(r) { return r.status === 'approved'; });
         if (retry.length > 0) {
-          doRollAnimation();
+          rollTheDice();
         } else {
           titleEl.textContent = 'No restaurants found';
-          subtitleEl.textContent = 'Try searching a suburb first to load restaurants';
+          subtitleEl.textContent = 'Try refreshing the page';
         }
       }, 2000);
       return;
     }
 
-    doRollAnimation();
-  }
-
-  function doRollAnimation() {
-    var modal = document.getElementById('diceModal');
-    var emojiEl = document.getElementById('diceEmoji');
-    var titleEl = document.getElementById('diceTitle');
-    var subtitleEl = document.getElementById('diceSubtitle');
+    // Start animation immediately
     modal.style.display = 'flex';
     document.getElementById('diceResult').style.display = 'none';
     titleEl.textContent = 'Rolling...';
-    subtitleEl.textContent = 'Finding you something tasty';
+    subtitleEl.textContent = 'Finding you something tasty nearby';
+
+    var diceFaces = [
+      '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'
+    ];
+
+    // Show rolling red dice
+    emojiEl.innerHTML = '<div class="dice-red dice-rolling"><span style="font-size:2.5rem">⚃</span></div>';
 
     var rolls = 0;
-    var maxRolls = 15;
+    var maxRolls = 18;
     var rollInterval = setInterval(function() {
-      emojiEl.textContent = foodEmojis[Math.floor(Math.random() * foodEmojis.length)];
-      emojiEl.style.transform = 'rotate(' + (Math.random() * 40 - 20) + 'deg) scale(' + (0.9 + Math.random() * 0.3) + ')';
+      var face = diceFaces[Math.floor(Math.random() * diceFaces.length)];
+      emojiEl.innerHTML = '<div class="dice-red dice-rolling"><span style="font-size:2.5rem">' + face + '</span></div>';
       rolls++;
       if (rolls >= maxRolls) {
         clearInterval(rollInterval);
-        emojiEl.style.transform = 'rotate(0deg) scale(1)';
-        showDiceResult();
+        emojiEl.innerHTML = '<div class="dice-red dice-landed"><span style="font-size:2.5rem">⚅</span></div>';
       }
     }, 100);
+
+    // If we already have location, just wait for animation then show result
+    if (window.userLat && window.userLng) {
+      setTimeout(function() {
+        clearInterval(rollInterval);
+        emojiEl.innerHTML = '<div class="dice-red dice-landed"><span style="font-size:2.5rem">⚅</span></div>';
+        showDiceResult();
+      }, maxRolls * 100);
+      return;
+    }
+
+    // Otherwise, silently request location while animation plays
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function(pos) {
+          window.userLat = pos.coords.latitude;
+          window.userLng = pos.coords.longitude;
+          // Wait for animation to finish, then show nearby result
+          var elapsed = rolls * 100;
+          var remaining = Math.max(0, (maxRolls * 100) - elapsed);
+          setTimeout(function() {
+            clearInterval(rollInterval);
+            emojiEl.innerHTML = '<div class="dice-red dice-landed"><span style="font-size:2.5rem">⚅</span></div>';
+            showDiceResult();
+          }, remaining);
+        },
+        function() {
+          // Location denied — show result from all restaurants after animation
+          var elapsed = rolls * 100;
+          var remaining = Math.max(0, (maxRolls * 100) - elapsed);
+          setTimeout(function() {
+            clearInterval(rollInterval);
+            emojiEl.innerHTML = '<div class="dice-red dice-landed"><span style="font-size:2.5rem">⚅</span></div>';
+            showDiceResult();
+          }, remaining);
+        },
+        { timeout: 5000, enableHighAccuracy: false }
+      );
+    } else {
+      // No geolocation support — just show any result after animation
+      setTimeout(function() {
+        clearInterval(rollInterval);
+        emojiEl.innerHTML = '<div class="dice-red dice-landed"><span style="font-size:2.5rem">⚅</span></div>';
+        showDiceResult();
+      }, maxRolls * 100);
+    }
   }
 
   function getDistanceKm(lat1, lng1, lat2, lng2) {
@@ -3863,10 +3906,12 @@
     // If user has shared location, prefer nearby restaurants (within 20km)
     var pool = approved;
     var isNearby = false;
-    if (typeof userLat !== 'undefined' && userLat && typeof userLng !== 'undefined' && userLng) {
+    var uLat = window.userLat;
+    var uLng = window.userLng;
+    if (uLat && uLng) {
       var nearby = approved.filter(function(r) {
         if (!r.lat || !r.lng) return false;
-        return getDistanceKm(userLat, userLng, r.lat, r.lng) <= 20;
+        return getDistanceKm(uLat, uLng, r.lat, r.lng) <= 20;
       });
       if (nearby.length >= 3) {
         pool = nearby;
@@ -3883,9 +3928,9 @@
     };
     var emoji = cuisineEmojis[pick.cuisine] || '🍽️';
 
-    document.getElementById('diceEmoji').textContent = emoji;
+    document.getElementById('diceEmoji').innerHTML = '<div style="font-size:3.5rem">' + emoji + '</div>';
     document.getElementById('diceTitle').textContent = 'You should try...';
-    document.getElementById('diceSubtitle').textContent = isNearby ? '📍 Based on your location' : '🌏 From across Australia';
+    document.getElementById('diceSubtitle').textContent = isNearby ? '📍 Based on your location' : '';
 
     document.getElementById('diceName').textContent = pick.name;
     document.getElementById('diceDish').textContent = pick.dish || (pick.dishes && pick.dishes[0] ? pick.dishes[0].name : '');
@@ -3895,7 +3940,7 @@
     // Distance if available
     var distText = '';
     if (isNearby && pick.lat && pick.lng) {
-      var dist = getDistanceKm(userLat, userLng, pick.lat, pick.lng);
+      var dist = getDistanceKm(uLat, uLng, pick.lat, pick.lng);
       distText = ' · ' + dist.toFixed(1) + ' km away';
     }
     document.getElementById('diceCuisine').textContent += distText;
@@ -3918,7 +3963,58 @@
 <div id="diceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;justify-content:center;align-items:center;padding:24px" onclick="if(event.target===this)closeDice()">
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:400px;width:100%;text-align:center;position:relative">
     <button onclick="closeDice()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer">&times;</button>
-    <div id="diceEmoji" style="font-size:4rem;margin-bottom:16px;transition:transform 0.1s">🎲</div>
+    <div id="diceEmoji" style="font-size:4rem;margin-bottom:16px">🎲</div>
+    <style>
+      @keyframes diceRoll {
+        0% { transform: rotate(0deg) scale(1); }
+        10% { transform: rotate(36deg) scale(1.1); }
+        20% { transform: rotate(72deg) scale(0.9); }
+        30% { transform: rotate(108deg) scale(1.15); }
+        40% { transform: rotate(180deg) scale(0.85); }
+        50% { transform: rotate(252deg) scale(1.2); }
+        60% { transform: rotate(324deg) scale(0.9); }
+        70% { transform: rotate(396deg) scale(1.1); }
+        80% { transform: rotate(468deg) scale(0.95); }
+        90% { transform: rotate(540deg) scale(1.05); }
+        100% { transform: rotate(720deg) scale(1); }
+      }
+      @keyframes diceBounce {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        15% { transform: translateY(-18px) rotate(45deg); }
+        30% { transform: translateY(0) rotate(90deg); }
+        45% { transform: translateY(-12px) rotate(180deg); }
+        60% { transform: translateY(0) rotate(270deg); }
+        75% { transform: translateY(-6px) rotate(330deg); }
+        90% { transform: translateY(0) rotate(350deg); }
+      }
+      .dice-rolling {
+        animation: diceBounce 0.6s ease-in-out infinite;
+      }
+      .dice-landed {
+        animation: none;
+        transform: rotate(0deg) scale(1);
+      }
+      .dice-red {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(135deg, #e8402a, #c0301e);
+        border-radius: 14px;
+        font-size: 2.2rem;
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(232, 64, 42, 0.4);
+        position: relative;
+      }
+      .dice-red .dot {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #fff;
+        border-radius: 50%;
+      }
+    </style>
     <h3 id="diceTitle" style="font-family:Fraunces,serif;color:var(--cream);font-size:1.3rem;margin:0 0 8px">Rolling...</h3>
     <p id="diceSubtitle" style="color:var(--muted);font-size:0.85rem;margin:0 0 24px">Finding you something tasty</p>
     <div id="diceResult" style="display:none">
