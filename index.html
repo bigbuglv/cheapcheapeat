@@ -2669,6 +2669,7 @@
     document.getElementById('pendingEdits').style.display = tab === 'edits' ? 'block' : 'none';
     document.getElementById('dealsAdmin').style.display = tab === 'deals' ? 'block' : 'none';
     document.getElementById('dupesAdmin').style.display = tab === 'dupes' ? 'block' : 'none';
+    document.getElementById('exportAdmin').style.display = tab === 'export' ? 'block' : 'none';
 
     const setTab = (id, active) => {
       const el = document.getElementById(id);
@@ -2682,6 +2683,7 @@
     setTab('tab-edits', tab === 'edits');
     setTab('tab-deals', tab === 'deals');
     setTab('tab-dupes', tab === 'dupes');
+    setTab('tab-export', tab === 'export');
 
     if (tab === 'edits') loadPendingEdits();
     if (tab === 'deals') initDealsAdmin();
@@ -2815,11 +2817,116 @@
     status.textContent = `${deleted} deleted, ${errors} errors`;
     status.style.color = deleted > 0 ? 'var(--green)' : 'var(--red)';
     dupesToDelete = [];
-
-    // Reload restaurants to reflect changes
     await loadRestaurants();
     showToast(`✅ ${deleted} duplicate(s) removed!`);
   };
+
+  // ── EXPORT ADMIN ──
+  let exportData = [];
+
+  window.loadExportPreview = async () => {
+    const btn = document.getElementById('exportLoadBtn');
+    const statusEl = document.getElementById('exportStatus2');
+    const preview = document.getElementById('exportPreview');
+    const downloadBtn = document.getElementById('exportDownloadBtn');
+    const statusFilter = document.getElementById('exportStatus').value;
+
+    btn.textContent = '⏳ Loading...';
+    btn.disabled = true;
+    statusEl.textContent = '';
+    preview.style.display = 'none';
+    exportData = [];
+
+    try {
+      let q;
+      if (statusFilter === 'all') {
+        q = collection(db, "restaurants");
+      } else {
+        q = query(collection(db, "restaurants"), where("status", "==", statusFilter));
+      }
+      const snapshot = await getDocs(q);
+      exportData = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      // Sort by name
+      exportData.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+      // Render preview table
+      const thead = document.getElementById('exportThead');
+      const tbody = document.getElementById('exportTbody');
+      const cols = ['Name', 'Cuisine', 'Dish', 'Price', 'Address', 'Status', 'Via'];
+
+      thead.innerHTML = '<tr>' + cols.map(c =>
+        `<th style="background:var(--surface2);color:var(--gold);padding:8px 12px;text-align:left;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap">${c}</th>`
+      ).join('') + '</tr>';
+
+      tbody.innerHTML = exportData.slice(0, 10).map((r, i) => `
+        <tr style="border-bottom:1px solid var(--border);${i % 2 === 1 ? 'background:rgba(255,255,255,0.02)' : ''}">
+          <td style="padding:8px 12px;color:var(--cream);font-weight:600;white-space:nowrap">${r.name || '—'}</td>
+          <td style="padding:8px 12px;color:var(--muted)">${r.cuisineLabel || r.cuisine || '—'}</td>
+          <td style="padding:8px 12px;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.dish || (r.dishes?.[0]?.name) || '—'}</td>
+          <td style="padding:8px 12px;color:var(--gold);white-space:nowrap">${r.exactPrice || ('Under $' + (r.priceRange || '20'))}</td>
+          <td style="padding:8px 12px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.address || '—'}</td>
+          <td style="padding:8px 12px"><span style="padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:700;background:${r.status === 'approved' ? 'rgba(76,175,125,0.15)' : 'rgba(245,200,66,0.15)'};color:${r.status === 'approved' ? '#4caf7d' : '#f5c842'}">${r.status || 'approved'}</span></td>
+          <td style="padding:8px 12px;color:var(--muted);font-size:0.72rem">${r.createdVia || 'user'}</td>
+        </tr>
+      `).join('');
+
+      if (exportData.length > 10) {
+        tbody.innerHTML += `<tr><td colspan="7" style="padding:10px 12px;color:var(--muted);font-size:0.78rem;text-align:center">… and ${exportData.length - 10} more rows. All will be included in the download.</td></tr>`;
+      }
+
+      preview.style.display = 'block';
+      statusEl.textContent = `${exportData.length} restaurants found`;
+      statusEl.style.color = 'var(--green)';
+      downloadBtn.disabled = false;
+      downloadBtn.style.opacity = '1';
+
+    } catch (err) {
+      statusEl.textContent = 'Error: ' + err.message;
+      statusEl.style.color = 'var(--red)';
+    } finally {
+      btn.textContent = '🔍 Preview';
+      btn.disabled = false;
+    }
+  };
+
+  window.downloadExport = () => {
+    if (exportData.length === 0) return;
+    const format = document.getElementById('exportFormat').value;
+
+    if (format === 'json') {
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      triggerDownload(blob, 'cheapbites_restaurants.json');
+    } else {
+      // CSV
+      const cols = ['id','name','cuisineLabel','dish','exactPrice','priceRange','address','status','createdVia','lat','lng','phone','hours','website','notes'];
+      const header = cols.join(',');
+      const rows = exportData.map(r =>
+        cols.map(col => {
+          let val = r[col] ?? '';
+          if (col === 'dish') val = r.dish || r.dishes?.[0]?.name || '';
+          // Escape commas and quotes
+          val = String(val).replace(/"/g, '""');
+          return `"${val}"`;
+        }).join(',')
+      );
+      const csv = [header, ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      triggerDownload(blob, 'cheapbites_restaurants.csv');
+    }
+  };
+
+  function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast(`✅ Downloaded ${filename}`);
+  }
 
   // ── DEALS ADMIN ──
   let dealEditingId = null;
@@ -3612,9 +3719,52 @@
         <button id="tab-edits" onclick="switchAdminTab('edits')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">Edit Suggestions</button>
         <button id="tab-deals" onclick="switchAdminTab('deals')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🔥 Deals</button>
         <button id="tab-dupes" onclick="switchAdminTab('dupes')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🔄 Duplicates</button>
+        <button id="tab-export" onclick="switchAdminTab('export')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">📥 Export</button>
       </div>
       <div id="pendingList"></div>
       <div id="pendingEdits" style="display:none"></div>
+      <div id="exportAdmin" style="display:none">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px">
+          <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.2rem;margin:0 0 8px">Export Restaurant Listings</h3>
+          <p style="color:var(--muted);font-size:0.82rem;margin:0 0 20px">Download all restaurants from your database as a CSV (opens in Excel) or JSON file.</p>
+
+          <!-- Filters -->
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;align-items:center">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <label style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Status</label>
+              <select id="exportStatus" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;padding:8px 12px;outline:none">
+                <option value="all">All restaurants</option>
+                <option value="approved" selected>Approved only</option>
+                <option value="pending">Pending only</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <label style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Format</label>
+              <select id="exportFormat" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:DM Sans,sans-serif;font-size:0.82rem;padding:8px 12px;outline:none">
+                <option value="csv">CSV (Excel)</option>
+                <option value="json">JSON</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Action buttons -->
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <button onclick="loadExportPreview()" id="exportLoadBtn" style="padding:10px 20px;background:var(--surface2);color:var(--cream);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-weight:600;font-family:DM Sans,sans-serif;font-size:0.85rem">🔍 Preview</button>
+            <button onclick="downloadExport()" id="exportDownloadBtn" disabled style="padding:10px 20px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif;font-size:0.85rem;opacity:0.4">📥 Download</button>
+            <span id="exportStatus2" style="color:var(--muted);font-size:0.82rem"></span>
+          </div>
+
+          <!-- Preview table -->
+          <div id="exportPreview" style="margin-top:20px;display:none">
+            <div style="overflow-x:auto;border-radius:8px;border:1px solid var(--border)">
+              <table id="exportTable" style="width:100%;border-collapse:collapse;font-size:0.78rem">
+                <thead id="exportThead"></thead>
+                <tbody id="exportTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="dupesAdmin" style="display:none">
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px">
           <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.2rem;margin:0 0 8px">Remove Duplicate Restaurants</h3>
