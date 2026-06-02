@@ -2670,6 +2670,7 @@
     document.getElementById('dealsAdmin').style.display = tab === 'deals' ? 'block' : 'none';
     document.getElementById('dupesAdmin').style.display = tab === 'dupes' ? 'block' : 'none';
     document.getElementById('exportAdmin').style.display = tab === 'export' ? 'block' : 'none';
+    document.getElementById('bulkDealsAdmin').style.display = tab === 'bulkdeals' ? 'block' : 'none';
 
     const setTab = (id, active) => {
       const el = document.getElementById(id);
@@ -2684,6 +2685,7 @@
     setTab('tab-deals', tab === 'deals');
     setTab('tab-dupes', tab === 'dupes');
     setTab('tab-export', tab === 'export');
+    setTab('tab-bulkdeals', tab === 'bulkdeals');
 
     if (tab === 'edits') loadPendingEdits();
     if (tab === 'deals') initDealsAdmin();
@@ -2914,6 +2916,74 @@
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       triggerDownload(blob, 'cheapbites_restaurants.csv');
     }
+  };
+
+  // ── BULK DEALS ──
+  const BULK_DEALS = [
+    { name:"Frenchie", type:"limited", dishes:[{dish:"Beef Cheek with Bourguignonne Sauce",price:"$14"},{dish:"Seared Tuna with Crispy Frites",price:"$14"},{dish:"Rock Oysters with Champagne Granite",price:"$14"}], notes:"Everything on the menu is $14. Dine-in only." },
+    { name:"BKK Thai", type:"weekly", weeklyDishes:{mon:null,tue:null,wed:{dish:"Chargrilled Half Chicken with salad, sweet chilli & rice or fries",price:"$20"},thu:null,fri:null}, notes:"Wednesday night from 5pm until late." },
+    { name:"Kafe Kooks", type:"limited", dishes:[{dish:"Single Roti Paratha",price:"$6"},{dish:"Spinach & Fetta Roti",price:"$12"},{dish:"Thai Beef Madtarbak Roti",price:"$15"}], notes:"All day every day. 63 Mountain St, Ultimo." },
+    { name:"Temasek", type:"weekly", weeklyDishes:{mon:{dish:"Vegetarian Fried Noodles",price:"$17"},tue:{dish:"Hainanese Chicken Laksa",price:"$20"},wed:{dish:"Vegetarian Fried Noodles",price:"$17"},thu:{dish:"Hainanese Chicken Laksa",price:"$20"},fri:{dish:"Vegetarian Fried Noodles",price:"$17"}}, notes:"Lunch specials Mon-Fri only." },
+    { name:"The Wray Hotel", type:"limited", dishes:[{dish:"Rump Steak, Chips & Salad",price:"$19.90"}], notes:"Available all week. Add 3 grilled prawns for $5." },
+    { name:"The Oxford Hotel", type:"limited", dishes:[{dish:"Pizza",price:"$15"},{dish:"Parmi (Chicken Parmigiana)",price:"$18"}], notes:"All day every day." },
+    { name:"Siena's", type:"limited", dishes:[{dish:"Pizza",price:"$16"},{dish:"Pasta",price:"$16"}], notes:"Pizzas and pastas from $16 all week. Leederville." },
+    { name:"Love Street Pizza", type:"weekly", weeklyDishes:{mon:{dish:"Monday Pizza Night Special",price:"$20"},tue:null,wed:null,thu:null,fri:null}, notes:"Monday pizza night only." },
+    { name:"The Station", type:"weekly", weeklyDishes:{mon:{dish:"Burger Special (Trivia Night)",price:"$20"},tue:null,wed:null,thu:null,fri:null}, notes:"Monday burger and trivia night. South Perth." },
+    { name:"Hyde Park Hotel", type:"weekly", weeklyDishes:{mon:{dish:"Chicken Parmigiana with chips & salad",price:"$20"},tue:null,wed:null,thu:null,fri:null}, notes:"Monday parmi special." },
+    { name:"The Breakwater", type:"weekly", weeklyDishes:{mon:null,tue:{dish:"Fish & Chips (snapper, tartare, salad & fries)",price:"$20"},wed:null,thu:null,fri:null}, notes:"Every Tuesday all day. Hillarys." },
+    { name:"Brooklyn Depot", type:"weekly", weeklyDishes:{mon:null,tue:null,wed:{dish:"$1 Wings with any drink purchase",price:"$1"},thu:null,fri:{dish:"Burgers",price:"$10"}}, notes:"Wed $1 wings all day. Fri $10 burgers." },
+    { name:"Fritzenberger", type:"weekly", weeklyDishes:{mon:{dish:"Burgers",price:"$12"},tue:{dish:"2-for-1 Burgers",price:"$12"},wed:null,thu:null,fri:null}, notes:"Monday $12 burgers. Tuesday 2-for-1." },
+    { name:"Rafi", type:"limited", dishes:[{dish:"Wagyu Enoki Skewers",price:"$18"},{dish:"Wok-Fried Black Pepper Beef with Truffle Butter",price:"$19"},{dish:"Hainanese Chicken",price:"$18"}], notes:"All dishes under $20. Mon-Fri lunch 11:30am-2pm & dinner 5:30-7pm." },
+    { name:"BKK Thai Melbourne CBD", type:"weekly", weeklyDishes:{mon:null,tue:null,wed:{dish:"Chargrilled Half Chicken with salad, sweet chilli & rice or fries",price:"$20"},thu:null,fri:null}, notes:"Wednesday night from 5pm until late. CBD location." }
+  ];
+
+  window.runBulkDeals = async () => {
+    const btn = document.getElementById('bulkDealsBtn');
+    const statusEl = document.getElementById('bulkDealsStatus');
+    const logEl = document.getElementById('bulkDealsList');
+    btn.disabled = true;
+    btn.textContent = '⏳ Adding deals...';
+    logEl.style.display = 'block';
+    logEl.innerHTML = '';
+    function dlog(msg, color) { logEl.innerHTML += `<div style="color:${color||'var(--muted)'}">${msg}</div>`; logEl.scrollTop = logEl.scrollHeight; }
+
+    // Use already-loaded restaurants array
+    const rMap = {};
+    restaurants.forEach(r => { rMap[(r.name||'').toLowerCase().trim()] = {id:r.id,name:r.name}; });
+    dlog(`Matched against ${Object.keys(rMap).length} restaurants`, 'var(--green)');
+
+    let added = 0, skipped = 0;
+    for (const deal of BULK_DEALS) {
+      const key = deal.name.toLowerCase().trim();
+      const match = rMap[key];
+      if (!match) { dlog(`⚠️ "${deal.name}" not found in database — skipping`, '#f5c842'); skipped++; continue; }
+      try {
+        const payload = { restaurantId:match.id, restaurantName:match.name, type:deal.type, notes:deal.notes||null, startDate:null, endDate:null, createdAt:serverTimestamp(), createdVia:'bulk-upload' };
+        if (deal.type === 'limited') {
+          payload.dishes = deal.dishes; payload.dish = deal.dishes[0].dish; payload.price = deal.dishes[0].price; payload.weeklyDishes = null;
+        } else {
+          payload.weeklyDishes = deal.weeklyDishes;
+          const first = ['mon','tue','wed','thu','fri'].find(k => deal.weeklyDishes[k]);
+          payload.dish = first ? deal.weeklyDishes[first].dish : null;
+          payload.price = first ? deal.weeklyDishes[first].price : null;
+          payload.dishes = null;
+        }
+        await addDoc(collection(db, "deals"), payload);
+        added++;
+        dlog(`✅ "${deal.name}" deal added`, '#4caf7d');
+      } catch(err) {
+        skipped++;
+        dlog(`❌ "${deal.name}": ${err.message}`, '#e8402a');
+      }
+      await new Promise(r => setTimeout(r, 150));
+    }
+    btn.textContent = '✅ Done';
+    btn.disabled = false;
+    statusEl.textContent = `${added} deals added, ${skipped} skipped`;
+    statusEl.style.color = added > 0 ? '#4caf7d' : '#e8402a';
+    await loadDeals();
+    renderDealsAdminList();
+    showToast(`✅ ${added} deals added!`);
   };
 
   function triggerDownload(blob, filename) {
@@ -3720,11 +3790,11 @@
         <button id="tab-deals" onclick="switchAdminTab('deals')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🔥 Deals</button>
         <button id="tab-dupes" onclick="switchAdminTab('dupes')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">🔄 Duplicates</button>
         <button id="tab-export" onclick="switchAdminTab('export')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">📥 Export</button>
+        <button id="tab-bulkdeals" onclick="switchAdminTab('bulkdeals')" style="padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem">⚡ Bulk Deals</button>
       </div>
       <div id="pendingList"></div>
       <div id="pendingEdits" style="display:none"></div>
       <div id="exportAdmin" style="display:none">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px">
           <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.2rem;margin:0 0 8px">Export Restaurant Listings</h3>
           <p style="color:var(--muted);font-size:0.82rem;margin:0 0 20px">Download all restaurants from your database as a CSV (opens in Excel) or JSON file.</p>
 
@@ -3775,6 +3845,17 @@
             <span id="dupesStatus" style="color:var(--muted);font-size:0.82rem"></span>
           </div>
           <div id="dupesList"></div>
+        </div>
+      </div>
+      <div id="bulkDealsAdmin" style="display:none">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px">
+          <h3 style="font-family:Fraunces,serif;color:var(--cream);font-size:1.2rem;margin:0 0 8px">⚡ Bulk Add Deals</h3>
+          <p style="color:var(--muted);font-size:0.82rem;margin:0 0 16px">Adds deals directly to Firestore using your existing admin session. No auth issues.</p>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+            <button onclick="runBulkDeals()" id="bulkDealsBtn" style="padding:10px 20px;background:var(--gold);color:#0e0c09;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:DM Sans,sans-serif;font-size:0.85rem">🔥 Add All Deals</button>
+            <span id="bulkDealsStatus" style="color:var(--muted);font-size:0.82rem"></span>
+          </div>
+          <div id="bulkDealsList" style="font-family:monospace;font-size:0.78rem;max-height:300px;overflow-y:auto;background:var(--surface2);border-radius:8px;padding:12px;display:none"></div>
         </div>
       </div>
       <div id="dealsAdmin" style="display:none">
