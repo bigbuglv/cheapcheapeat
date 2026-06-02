@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CheapBites — Restaurants + Deals Upload</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0e0c09; --surface:#1a1710; --surface2:#252118;
+    --gold:#f5c842; --gold-dim:#b8942f; --red:#e8402a;
+    --green:#4caf7d; --cream:#f0ead8; --muted:#7a7060;
+    --border:rgba(245,200,66,0.15); --orange:#ff8b5e;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--cream); font-family:'DM Sans',sans-serif; min-height:100vh; padding:24px; }
+  .container { max-width:960px; margin:0 auto; }
+  h1 { font-family:'Fraunces',serif; font-size:2rem; font-weight:900; margin-bottom:4px; }
+  h1 .gold { color:var(--gold); }
+  .subtitle { color:var(--muted); font-size:0.9rem; margin-bottom:24px; }
+  .info-box { background:rgba(245,200,66,0.06); border:1px solid var(--border); border-radius:12px; padding:16px 20px; margin-bottom:20px; font-size:0.85rem; color:var(--muted); line-height:1.6; }
+  .stats-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border-radius:12px; overflow:hidden; margin-bottom:20px; }
+  .stat { background:var(--surface); padding:14px; text-align:center; }
+  .stat-num { font-family:'Fraunces',serif; font-size:1.6rem; font-weight:900; color:var(--gold); }
+  .stat-label { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-top:2px; }
+  .btn { font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:700; padding:12px 24px; border-radius:10px; cursor:pointer; border:none; transition:all 0.2s; }
+  .btn-gold { background:var(--gold); color:#0e0c09; }
+  .btn-gold:hover:not(:disabled) { background:#ffd740; transform:translateY(-1px); }
+  .btn-gold:disabled { opacity:0.4; cursor:not-allowed; }
+  .btn-outline { background:transparent; color:var(--cream); border:1px solid var(--border); }
+  .btn-outline:hover { border-color:var(--gold-dim); color:var(--gold); }
+  .btn-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:16px; }
+  .progress-bar { height:4px; background:var(--surface2); border-radius:2px; margin-bottom:16px; overflow:hidden; }
+  .progress-fill { height:100%; background:var(--orange); border-radius:2px; transition:width 0.3s; width:0%; }
+
+  /* Entry card */
+  .entry-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:12px; }
+  .entry-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+  .entry-name { font-family:'Fraunces',serif; font-size:1rem; font-weight:700; color:var(--cream); flex:1; }
+  .tag { padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:700; }
+  .tag-city { background:rgba(245,200,66,0.1); color:var(--gold-dim); }
+  .tag-limited { background:rgba(255,139,94,0.15); color:var(--orange); }
+  .tag-weekly { background:rgba(76,175,125,0.15); color:var(--green); }
+  .tag-existing { background:rgba(76,175,125,0.15); color:var(--green); }
+  .tag-new { background:rgba(245,200,66,0.15); color:var(--gold); }
+
+  .entry-body { display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.8rem; }
+  .entry-section { background:var(--surface2); border-radius:8px; padding:10px 12px; }
+  .entry-section-title { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:6px; font-weight:600; }
+  .entry-row { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .entry-row:last-child { border-bottom:none; }
+  .entry-row-label { color:var(--muted); }
+  .entry-row-value { color:var(--cream); text-align:right; max-width:60%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .deal-dish-row { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .deal-dish-row:last-child { border-bottom:none; }
+  .weekly-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:3px; }
+  .weekly-day { text-align:center; padding:4px 2px; background:var(--surface); border-radius:4px; }
+  .wd-label { font-size:0.6rem; color:var(--muted); text-transform:uppercase; }
+  .wd-dish { font-size:0.65rem; color:var(--cream); line-height:1.2; margin-top:2px; }
+  .wd-price { font-size:0.68rem; color:var(--orange); font-weight:700; }
+  .wd-empty { font-size:0.65rem; color:var(--surface2); }
+  .entry-status { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:700; }
+  .s-pending { background:var(--surface2); color:var(--muted); }
+  .s-done { background:rgba(76,175,125,0.15); color:var(--green); }
+  .s-skip { background:rgba(245,200,66,0.1); color:var(--gold-dim); }
+  .s-error { background:rgba(232,64,42,0.15); color:var(--red); }
+  .check-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .check-row input { accent-color:var(--gold); width:16px; height:16px; cursor:pointer; }
+
+  #log { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; max-height:200px; overflow-y:auto; font-family:monospace; font-size:0.78rem; line-height:1.8; color:var(--muted); display:none; margin-top:16px; }
+  #log .ok { color:var(--green); } #log .err { color:var(--red); } #log .skip { color:var(--gold-dim); }
+
+  @media(max-width:600px) { .entry-body { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1><span class="gold">Cheap</span>Bites — Restaurants + Deals</h1>
+  <p class="subtitle">Adds the restaurant (if not already in database) AND its deal in one shot</p>
+
+  <div class="info-box">
+    🔄 <strong style="color:var(--cream)">How it works:</strong> For each entry, it first checks if a restaurant with that name already exists. If yes, it skips creating the restaurant and just adds the deal. If no, it creates the restaurant first, then adds the deal. Run it as many times as you like — restaurants are never duplicated.
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num" id="selectedCount">15</div><div class="stat-label">Selected</div></div>
+    <div class="stat"><div class="stat-num" id="restaurantCount">0</div><div class="stat-label">Restaurants added</div></div>
+    <div class="stat"><div class="stat-num" id="dealCount">0</div><div class="stat-label">Deals added</div></div>
+    <div class="stat"><div class="stat-num" id="errorCount">0</div><div class="stat-label">Errors</div></div>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="btn-row">
+    <button class="btn btn-gold" id="uploadBtn" onclick="startUpload()">🚀 Upload Selected</button>
+    <button class="btn btn-outline" onclick="selectAll(true)">Select All</button>
+    <button class="btn btn-outline" onclick="selectAll(false)">Deselect All</button>
+  </div>
+
+  <div id="entryCards"></div>
+  <div id="log"></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDoLc_QJsdT2Eiz4u5JAVIAgQXjhxbSn-o",
+    authDomain: "cheapcheapeats.firebaseapp.com",
+    projectId: "cheapcheapeats",
+    storageBucket: "cheapcheapeats.firebasestorage.app",
+    messagingSenderId: "47196090968",
+    appId: "1:47196090968:web:205e242bdf064e6bf9102d"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ── COMBINED DATA: restaurant + deal in one object ──
+  const ENTRIES = [
+    // ── MELBOURNE ──
+    {
+      restaurant: { name: "Frenchie", cuisine: "french", cuisineLabel: "French", dish: "Beef Cheek with Bourguignonne Sauce", exactPrice: "$14", priceRange: "15", address: "267 Little Lonsdale St, Melbourne VIC 3000", lat: -37.8118, lng: 144.9608 },
+      deal: { type: "limited", dishes: [{ dish: "Beef Cheek with Bourguignonne Sauce", price: "$14" }, { dish: "Seared Tuna with Crispy Frites", price: "$14" }, { dish: "Rock Oysters with Champagne Granite", price: "$14" }], notes: "Everything on the menu is $14. Dine-in only." }
+    },
+    {
+      restaurant: { name: "BKK Thai", cuisine: "thai", cuisineLabel: "Thai", dish: "$20 Chargrilled Half Chicken (Wed nights)", exactPrice: "$20", priceRange: "20", address: "The Easey, 48 Easey St, Collingwood VIC 3066", lat: -37.7985, lng: 144.9880 },
+      deal: { type: "weekly", weeklyDishes: { mon: null, tue: null, wed: { dish: "Chargrilled Half Chicken with salad, sweet chilli & rice or fries", price: "$20" }, thu: null, fri: null }, notes: "Wednesday night only from 5pm until late." }
+    },
+
+    // ── SYDNEY ──
+    {
+      restaurant: { name: "Kafe Kooks", cuisine: "malaysian", cuisineLabel: "Malaysian", dish: "Single Roti Paratha", exactPrice: "$6", priceRange: "10", address: "63 Mountain St, Ultimo NSW 2007", lat: -33.8789, lng: 151.1994 },
+      deal: { type: "limited", dishes: [{ dish: "Single Roti Paratha", price: "$6" }, { dish: "Spinach & Fetta Roti", price: "$12" }, { dish: "Thai Beef Madtarbak Roti", price: "$15" }], notes: "All day every day. Great value roti and Malaysian street food." }
+    },
+    {
+      restaurant: { name: "Temasek", cuisine: "malaysian", cuisineLabel: "Malaysian", dish: "Hainanese Chicken Laksa", exactPrice: "$20", priceRange: "20", address: "321 Pacific Hwy, Lane Cove NSW 2066", lat: -33.8197, lng: 151.1689 },
+      deal: { type: "weekly", weeklyDishes: { mon: { dish: "Vegetarian Fried Noodles", price: "$17" }, tue: { dish: "Hainanese Chicken Laksa", price: "$20" }, wed: { dish: "Vegetarian Fried Noodles", price: "$17" }, thu: { dish: "Hainanese Chicken Laksa", price: "$20" }, fri: { dish: "Vegetarian Fried Noodles", price: "$17" } }, notes: "Lunch specials Mon–Fri only." }
+    },
+
+    // ── PERTH ──
+    {
+      restaurant: { name: "The Wray Hotel", cuisine: "other", cuisineLabel: "Other", dish: "Rump Steak, Chips & Salad", exactPrice: "$19.90", priceRange: "20", address: "2 Douro Rd, Fremantle WA 6160", lat: -32.0578, lng: 115.7500 },
+      deal: { type: "limited", dishes: [{ dish: "Rump Steak, Chips & Salad", price: "$19.90" }], notes: "Available all week. Add 3 grilled prawns for $5." }
+    },
+    {
+      restaurant: { name: "The Oxford Hotel", cuisine: "other", cuisineLabel: "Other", dish: "Pizza", exactPrice: "$15", priceRange: "15", address: "215 Oxford St, Leederville WA 6007", lat: -31.9290, lng: 115.8420 },
+      deal: { type: "limited", dishes: [{ dish: "Pizza", price: "$15" }, { dish: "Parmi (Chicken Parmigiana)", price: "$18" }], notes: "All day every day." }
+    },
+    {
+      restaurant: { name: "Siena's", cuisine: "italian", cuisineLabel: "Italian", dish: "Pasta or Pizza", exactPrice: "$16", priceRange: "20", address: "742 Newcastle St, Leederville WA 6007", lat: -31.9285, lng: 115.8415 },
+      deal: { type: "limited", dishes: [{ dish: "Pizza", price: "$16" }, { dish: "Pasta", price: "$16" }, { dish: "Parmigiana", price: "$23" }], notes: "Pizzas and pastas from $16 all week. Leederville." }
+    },
+    {
+      restaurant: { name: "Love Street Pizza", cuisine: "italian", cuisineLabel: "Italian", dish: "Monday Pizza Night", exactPrice: "$20", priceRange: "20", address: "62 Love St, Northbridge WA 6003", lat: -31.9470, lng: 115.8590 },
+      deal: { type: "weekly", weeklyDishes: { mon: { dish: "Monday Pizza Night Special", price: "$20" }, tue: null, wed: null, thu: null, fri: null }, notes: "Monday pizza night only." }
+    },
+    {
+      restaurant: { name: "The Station", cuisine: "other", cuisineLabel: "Other", dish: "Monday Burger & Trivia Night", exactPrice: "$20", priceRange: "20", address: "1 The Esplanade, South Perth WA 6151", lat: -31.9706, lng: 115.8630 },
+      deal: { type: "weekly", weeklyDishes: { mon: { dish: "Burger Special (Trivia Night)", price: "$20" }, tue: null, wed: null, thu: null, fri: null }, notes: "Monday burger and trivia night. South Perth." }
+    },
+    {
+      restaurant: { name: "Hyde Park Hotel", cuisine: "other", cuisineLabel: "Other", dish: "Monday Parmi Special", exactPrice: "$20", priceRange: "20", address: "331 Bulwer St, Perth WA 6000", lat: -31.9378, lng: 115.8640 },
+      deal: { type: "weekly", weeklyDishes: { mon: { dish: "Chicken Parmigiana with chips & salad", price: "$20" }, tue: null, wed: null, thu: null, fri: null }, notes: "Monday parmi special." }
+    },
+    {
+      restaurant: { name: "The Breakwater", cuisine: "other", cuisineLabel: "Other", dish: "Tuesday Fish & Chips", exactPrice: "$20", priceRange: "20", address: "Hillarys Boat Harbour, Sorrento Quay, Hillarys WA 6025", lat: -31.8170, lng: 115.7380 },
+      deal: { type: "weekly", weeklyDishes: { mon: null, tue: { dish: "Fish & Chips (snapper, tartare, salad & fries)", price: "$20" }, wed: null, thu: null, fri: null }, notes: "Every Tuesday all day. Hillarys Boat Harbour." }
+    },
+
+    // ── BRISBANE (restaurants already in DB, deals only effectively) ──
+    {
+      restaurant: { name: "Brooklyn Depot", cuisine: "american", cuisineLabel: "American", dish: "Burgers / 50c Wings (Wed) / $10 Burgers (Fri)", exactPrice: "$10", priceRange: "10", address: "170 Grey St, South Brisbane QLD 4101", lat: -27.4778, lng: 153.0185 },
+      deal: { type: "weekly", weeklyDishes: { mon: null, tue: null, wed: { dish: "$1 Wings with any drink purchase", price: "$1" }, thu: null, fri: { dish: "Burgers", price: "$10" } }, notes: "Wed $1 wings all day 11am–9pm. Fri $10 burgers." }
+    },
+    {
+      restaurant: { name: "Fritzenberger", cuisine: "american", cuisineLabel: "American", dish: "$12 Burgers (Mon) / 2-for-1 (Tue)", exactPrice: "$12", priceRange: "15", address: "Shop 11-12, Little Stanley St, South Brisbane QLD 4101", lat: -27.4790, lng: 153.0195 },
+      deal: { type: "weekly", weeklyDishes: { mon: { dish: "Burgers", price: "$12" }, tue: { dish: "2-for-1 Burgers", price: "$12" }, wed: null, thu: null, fri: null }, notes: "Monday $12 burgers. Tuesday 2-for-1." }
+    },
+    {
+      restaurant: { name: "Rafi", cuisine: "american", cuisineLabel: "American", dish: "Cheeseburger (3-6pm deal)", exactPrice: "$15", priceRange: "15", address: "Shop 15, 155B Miller St, North Sydney NSW 2060", lat: -33.8390, lng: 151.2070 },
+      deal: { type: "limited", dishes: [{ dish: "Wagyu Enoki Skewers", price: "$18" }, { dish: "Wok-Fried Black Pepper Beef with Truffle Butter", price: "$19" }, { dish: "Hainanese Chicken", price: "$18" }], notes: "All dishes under $20. Mon–Fri lunch 11:30am–2pm & dinner 5:30–7pm." }
+    },
+    {
+      restaurant: { name: "BKK Thai Melbourne CBD", cuisine: "thai", cuisineLabel: "Thai", dish: "$20 Chargrilled Half Chicken (Wed nights)", exactPrice: "$20", priceRange: "20", address: "Level 1, 161 Collins St, Melbourne VIC 3000", lat: -37.8142, lng: 144.9650 },
+      deal: { type: "weekly", weeklyDishes: { mon: null, tue: null, wed: { dish: "Chargrilled Half Chicken with salad, sweet chilli & rice or fries", price: "$20" }, thu: null, fri: null }, notes: "Wednesday night from 5pm until late. CBD location." }
+    }
+  ];
+
+  // ── RENDER CARDS ──
+  const container = document.getElementById('entryCards');
+  const DAY_LABELS = { mon:'Mon', tue:'Tue', wed:'Wed', thu:'Thu', fri:'Fri' };
+
+  ENTRIES.forEach((entry, i) => {
+    const { restaurant, deal } = entry;
+    const card = document.createElement('div');
+    card.className = 'entry-card';
+
+    const dealHTML = deal.type === 'limited'
+      ? deal.dishes.map(d => `<div class="deal-dish-row"><span style="color:var(--cream)">${d.dish}</span><span style="color:var(--orange);font-weight:700">${d.price}</span></div>`).join('')
+      : `<div class="weekly-grid">${['mon','tue','wed','thu','fri'].map(k => {
+          const wd = deal.weeklyDishes[k];
+          return `<div class="weekly-day"><div class="wd-label">${DAY_LABELS[k]}</div>${wd
+            ? `<div class="wd-dish">${wd.dish.length > 15 ? wd.dish.substring(0,15)+'…' : wd.dish}</div><div class="wd-price">${wd.price}</div>`
+            : `<div class="wd-empty">—</div>`}</div>`;
+        }).join('')}</div>`;
+
+    card.innerHTML = `
+      <div class="check-row">
+        <input type="checkbox" checked data-idx="${i}" onchange="window._updateCount()">
+        <span class="tag tag-city">📍 ${restaurant.address.split(',').slice(-2).join(',').trim()}</span>
+        <span class="tag ${deal.type === 'limited' ? 'tag-limited' : 'tag-weekly'}">${deal.type === 'limited' ? '🔥 Limited' : '📅 Weekly'}</span>
+        <span class="entry-status s-pending" id="entry-status-${i}">Pending</span>
+      </div>
+      <div class="entry-name">${restaurant.name}</div>
+      <div style="height:10px"></div>
+      <div class="entry-body">
+        <div class="entry-section">
+          <div class="entry-section-title">🍽️ Restaurant</div>
+          <div class="entry-row"><span class="entry-row-label">Cuisine</span><span class="entry-row-value">${restaurant.cuisineLabel}</span></div>
+          <div class="entry-row"><span class="entry-row-label">Price tier</span><span class="entry-row-value" style="color:var(--gold)">Under $${restaurant.priceRange}</span></div>
+          <div class="entry-row"><span class="entry-row-label">Address</span><span class="entry-row-value">${restaurant.address}</span></div>
+        </div>
+        <div class="entry-section">
+          <div class="entry-section-title">🔥 Deal</div>
+          ${dealHTML}
+          ${deal.notes ? `<div style="font-size:0.72rem;color:var(--muted);margin-top:6px;font-style:italic">${deal.notes}</div>` : ''}
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // ── HELPERS ──
+  window._updateCount = () => {
+    document.getElementById('selectedCount').textContent =
+      document.querySelectorAll('#entryCards input[type=checkbox]:checked').length;
+  };
+  window.selectAll = (state) => {
+    document.querySelectorAll('#entryCards input[type=checkbox]').forEach(cb => cb.checked = state);
+    window._updateCount();
+  };
+  function log(msg, cls='') {
+    const el = document.getElementById('log');
+    el.style.display = 'block';
+    el.innerHTML += `<div class="${cls}">${msg}</div>`;
+    el.scrollTop = el.scrollHeight;
+  }
+
+  // ── UPLOAD ──
+  window.startUpload = async () => {
+    const btn = document.getElementById('uploadBtn');
+    const checkboxes = document.querySelectorAll('#entryCards input[type=checkbox]:checked');
+    const indices = Array.from(checkboxes).map(cb => parseInt(cb.dataset.idx));
+    if (indices.length === 0) { alert('No entries selected!'); return; }
+    if (!confirm(`Upload ${indices.length} entries?\n\nFor each: checks if restaurant exists, creates it if not, then adds the deal.`)) return;
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Loading existing restaurants...';
+
+    // Load all restaurants into a map
+    let existingMap = {};
+    try {
+      const snapshot = await getDocs(collection(db, "restaurants"));
+      snapshot.forEach(d => {
+        const name = (d.data().name || '').toLowerCase().trim();
+        existingMap[name] = { id: d.id, name: d.data().name };
+      });
+      log(`Loaded ${Object.keys(existingMap).length} existing restaurants`, 'ok');
+    } catch(err) {
+      log(`⚠️ Could not load restaurants: ${err.message}`, 'err');
+    }
+
+    btn.textContent = '⏳ Uploading...';
+    let restaurantsAdded = 0, dealsAdded = 0, errors = 0;
+    const total = indices.length;
+
+    for (let i = 0; i < indices.length; i++) {
+      const idx = indices[i];
+      const { restaurant, deal } = ENTRIES[idx];
+      const statusEl = document.getElementById(`entry-status-${idx}`);
+      const nameKey = restaurant.name.toLowerCase().trim();
+
+      try {
+        // Step 1: Get or create restaurant
+        let restaurantId, restaurantName;
+
+        if (existingMap[nameKey]) {
+          // Already exists — reuse it
+          restaurantId = existingMap[nameKey].id;
+          restaurantName = existingMap[nameKey].name;
+          log(`↩️ "${restaurant.name}" already exists — reusing`, 'skip');
+        } else {
+          // Create new restaurant
+          const rDoc = await addDoc(collection(db, "restaurants"), {
+            name: restaurant.name,
+            cuisine: restaurant.cuisine,
+            cuisineLabel: restaurant.cuisineLabel,
+            dish: restaurant.dish,
+            dishes: [{ name: restaurant.dish, price: restaurant.exactPrice, tier: restaurant.priceRange }],
+            exactPrice: restaurant.exactPrice,
+            priceRange: restaurant.priceRange,
+            address: restaurant.address,
+            lat: restaurant.lat || null,
+            lng: restaurant.lng || null,
+            phone: null, hours: null, website: null, notes: null,
+            isOwner: false, stars: 4,
+            status: 'approved',
+            createdAt: serverTimestamp(),
+            createdVia: 'bulk-upload'
+          });
+          restaurantId = rDoc.id;
+          restaurantName = restaurant.name;
+          existingMap[nameKey] = { id: restaurantId, name: restaurantName };
+          restaurantsAdded++;
+          log(`✅ Restaurant "${restaurant.name}" created → ${restaurantId}`, 'ok');
+        }
+
+        // Step 2: Add deal
+        const dealPayload = {
+          restaurantId,
+          restaurantName,
+          type: deal.type,
+          notes: deal.notes || null,
+          startDate: deal.startDate || null,
+          endDate: deal.endDate || null,
+          createdAt: serverTimestamp(),
+          createdVia: 'bulk-upload'
+        };
+
+        if (deal.type === 'limited') {
+          dealPayload.dishes = deal.dishes;
+          dealPayload.dish = deal.dishes[0].dish;
+          dealPayload.price = deal.dishes[0].price;
+          dealPayload.weeklyDishes = null;
+        } else {
+          dealPayload.weeklyDishes = deal.weeklyDishes;
+          const firstDay = ['mon','tue','wed','thu','fri'].find(k => deal.weeklyDishes[k]);
+          dealPayload.dish = firstDay ? deal.weeklyDishes[firstDay].dish : null;
+          dealPayload.price = firstDay ? deal.weeklyDishes[firstDay].price : null;
+          dealPayload.dishes = null;
+        }
+
+        const dealRef = await addDoc(collection(db, "deals"), dealPayload);
+        dealsAdded++;
+        statusEl.className = 'entry-status s-done';
+        statusEl.textContent = existingMap[nameKey].id === restaurantId && restaurantsAdded === 0
+          ? '✅ Deal added' : '✅ Restaurant + Deal added';
+        log(`🔥 Deal for "${restaurantName}" added → ${dealRef.id}`, 'ok');
+
+      } catch(err) {
+        errors++;
+        statusEl.className = 'entry-status s-error';
+        statusEl.textContent = '❌ Error';
+        log(`❌ "${restaurant.name}": ${err.message}`, 'err');
+      }
+
+      document.getElementById('restaurantCount').textContent = restaurantsAdded;
+      document.getElementById('dealCount').textContent = dealsAdded;
+      document.getElementById('errorCount').textContent = errors;
+      document.getElementById('progressFill').style.width = `${((i+1)/total)*100}%`;
+      await new Promise(r => setTimeout(r, 250));
+    }
+
+    btn.textContent = `✅ Done — ${restaurantsAdded} restaurants + ${dealsAdded} deals added`;
+    log(`\nComplete: ${restaurantsAdded} restaurants created, ${dealsAdded} deals added, ${errors} errors.`, 'ok');
+  };
+</script>
+</body>
+</html>
