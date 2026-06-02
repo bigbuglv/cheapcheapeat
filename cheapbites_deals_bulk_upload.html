@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CheapBites — Bulk Deals Upload</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0c09; --surface: #1a1710; --surface2: #252118;
+    --gold: #f5c842; --gold-dim: #b8942f; --red: #e8402a;
+    --green: #4caf7d; --cream: #f0ead8; --muted: #7a7060;
+    --border: rgba(245,200,66,0.15); --orange: #ff8b5e;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--cream); font-family:'DM Sans',sans-serif; min-height:100vh; padding:24px; }
+  .container { max-width:960px; margin:0 auto; }
+  h1 { font-family:'Fraunces',serif; font-size:2rem; font-weight:900; margin-bottom:4px; }
+  h1 .gold { color:var(--gold); }
+  .subtitle { color:var(--muted); font-size:0.9rem; margin-bottom:28px; }
+  .info-box { background:rgba(245,200,66,0.06); border:1px solid var(--border); border-radius:12px; padding:16px 20px; margin-bottom:20px; font-size:0.85rem; color:var(--muted); line-height:1.6; }
+  .stats-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border-radius:12px; overflow:hidden; margin-bottom:20px; }
+  .stat { background:var(--surface); padding:16px; text-align:center; }
+  .stat-num { font-family:'Fraunces',serif; font-size:1.8rem; font-weight:900; color:var(--gold); }
+  .stat-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-top:2px; }
+  .btn { font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:700; padding:12px 24px; border-radius:10px; cursor:pointer; border:none; transition:all 0.2s; }
+  .btn-gold { background:var(--gold); color:#0e0c09; }
+  .btn-gold:hover:not(:disabled) { background:#ffd740; transform:translateY(-1px); }
+  .btn-gold:disabled { opacity:0.4; cursor:not-allowed; }
+  .btn-outline { background:transparent; color:var(--cream); border:1px solid var(--border); }
+  .btn-outline:hover { border-color:var(--gold-dim); color:var(--gold); }
+  .btn-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:16px; }
+  .progress-bar { height:4px; background:var(--surface2); border-radius:2px; margin-bottom:16px; overflow:hidden; }
+  .progress-fill { height:100%; background:var(--orange); border-radius:2px; transition:width 0.3s; width:0%; }
+  .deal-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:12px; }
+  .deal-card-header { display:flex; justify-content:space-between; align-items:start; margin-bottom:10px; gap:12px; }
+  .deal-name { font-family:'Fraunces',serif; font-size:1rem; font-weight:700; color:var(--cream); }
+  .deal-type-badge { padding:3px 10px; border-radius:6px; font-size:0.72rem; font-weight:700; white-space:nowrap; }
+  .badge-limited { background:rgba(255,139,94,0.15); color:var(--orange); }
+  .badge-weekly { background:rgba(76,175,125,0.15); color:var(--green); }
+  .deal-meta { font-size:0.8rem; color:var(--muted); margin-bottom:8px; }
+  .deal-dishes { display:flex; flex-direction:column; gap:4px; margin-bottom:8px; }
+  .deal-dish-row { display:flex; justify-content:space-between; padding:6px 10px; background:var(--surface2); border-radius:6px; font-size:0.82rem; }
+  .deal-dish-name { color:var(--cream); }
+  .deal-dish-price { color:var(--orange); font-weight:700; }
+  .deal-weekly-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:4px; margin-bottom:8px; }
+  .deal-day { background:var(--surface2); border-radius:6px; padding:6px 4px; text-align:center; font-size:0.75rem; }
+  .deal-day-label { color:var(--muted); font-size:0.65rem; text-transform:uppercase; margin-bottom:2px; }
+  .deal-day-dish { color:var(--cream); font-size:0.72rem; line-height:1.3; }
+  .deal-day-price { color:var(--orange); font-weight:700; font-size:0.75rem; }
+  .deal-day-empty { color:var(--muted); font-size:0.7rem; }
+  .deal-notes { font-size:0.78rem; color:var(--muted); font-style:italic; }
+  .deal-status { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:700; }
+  .status-pending { background:var(--surface2); color:var(--muted); }
+  .status-done { background:rgba(76,175,125,0.15); color:var(--green); }
+  .status-error { background:rgba(232,64,42,0.15); color:var(--red); }
+  .status-skip { background:rgba(245,200,66,0.1); color:var(--gold-dim); }
+  .check-wrap { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .check-wrap input { accent-color:var(--gold); width:16px; height:16px; cursor:pointer; }
+  #log { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; max-height:180px; overflow-y:auto; font-family:monospace; font-size:0.78rem; line-height:1.8; color:var(--muted); display:none; margin-top:16px; }
+  #log .ok { color:var(--green); } #log .err { color:var(--red); } #log .skip { color:var(--gold-dim); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1><span class="gold">Cheap</span>Bites — Bulk Deals Upload</h1>
+  <p class="subtitle">Add verified deals under $20 directly to your Firestore deals collection</p>
+
+  <div class="info-box">
+    💡 These deals are sourced from Urban List (Apr 2026), EatDrinkCheap (May 2026), PerthIsOK (Apr 2026) and SydneyExpert (May 2026). Each deal is linked to a restaurant already in your database by name. <strong style="color:var(--cream)">Important:</strong> the restaurant must already exist in Firestore — the tool will look it up by name and link the deal automatically. If it can't find a match it will skip it.
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num" id="selectedCount">15</div><div class="stat-label">Selected</div></div>
+    <div class="stat"><div class="stat-num" id="uploadedCount">0</div><div class="stat-label">Uploaded</div></div>
+    <div class="stat"><div class="stat-num" id="errorCount">0</div><div class="stat-label">Skipped / Errors</div></div>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="btn-row">
+    <button class="btn btn-gold" id="uploadBtn" onclick="startUpload()">🔥 Upload Selected Deals</button>
+    <button class="btn btn-outline" onclick="selectAll(true)">Select All</button>
+    <button class="btn btn-outline" onclick="selectAll(false)">Deselect All</button>
+  </div>
+
+  <div id="dealCards"></div>
+  <div id="log"></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDoLc_QJsdT2Eiz4u5JAVIAgQXjhxbSn-o",
+    authDomain: "cheapcheapeats.firebaseapp.com",
+    projectId: "cheapcheapeats",
+    storageBucket: "cheapcheapeats.firebasestorage.app",
+    messagingSenderId: "47196090968",
+    appId: "1:47196090968:web:205e242bdf064e6bf9102d"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ── DEALS DATA ──
+  const DEALS = [
+    // ── MELBOURNE ──
+    {
+      restaurantName: "Frenchie",
+      city: "Melbourne",
+      type: "limited",
+      dishes: [
+        { dish: "Beef Cheek with Bourguignonne Sauce", price: "$14" },
+        { dish: "Seared Tuna with Crispy Frites", price: "$14" },
+        { dish: "Rock Oysters with Champagne Granite", price: "$14" }
+      ],
+      notes: "Everything on the menu is $14. Dine-in only.",
+      startDate: "",
+      endDate: ""
+    },
+    {
+      restaurantName: "BKK Thai",
+      city: "Melbourne",
+      type: "weekly",
+      weeklyDishes: {
+        mon: null,
+        tue: null,
+        wed: { dish: "Chargrilled Half Chicken with salad, sweet chilli & rice or fries", price: "$20" },
+        thu: null,
+        fri: null
+      },
+      notes: "Wednesday night only from 5pm until late.",
+      startDate: "",
+      endDate: ""
+    },
+
+    // ── SYDNEY ──
+    {
+      restaurantName: "Rafi",
+      city: "Sydney",
+      type: "limited",
+      dishes: [
+        { dish: "Wagyu Enoki Skewers", price: "$18" },
+        { dish: "Wok-Fried Black Pepper Beef with Truffle Butter", price: "$19" },
+        { dish: "Hainanese Chicken", price: "$18" }
+      ],
+      notes: "All dishes under $20. Mon–Fri lunch 11:30am–2pm, dinner 5:30–7pm.",
+      startDate: "",
+      endDate: ""
+    },
+    {
+      restaurantName: "Kafe Kooks",
+      city: "Sydney",
+      type: "limited",
+      dishes: [
+        { dish: "Single Roti Paratha", price: "$6" },
+        { dish: "Spinach & Fetta Roti", price: "$12" }
+      ],
+      notes: "All day, every day. 63 Mountain St, Ultimo.",
+      startDate: "",
+      endDate: ""
+    },
+    {
+      restaurantName: "Temasek",
+      city: "Sydney",
+      type: "weekly",
+      weeklyDishes: {
+        mon: { dish: "Vegetarian Fried Noodles", price: "$17" },
+        tue: { dish: "Hainanese Chicken Laksa", price: "$20" },
+        wed: { dish: "Vegetarian Fried Noodles", price: "$17" },
+        thu: { dish: "Hainanese Chicken Laksa", price: "$20" },
+        fri: { dish: "Vegetarian Fried Noodles", price: "$17" }
+      },
+      notes: "Lunch specials only. Ask staff for current menu.",
+      startDate: "",
+      endDate: ""
+    },
+
+    // ── BRISBANE ──
+    {
+      restaurantName: "Brooklyn Depot",
+      city: "Brisbane",
+      type: "weekly",
+      weeklyDishes: {
+        mon: null,
+        tue: null,
+        wed: { dish: "$1 Wings with any drink purchase", price: "$1" },
+        thu: null,
+        fri: { dish: "Burgers", price: "$10" }
+      },
+      notes: "Wed $1 wings all day 11am–9pm. Fri $10 burgers.",
+      startDate: "",
+      endDate: ""
+    },
+    {
+      restaurantName: "Fritzenberger",
+      city: "Brisbane",
+      type: "weekly",
+      weeklyDishes: {
+        mon: { dish: "Burgers", price: "$12" },
+        tue: { dish: "2-for-1 Burgers", price: "$12" },
+        wed: null,
+        thu: null,
+        fri: null
+      },
+      notes: "Monday $12 burgers. Tuesday 2-for-1.",
+      startDate: "",
+      endDate: ""
+    },
+    {
+      restaurantName: "Vietnamese Pho Ever",
+      city: "Brisbane",
+      type: "weekly",
+      weeklyDishes: {
+        mon: { dish: "250g Rump Steak with sauce, chips & salad", price: "$19.90" },
+        tue: { dish: "250g Rump Steak with sauce, chips & salad", price: "$19.90" },
+        wed: { dish: "250g Rump Steak with sauce, chips & salad", price: "$19.90" },
+        thu: { dish: "250g Rump Steak with sauce, chips & salad", price: "$19.90" },
+        fri: { dish: "250g Rump Steak with sauce, chips & salad", price: "$19.90" }
+      },
+      notes: "Lunch special Mon–Fri 11:30am–2:30pm only.",
+      startDate: "",
+      endDate: ""
+    },
+
+    // ── PERTH ──
+    {
+      restaurantName: "The Wray Hotel",
+      city: "Perth",
+      type: "limited",
+      dishes: [
+        { dish: "Rump Steak, Chips & Salad", price: "$19.90" }
+      ],
+      notes: "Available all week. Add 3 grilled prawns for $5.",
+      startDate: "",
+      endDate: ""
+    },
+    {
+      restaurantName: "The Oxford Hotel",
+      city: "Perth",
+      type: "limited",
+      dishes: [
+        { dish: "Pizza", price: "$15" },
+        { dish: "Parmi (Chicken Parmigiana)", price: "$18" }
+      ],
+      notes: "All day every day.",
+      startDate: "",
+      endDate: ""
+    },
+    {
+      restaurantName: "Siena's",
+      city: "Perth",
+      type: "limited",
+      dishes: [
+        { dish: "Pizza", price: "$16" },
+        { dish: "Pasta", price: "$16" }
+      ],
+      notes: "Leederville. Pizzas and pastas from $16 all week.",
+      startDate: "",
+      endDate: ""
+    },
+    {
+      restaurantName: "Love Street Pizza",
+      city: "Perth",
+      type: "weekly",
+      weeklyDishes: {
+        mon: { dish: "Monday Pizza Night", price: "$20" },
+        tue: null,
+        wed: null,
+        thu: null,
+        fri: null
+      },
+      notes: "Monday pizza night special.",
+      startDate: "",
+      endDate: ""
+    },
+    {
+      restaurantName: "The Station",
+      city: "Perth",
+      type: "weekly",
+      weeklyDishes: {
+        mon: { dish: "Burger Special (Trivia Night)", price: "$20" },
+        tue: null,
+        wed: null,
+        thu: null,
+        fri: null
+      },
+      notes: "Monday burger & trivia night. South Perth.",
+      startDate: "",
+      endDate: ""
+    },
+    {
+      restaurantName: "Hyde Park Hotel",
+      city: "Perth",
+      type: "weekly",
+      weeklyDishes: {
+        mon: { dish: "Chicken Parmigiana with chips & salad", price: "$20" },
+        tue: null,
+        wed: null,
+        thu: null,
+        fri: null
+      },
+      notes: "Monday parmi special.",
+      startDate: "",
+      endDate: ""
+    },
+    {
+      restaurantName: "The Breakwater",
+      city: "Perth",
+      type: "weekly",
+      weeklyDishes: {
+        mon: null,
+        tue: { dish: "Fish & Chips (snapper, tartare, salad & fries)", price: "$20" },
+        wed: null,
+        thu: null,
+        fri: null
+      },
+      notes: "Every Tuesday all day. Hillarys.",
+      startDate: "",
+      endDate: ""
+    }
+  ];
+
+  // ── RENDER DEAL CARDS ──
+  const container = document.getElementById('dealCards');
+  const DAY_LABELS = { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri' };
+
+  DEALS.forEach((deal, i) => {
+    const card = document.createElement('div');
+    card.className = 'deal-card';
+    card.id = `deal-card-${i}`;
+
+    const dishesHTML = deal.type === 'limited'
+      ? `<div class="deal-dishes">${deal.dishes.map(d =>
+          `<div class="deal-dish-row"><span class="deal-dish-name">${d.dish}</span><span class="deal-dish-price">${d.price}</span></div>`
+        ).join('')}</div>`
+      : `<div class="deal-weekly-grid">${['mon','tue','wed','thu','fri'].map(k => {
+          const wd = deal.weeklyDishes[k];
+          return `<div class="deal-day">
+            <div class="deal-day-label">${DAY_LABELS[k]}</div>
+            ${wd ? `<div class="deal-day-dish">${wd.dish.length > 20 ? wd.dish.substring(0,20)+'…' : wd.dish}</div><div class="deal-day-price">${wd.price}</div>`
+                 : `<div class="deal-day-empty">—</div>`}
+          </div>`;
+        }).join('')}</div>`;
+
+    card.innerHTML = `
+      <div class="check-wrap">
+        <input type="checkbox" checked data-idx="${i}" onchange="window._updateCount()">
+        <span style="font-size:0.75rem;color:var(--muted)">📍 ${deal.city}</span>
+        <span class="deal-status status-pending" id="deal-status-${i}">Pending</span>
+      </div>
+      <div class="deal-card-header">
+        <div class="deal-name">${deal.restaurantName}</div>
+        <span class="deal-type-badge ${deal.type === 'limited' ? 'badge-limited' : 'badge-weekly'}">
+          ${deal.type === 'limited' ? '🔥 Limited Deal' : '📅 Weekly Special'}
+        </span>
+      </div>
+      ${dishesHTML}
+      ${deal.notes ? `<div class="deal-notes">ℹ️ ${deal.notes}</div>` : ''}
+    `;
+    container.appendChild(card);
+  });
+
+  // ── HELPERS ──
+  window._updateCount = () => {
+    document.getElementById('selectedCount').textContent =
+      document.querySelectorAll('#dealCards input[type=checkbox]:checked').length;
+  };
+  window.selectAll = (state) => {
+    document.querySelectorAll('#dealCards input[type=checkbox]').forEach(cb => cb.checked = state);
+    window._updateCount();
+  };
+  function log(msg, cls = '') {
+    const el = document.getElementById('log');
+    el.style.display = 'block';
+    el.innerHTML += `<div class="${cls}">${msg}</div>`;
+    el.scrollTop = el.scrollHeight;
+  }
+
+  // ── UPLOAD ──
+  window.startUpload = async () => {
+    const btn = document.getElementById('uploadBtn');
+    const checkboxes = document.querySelectorAll('#dealCards input[type=checkbox]:checked');
+    const indices = Array.from(checkboxes).map(cb => parseInt(cb.dataset.idx));
+    if (indices.length === 0) { alert('No deals selected!'); return; }
+    if (!confirm(`Upload ${indices.length} deals to CheapBites?\n\nDeals will be live immediately.`)) return;
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Loading restaurants...';
+
+    // Load all approved restaurants to match by name
+    let restaurantMap = {};
+    try {
+      const snapshot = await getDocs(query(collection(db, "restaurants"), where("status", "==", "approved")));
+      snapshot.forEach(d => {
+        const name = (d.data().name || '').toLowerCase().trim();
+        restaurantMap[name] = { id: d.id, name: d.data().name };
+      });
+      log(`Loaded ${Object.keys(restaurantMap).length} restaurants for matching`, 'ok');
+    } catch (err) {
+      log(`⚠️ Could not load restaurants: ${err.message}`, 'err');
+    }
+
+    btn.textContent = '⏳ Uploading deals...';
+    let uploaded = 0, skipped = 0, errors = 0;
+    const total = indices.length;
+
+    for (let i = 0; i < indices.length; i++) {
+      const idx = indices[i];
+      const deal = DEALS[idx];
+      const statusEl = document.getElementById(`deal-status-${idx}`);
+
+      // Match restaurant by name
+      const nameKey = deal.restaurantName.toLowerCase().trim();
+      const match = restaurantMap[nameKey];
+
+      if (!match) {
+        // Try partial match
+        const partialKey = Object.keys(restaurantMap).find(k => k.includes(nameKey) || nameKey.includes(k));
+        if (!partialKey) {
+          skipped++;
+          statusEl.className = 'deal-status status-skip';
+          statusEl.textContent = '⚠️ No restaurant match';
+          log(`⚠️ "${deal.restaurantName}" — no matching restaurant found in database, skipping`, 'skip');
+          document.getElementById('errorCount').textContent = skipped + errors;
+          document.getElementById('progressFill').style.width = `${((i+1)/total)*100}%`;
+          await new Promise(r => setTimeout(r, 100));
+          continue;
+        }
+        restaurantMap[nameKey] = restaurantMap[partialKey];
+      }
+
+      const restaurant = restaurantMap[nameKey] || restaurantMap[Object.keys(restaurantMap).find(k => k.includes(nameKey) || nameKey.includes(k))];
+
+      try {
+        const payload = {
+          restaurantId: restaurant.id,
+          restaurantName: restaurant.name,
+          type: deal.type,
+          notes: deal.notes || null,
+          startDate: deal.startDate || null,
+          endDate: deal.endDate || null,
+          createdAt: serverTimestamp(),
+          createdVia: 'bulk-upload'
+        };
+
+        if (deal.type === 'limited') {
+          payload.dishes = deal.dishes;
+          payload.dish = deal.dishes[0].dish;
+          payload.price = deal.dishes[0].price;
+          payload.weeklyDishes = null;
+        } else {
+          payload.weeklyDishes = deal.weeklyDishes;
+          const firstDay = ['mon','tue','wed','thu','fri'].find(k => deal.weeklyDishes[k]);
+          payload.dish = firstDay ? deal.weeklyDishes[firstDay].dish : null;
+          payload.price = firstDay ? deal.weeklyDishes[firstDay].price : null;
+          payload.dishes = null;
+        }
+
+        const docRef = await addDoc(collection(db, "deals"), payload);
+        uploaded++;
+        statusEl.className = 'deal-status status-done';
+        statusEl.textContent = '✅ Uploaded';
+        log(`✅ "${deal.restaurantName}" deal → ${docRef.id}`, 'ok');
+      } catch (err) {
+        errors++;
+        statusEl.className = 'deal-status status-error';
+        statusEl.textContent = '❌ Error';
+        log(`❌ "${deal.restaurantName}": ${err.message}`, 'err');
+      }
+
+      document.getElementById('uploadedCount').textContent = uploaded;
+      document.getElementById('errorCount').textContent = skipped + errors;
+      document.getElementById('progressFill').style.width = `${((i+1)/total)*100}%`;
+      await new Promise(r => setTimeout(r, 200));
+    }
+
+    btn.textContent = `✅ Done — ${uploaded} deals uploaded`;
+    log(`\nComplete: ${uploaded} uploaded, ${skipped} skipped (no restaurant match), ${errors} errors.`, 'ok');
+  };
+</script>
+</body>
+</html>
