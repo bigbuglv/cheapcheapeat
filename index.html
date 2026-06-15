@@ -1952,14 +1952,45 @@
       </div>
       <a class="map-link" href="${mapsUrl}" target="_blank">📍 Open in Google Maps</a>
       ${r.website ? `<a class="map-link" href="${r.website}" target="_blank" style="margin-top:8px;background:var(--surface2);color:var(--cream);border:1px solid var(--border)">🌐 Visit Restaurant Website</a>` : ''}
+      <button onclick="shareRestaurant('${r.id}', '${(r.name||'').replace(/'/g,"\\'")}', '${(r.address||'').replace(/'/g,"\\'")}', '${(r.dish||'').replace(/'/g,"\\'")}', '${r.exactPrice||''}')" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">🔗 Share this restaurant</button>
       <button onclick="openEditForm(this.dataset.id)" data-id="${r.id}" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">✏️ Suggest an Edit</button>
     `;
+    // Update URL to shareable link without reloading
+    history.pushState(null, '', `?r=${r.id}`);
     document.getElementById('modal').classList.add('open');
   };
 
   window.closeModal = (e) => {
     if (e.target === document.getElementById('modal')) {
       document.getElementById('modal').classList.remove('open');
+      // Clean up the ?r= param from the URL when modal is closed
+      history.replaceState(null, '', window.location.pathname);
+    }
+  };
+
+  window.shareRestaurant = async (id, name, address, dish, price) => {
+    const url = `https://cheapbites.com.au/?r=${id}`;
+    const text = `${name} — ${dish}${price ? ' (' + price + ')' : ''} 🍽️\n${address}\n\nFound on CheapBites: ${url}`;
+
+    // Use native share sheet on mobile if available
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${name} on CheapBites`,
+          text: `${name} — ${dish}${price ? ' (' + price + ')' : ''} 🍽️\n${address}`,
+          url
+        });
+        return;
+      } catch(e) { /* user cancelled or error — fall through to clipboard */ }
+    }
+
+    // Desktop fallback — copy to clipboard
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast('🔗 Link copied to clipboard!');
+    } catch(e) {
+      // Last resort — show the URL in a prompt
+      prompt('Copy this link to share:', url);
     }
   };
 
@@ -3631,6 +3662,24 @@
   function applyUrlParamsAfterLoad() {
     try {
       const params = new URLSearchParams(window.location.search);
+
+      // ?r=restaurantId → open that restaurant's modal directly (shareable link)
+      const rId = params.get('r');
+      if (rId) {
+        const restaurant = restaurants.find(r => r.id === rId);
+        if (restaurant) {
+          // Show search results so there's something behind the modal
+          searchActive = true;
+          renderCards(restaurants.slice(0, 20));
+          setTimeout(() => {
+            openModal(restaurant);
+            // Update URL to the shareable form without reloading
+            history.replaceState(null, '', `?r=${rId}`);
+          }, 100);
+          return; // Don't apply other params
+        }
+      }
+
       // ?q=Footscray → pre-fill search and filter (used by static suburb pages + Google Sitelinks search box)
       const q = params.get('q');
       if (q) {
@@ -3648,9 +3697,7 @@
       if (params.get('deal') === 'true' || params.get('deals') === 'true') {
         const dealChip = document.querySelector('.price-filter-row .filter-chip.deal');
         if (dealChip) {
-          // Trigger the same flow as if the user clicked it
           window.setPriceFilter('deal', dealChip);
-          // Smooth-scroll to the listings so the user sees the filter took effect
           setTimeout(() => {
             const listings = document.getElementById('listings') || document.querySelector('.cards-grid');
             if (listings) listings.scrollIntoView({ behavior: 'smooth', block: 'start' });
