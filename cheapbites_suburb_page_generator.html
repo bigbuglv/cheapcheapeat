@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CheapBites — Suburb Page Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0e0c09; --surface:#1a1710; --surface2:#252118;
+    --gold:#f5c842; --gold-dim:#b8942f; --red:#e8402a;
+    --green:#4caf7d; --cream:#f0ead8; --muted:#7a7060;
+    --border:rgba(245,200,66,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--cream); font-family:'DM Sans',sans-serif; min-height:100vh; padding:32px 24px; }
+  .container { max-width:860px; margin:0 auto; }
+  h1 { font-family:'Fraunces',serif; font-size:2rem; font-weight:900; margin-bottom:4px; }
+  h1 .gold { color:var(--gold); }
+  .subtitle { color:var(--muted); font-size:0.9rem; margin-bottom:32px; }
+  .step { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:20px; }
+  .step-num { font-family:'Fraunces',serif; font-size:2rem; font-weight:900; color:var(--gold); opacity:0.5; margin-bottom:8px; }
+  .step h3 { font-size:1rem; font-weight:700; margin-bottom:8px; }
+  .step p { color:var(--muted); font-size:0.85rem; line-height:1.6; margin-bottom:12px; }
+  textarea {
+    width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:8px;
+    color:var(--cream); font-family:monospace; font-size:0.78rem; padding:12px; outline:none;
+    resize:vertical; min-height:120px; line-height:1.5;
+  }
+  textarea:focus { border-color:var(--gold-dim); }
+  .btn { font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:700; padding:12px 24px; border-radius:10px; cursor:pointer; border:none; transition:all 0.2s; }
+  .btn-gold { background:var(--gold); color:#0e0c09; }
+  .btn-gold:hover:not(:disabled) { background:#ffd740; transform:translateY(-1px); }
+  .btn-gold:disabled { opacity:0.4; cursor:not-allowed; }
+  .btn-outline { background:transparent; color:var(--cream); border:1px solid var(--border); }
+  .btn-outline:hover { border-color:var(--gold-dim); color:var(--gold); }
+  .btn-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+  .stats-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border-radius:12px; overflow:hidden; margin-bottom:20px; }
+  .stat { background:var(--surface); padding:14px; text-align:center; }
+  .stat-num { font-family:'Fraunces',serif; font-size:1.6rem; font-weight:900; color:var(--gold); }
+  .stat-label { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-top:2px; }
+  #suburbList { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; margin-top:16px; }
+  .suburb-chip {
+    background:var(--surface2); border:1px solid var(--border); border-radius:8px;
+    padding:8px 12px; font-size:0.82rem; display:flex; justify-content:space-between;
+    align-items:center; cursor:pointer; transition:border-color 0.2s;
+  }
+  .suburb-chip.selected { border-color:var(--gold); background:rgba(245,200,66,0.06); }
+  .suburb-chip .count { color:var(--gold); font-weight:700; font-size:0.75rem; }
+  #log { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px; max-height:150px; overflow-y:auto; font-family:monospace; font-size:0.75rem; line-height:1.8; color:var(--muted); display:none; margin-top:12px; }
+  #log .ok { color:var(--green); }
+  #log .info { color:var(--gold-dim); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1><span class="gold">Cheap</span>Bites — Suburb Page Generator</h1>
+  <p class="subtitle">Paste your CSV export → select suburbs → download static HTML pages for Google to index</p>
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-num">01</div>
+    <h3>Paste your CSV export</h3>
+    <p>Go to <strong>cheapbites.com.au → Admin → 📥 Export → Download CSV</strong> (Approved only). Open the file in a text editor and paste the entire contents below.</p>
+    <textarea id="csvInput" placeholder="id,name,cuisineLabel,dish,exactPrice,priceRange,address,status,...
+abc123,Pho 54,Vietnamese,Rare Beef Pho,$14,15,2/54 Park Rd Cabramatta NSW 2166,approved,..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="parseCSV()">📊 Parse CSV</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 (hidden until parsed) -->
+  <div class="step" id="step2" style="display:none">
+    <div class="step-num">02</div>
+    <h3>Select suburbs to generate pages for</h3>
+    <p>Only suburbs with 2+ restaurants are shown (a single listing doesn't make a useful page). Click to select/deselect. The generator will create one HTML file per selected suburb.</p>
+    <div class="stats-bar">
+      <div class="stat"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Restaurants</div></div>
+      <div class="stat"><div class="stat-num" id="statSuburbs">0</div><div class="stat-label">Suburbs found</div></div>
+      <div class="stat"><div class="stat-num" id="statSelected">0</div><div class="stat-label">Selected</div></div>
+    </div>
+    <div class="btn-row" style="margin-top:0;margin-bottom:12px">
+      <button class="btn btn-outline" style="padding:6px 14px;font-size:0.82rem" onclick="selectAllSuburbs(true)">Select All</button>
+      <button class="btn btn-outline" style="padding:6px 14px;font-size:0.82rem" onclick="selectAllSuburbs(false)">Deselect All</button>
+    </div>
+    <div id="suburbList"></div>
+  </div>
+
+  <!-- STEP 3 (hidden until suburbs selected) -->
+  <div class="step" id="step3" style="display:none">
+    <div class="step-num">03</div>
+    <h3>Generate & download</h3>
+    <p>Each suburb gets its own SEO-optimised HTML page: <code style="color:var(--gold)">cheap-eats-footscray.html</code>, <code style="color:var(--gold)">cheap-eats-cabramatta.html</code>, etc. Push them all to your GitHub repo root. Google will index each one as a separate page targeting that suburb's search queries.</p>
+    <p style="margin-top:8px">Each page includes: full restaurant listings, price tiers, addresses, cuisine types, a back link to the main site, and <strong>LocalBusiness + ItemList schema markup</strong> so Google can show rich results.</p>
+    <div class="btn-row">
+      <button class="btn btn-gold" id="generateBtn" onclick="generatePages()">⚡ Generate Pages</button>
+    </div>
+    <div id="log"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+  let allRestaurants = [];
+  let suburbMap = {};
+  let selectedSuburbs = new Set();
+
+  // ── PARSE CSV ──
+  function parseCSV() {
+    const raw = document.getElementById('csvInput').value.trim();
+    if (!raw) { alert('Please paste your CSV first.'); return; }
+
+    const lines = raw.split('\n').filter(l => l.trim());
+    if (lines.length < 2) { alert('CSV looks too short — make sure you pasted the full file.'); return; }
+
+    // Parse headers
+    const headers = parseCSVLine(lines[0]);
+    const idx = {};
+    headers.forEach((h, i) => { idx[h.trim()] = i; });
+
+    allRestaurants = [];
+    for (let i = 1; i < lines.length; i++) {
+      const cols = parseCSVLine(lines[i]);
+      if (cols.length < 3) continue;
+      allRestaurants.push({
+        id:          cols[idx['id']] || '',
+        name:        cols[idx['name']] || '',
+        cuisineLabel: cols[idx['cuisineLabel']] || cols[idx['cuisine']] || '',
+        dish:        cols[idx['dish']] || '',
+        exactPrice:  cols[idx['exactPrice']] || '',
+        priceRange:  cols[idx['priceRange']] || '20',
+        address:     cols[idx['address']] || '',
+        status:      cols[idx['status']] || 'approved',
+      });
+    }
+
+    allRestaurants = allRestaurants.filter(r => r.name && r.address);
+
+    // Group by suburb
+    suburbMap = {};
+    allRestaurants.forEach(r => {
+      const suburb = extractSuburb(r.address);
+      if (!suburb) return;
+      if (!suburbMap[suburb]) suburbMap[suburb] = [];
+      suburbMap[suburb].push(r);
+    });
+
+    // Filter to suburbs with 2+ restaurants
+    const validSuburbs = Object.keys(suburbMap)
+      .filter(s => suburbMap[s].length >= 2)
+      .sort();
+
+    // Select all by default
+    selectedSuburbs = new Set(validSuburbs);
+
+    renderSuburbChips(validSuburbs);
+
+    document.getElementById('statTotal').textContent = allRestaurants.length;
+    document.getElementById('statSuburbs').textContent = validSuburbs.length;
+    document.getElementById('statSelected').textContent = validSuburbs.length;
+    document.getElementById('step2').style.display = 'block';
+    document.getElementById('step3').style.display = 'block';
+    document.getElementById('step2').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (c === '"') {
+        if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
+        else { inQuotes = !inQuotes; }
+      } else if (c === ',' && !inQuotes) {
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += c;
+      }
+    }
+    result.push(current.trim());
+    return result;
+  }
+
+  function extractSuburb(address) {
+    if (!address) return null;
+    // "123 Smith St, Footscray VIC 3011" → "Footscray"
+    // "Shop 1/128 Little Bourke St, Melbourne VIC 3000" → "Melbourne"
+    const parts = address.split(',');
+    if (parts.length < 2) return null;
+    // The suburb is typically the second-to-last or last part before the state
+    const lastPart = parts[parts.length - 1].trim(); // "VIC 3011" or "NSW 2166"
+    const secondLast = parts[parts.length - 2].trim(); // "Footscray VIC 3011" or "Footscray"
+    // Remove state/postcode from secondLast
+    const suburb = secondLast
+      .replace(/\b(VIC|NSW|QLD|SA|WA|TAS|ACT|NT)\b\s*\d{4}/gi, '')
+      .replace(/\b(VIC|NSW|QLD|SA|WA|TAS|ACT|NT)\b/gi, '')
+      .trim();
+    return suburb.length > 1 ? titleCase(suburb) : null;
+  }
+
+  function titleCase(str) {
+    return str.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  }
+
+  function getStateFromAddress(address) {
+    const m = address.match(/\b(VIC|NSW|QLD|SA|WA|TAS|ACT|NT)\b/i);
+    return m ? m[1].toUpperCase() : 'VIC';
+  }
+
+  function renderSuburbChips(suburbs) {
+    const el = document.getElementById('suburbList');
+    el.innerHTML = suburbs.map(s => `
+      <div class="suburb-chip selected" id="chip-${slugify(s)}" onclick="toggleSuburb('${s}')">
+        <span>${s}</span>
+        <span class="count">${suburbMap[s].length}</span>
+      </div>
+    `).join('');
+  }
+
+  function toggleSuburb(suburb) {
+    if (selectedSuburbs.has(suburb)) {
+      selectedSuburbs.delete(suburb);
+      document.getElementById('chip-' + slugify(suburb)).classList.remove('selected');
+    } else {
+      selectedSuburbs.add(suburb);
+      document.getElementById('chip-' + slugify(suburb)).classList.add('selected');
+    }
+    document.getElementById('statSelected').textContent = selectedSuburbs.size;
+  }
+
+  function selectAllSuburbs(state) {
+    Object.keys(suburbMap).filter(s => suburbMap[s].length >= 2).forEach(suburb => {
+      if (state) {
+        selectedSuburbs.add(suburb);
+        const chip = document.getElementById('chip-' + slugify(suburb));
+        if (chip) chip.classList.add('selected');
+      } else {
+        selectedSuburbs.delete(suburb);
+        const chip = document.getElementById('chip-' + slugify(suburb));
+        if (chip) chip.classList.remove('selected');
+      }
+    });
+    document.getElementById('statSelected').textContent = selectedSuburbs.size;
+  }
+
+  function slugify(str) {
+    return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  // ── GENERATE PAGES ──
+  async function generatePages() {
+    if (selectedSuburbs.size === 0) { alert('Select at least one suburb.'); return; }
+    const btn = document.getElementById('generateBtn');
+    const logEl = document.getElementById('log');
+    btn.disabled = true;
+    btn.textContent = '⏳ Generating...';
+    logEl.style.display = 'block';
+    logEl.innerHTML = '';
+
+    function log(msg, cls) { logEl.innerHTML += `<div class="${cls||'info'}">${msg}</div>`; logEl.scrollTop = logEl.scrollHeight; }
+
+    const zip = new JSZip();
+
+    for (const suburb of selectedSuburbs) {
+      const restaurants = suburbMap[suburb];
+      const slug = slugify(suburb);
+      const state = getStateFromAddress(restaurants[0].address);
+      const html = buildSuburbPage(suburb, state, restaurants);
+      zip.file(`cheap-eats-${slug}.html`, html);
+      log(`✅ cheap-eats-${slug}.html (${restaurants.length} listings)`, 'ok');
+    }
+
+    // Also generate a city-level hub page for each state
+    const stateGroups = {};
+    selectedSuburbs.forEach(suburb => {
+      const state = getStateFromAddress(suburbMap[suburb][0].address);
+      if (!stateGroups[state]) stateGroups[state] = [];
+      stateGroups[state].push(suburb);
+    });
+
+    const cityNames = { VIC: 'Melbourne', NSW: 'Sydney', QLD: 'Brisbane', SA: 'Adelaide', WA: 'Perth' };
+    for (const [state, suburbs] of Object.entries(stateGroups)) {
+      const cityName = cityNames[state] || state;
+      const allR = suburbs.flatMap(s => suburbMap[s]);
+      const html = buildCityPage(cityName, state, suburbs, allR);
+      zip.file(`cheap-eats-${slugify(cityName)}.html`, html);
+      log(`✅ cheap-eats-${slugify(cityName)}.html (${allR.length} listings, ${suburbs.length} suburbs)`, 'ok');
+    }
+
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cheapbites-suburb-pages.zip';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    log(`\nDone! ${selectedSuburbs.size} suburb pages + ${Object.keys(stateGroups).length} city hub pages downloaded.`, 'ok');
+    log('Push all HTML files to your GitHub repo root and they\'ll be live within 2 minutes.', 'ok');
+    btn.textContent = `✅ Done — ${selectedSuburbs.size} pages downloaded`;
+    btn.disabled = false;
+  }
+
+  function priceTierColor(tier) {
+    if (tier === '10') return '#4caf7d';
+    if (tier === '15') return '#f5c842';
+    return '#e8402a';
+  }
+  function priceTierBg(tier) {
+    if (tier === '10') return 'rgba(76,175,125,0.12)';
+    if (tier === '15') return 'rgba(245,200,66,0.12)';
+    return 'rgba(232,64,42,0.12)';
+  }
+
+  // ── BUILD SUBURB PAGE ──
+  function buildSuburbPage(suburb, state, restaurants) {
+    const slug = slugify(suburb);
+    const cityName = { VIC: 'Melbourne', NSW: 'Sydney', QLD: 'Brisbane', SA: 'Adelaide', WA: 'Perth' }[state] || state;
+    const count = restaurants.length;
+    const cheapest = restaurants.reduce((a,b) => parseInt(a.priceRange||20) <= parseInt(b.priceRange||20) ? a : b);
+    const cuisineSet = [...new Set(restaurants.map(r => r.cuisineLabel).filter(Boolean))].join(', ');
+
+    const itemListSchema = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": `Cheap Eats in ${suburb} — Meals Under $20`,
+      "description": `${count} budget restaurants in ${suburb} with meals under $20`,
+      "url": `https://cheapbites.com.au/cheap-eats-${slug}.html`,
+      "numberOfItems": count,
+      "itemListElement": restaurants.map((r, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "item": {
+          "@type": "Restaurant",
+          "name": r.name,
+          "address": { "@type": "PostalAddress", "streetAddress": r.address },
+          "servesCuisine": r.cuisineLabel,
+          "priceRange": `$${r.exactPrice || ('Under $' + r.priceRange)}`
+        }
+      }))
+    }, null, 0);
+
+    const restaurantCards = restaurants.map(r => `
+      <div style="background:#1a1710;border:1px solid rgba(245,200,66,0.15);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:8px">
+          <h3 style="font-family:Fraunces,serif;font-size:1rem;font-weight:700;color:#f0ead8;margin:0">${r.name}</h3>
+          <span style="padding:3px 10px;border-radius:6px;font-size:0.72rem;font-weight:700;white-space:nowrap;background:${priceTierBg(r.priceRange)};color:${priceTierColor(r.priceRange)}">Under $${r.priceRange}</span>
+        </div>
+        ${r.dish ? `<p style="color:#f5c842;font-size:0.88rem;margin:0">${r.dish}${r.exactPrice ? ` — <strong>${r.exactPrice}</strong>` : ''}</p>` : ''}
+        <p style="color:#7a7060;font-size:0.78rem;margin:0">${r.cuisineLabel || ''}</p>
+        <p style="color:#7a7060;font-size:0.78rem;margin:0">📍 ${r.address}</p>
+        <a href="https://cheapbites.com.au/?q=${encodeURIComponent(suburb)}" style="color:#f5c842;font-size:0.78rem;text-decoration:none;margin-top:4px">View on CheapBites →</a>
+      </div>
+    `).join('');
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cheap Eats in ${suburb} — Meals Under $20 | CheapBites</title>
+<meta name="description" content="Find the best cheap meals under $20 in ${suburb}, ${cityName}. ${count} budget restaurants including ${cuisineSet} — verified by the CheapBites community.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://cheapbites.com.au/cheap-eats-${slug}.html">
+<meta property="og:title" content="Cheap Eats in ${suburb} — Meals Under $20">
+<meta property="og:description" content="${count} budget restaurants in ${suburb} with meals under $20. ${cuisineSet}.">
+<meta property="og:url" content="https://cheapbites.com.au/cheap-eats-${slug}.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://cheapbites.com.au/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<script type="application/ld+json">${itemListSchema}<\/script>
+<style>
+  :root { --bg:#0e0c09; --gold:#f5c842; --cream:#f0ead8; --muted:#7a7060; --border:rgba(245,200,66,0.15); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--cream); font-family:'DM Sans',sans-serif; min-height:100vh; }
+  header { background:rgba(14,12,9,0.95); border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; z-index:10; }
+  .logo { font-family:'Fraunces',serif; font-size:1.4rem; font-weight:900; color:var(--gold); text-decoration:none; }
+  .logo span { color:var(--cream); }
+  .back-link { font-size:0.82rem; color:var(--muted); text-decoration:none; border:1px solid var(--border); padding:6px 14px; border-radius:8px; transition:color 0.2s; }
+  .back-link:hover { color:var(--gold); }
+  .hero { padding:56px 24px 40px; text-align:center; max-width:800px; margin:0 auto; }
+  .hero h1 { font-family:'Fraunces',serif; font-size:2.2rem; font-weight:900; line-height:1.2; margin-bottom:12px; }
+  .hero h1 em { color:var(--gold); font-style:normal; }
+  .hero p { color:var(--muted); font-size:0.95rem; line-height:1.6; margin-bottom:24px; }
+  .hero-stats { display:flex; justify-content:center; gap:24px; flex-wrap:wrap; }
+  .hero-stat { background:#1a1710; border:1px solid var(--border); border-radius:10px; padding:12px 20px; text-align:center; }
+  .hero-stat-num { font-family:'Fraunces',serif; font-size:1.4rem; font-weight:900; color:var(--gold); }
+  .hero-stat-label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
+  main { max-width:900px; margin:0 auto; padding:0 24px 64px; }
+  .section-title { font-family:'Fraunces',serif; font-size:1.3rem; font-weight:700; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin-bottom:40px; }
+  .cta-box { background:#1a1710; border:1px solid rgba(245,200,66,0.25); border-radius:14px; padding:28px; text-align:center; margin-bottom:40px; }
+  .cta-box h2 { font-family:'Fraunces',serif; font-size:1.3rem; font-weight:700; margin-bottom:8px; }
+  .cta-box p { color:var(--muted); font-size:0.85rem; margin-bottom:18px; }
+  .cta-btn { display:inline-block; background:var(--gold); color:#0e0c09; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:700; padding:12px 24px; border-radius:10px; text-decoration:none; }
+  .nearby-links { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:40px; }
+  .nearby-link { padding:6px 14px; background:#252118; border:1px solid var(--border); border-radius:20px; color:var(--cream); text-decoration:none; font-size:0.82rem; }
+  .nearby-link:hover { border-color:var(--gold); color:var(--gold); }
+  footer { text-align:center; padding:24px; color:var(--muted); font-size:0.78rem; border-top:1px solid var(--border); }
+  footer a { color:var(--gold); text-decoration:none; }
+  @media(max-width:600px) { .hero h1 { font-size:1.6rem; } .grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <a href="https://cheapbites.com.au" class="logo">Cheap<span>Bites</span></a>
+  <a href="https://cheapbites.com.au" class="back-link">← All suburbs</a>
+</header>
+
+<div class="hero">
+  <h1>Cheap Eats in <em>${suburb}</em></h1>
+  <p>The best budget restaurants in ${suburb}, ${cityName} — every meal under $20, verified by the community.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">${count}</div><div class="hero-stat-label">Restaurants</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">$${cheapest.priceRange || 20}</div><div class="hero-stat-label">From</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">${[...new Set(restaurants.map(r=>r.cuisineLabel).filter(Boolean))].length}</div><div class="hero-stat-label">Cuisines</div></div>
+  </div>
+</div>
+
+<main>
+  <h2 class="section-title">🍽️ ${count} Cheap Restaurants in ${suburb}</h2>
+  <div class="grid">${restaurantCards}</div>
+
+  <div class="cta-box">
+    <h2>Know a cheap spot we missed?</h2>
+    <p>CheapBites is community-driven. If you know a restaurant in ${suburb} with meals under $20, add it for free — no account needed.</p>
+    <a href="https://cheapbites.com.au" class="cta-btn">+ Add a restaurant</a>
+  </div>
+
+  <h2 class="section-title" style="margin-bottom:12px">🗺️ More cheap eats near ${suburb}</h2>
+  <div class="nearby-links">
+    <a href="https://cheapbites.com.au" class="nearby-link">📍 Use my location</a>
+    <a href="https://cheapbites.com.au/?q=${encodeURIComponent(suburb)}" class="nearby-link">Search ${suburb} on CheapBites</a>
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 <a href="https://cheapbites.com.au">CheapBites</a> — Free community directory of cheap meals under $20 across Australia</p>
+</footer>
+</body>
+</html>`;
+  }
+
+  // ── BUILD CITY HUB PAGE ──
+  function buildCityPage(cityName, state, suburbs, restaurants) {
+    const slug = slugify(cityName);
+    const count = restaurants.length;
+    const suburbLinks = suburbs.sort().map(s => `
+      <a href="/cheap-eats-${slugify(s)}.html" style="background:#1a1710;border:1px solid rgba(245,200,66,0.15);border-radius:10px;padding:12px 16px;text-decoration:none;display:flex;justify-content:space-between;align-items:center">
+        <span style="color:#f0ead8;font-weight:600;font-size:0.9rem">${s}</span>
+        <span style="color:#f5c842;font-size:0.8rem;font-weight:700">${suburbMap[s].length} spots</span>
+      </a>
+    `).join('');
+
+    const topCuisines = Object.entries(
+      restaurants.reduce((acc, r) => { if (r.cuisineLabel) acc[r.cuisineLabel] = (acc[r.cuisineLabel]||0)+1; return acc; }, {})
+    ).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([c]) => c).join(', ');
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cheap Eats in ${cityName} — Meals Under $20 | CheapBites</title>
+<meta name="description" content="Find the best cheap meals under $20 in ${cityName}. ${count} budget restaurants across ${suburbs.length} suburbs — ${topCuisines} and more. Free community directory.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://cheapbites.com.au/cheap-eats-${slug}.html">
+<meta property="og:title" content="Cheap Eats in ${cityName} — Meals Under $20">
+<meta property="og:description" content="${count} budget restaurants across ${suburbs.length} suburbs in ${cityName} — all under $20.">
+<meta property="og:url" content="https://cheapbites.com.au/cheap-eats-${slug}.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://cheapbites.com.au/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<script type="application/ld+json">${JSON.stringify({
+  "@context":"https://schema.org",
+  "@type":"ItemList",
+  "name":`Cheap Eats in ${cityName}`,
+  "description":`Budget restaurants under $20 across ${cityName}`,
+  "url":`https://cheapbites.com.au/cheap-eats-${slug}.html`,
+  "numberOfItems":count
+}, null, 0)}<\/script>
+<style>
+  :root { --bg:#0e0c09; --gold:#f5c842; --cream:#f0ead8; --muted:#7a7060; --border:rgba(245,200,66,0.15); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--cream); font-family:'DM Sans',sans-serif; min-height:100vh; }
+  header { background:rgba(14,12,9,0.95); border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; z-index:10; }
+  .logo { font-family:'Fraunces',serif; font-size:1.4rem; font-weight:900; color:var(--gold); text-decoration:none; }
+  .logo span { color:var(--cream); }
+  .back-link { font-size:0.82rem; color:var(--muted); text-decoration:none; border:1px solid var(--border); padding:6px 14px; border-radius:8px; }
+  .hero { padding:56px 24px 40px; text-align:center; max-width:800px; margin:0 auto; }
+  .hero h1 { font-family:'Fraunces',serif; font-size:2.4rem; font-weight:900; line-height:1.2; margin-bottom:12px; }
+  .hero h1 em { color:var(--gold); font-style:normal; }
+  .hero p { color:var(--muted); font-size:0.95rem; line-height:1.6; margin-bottom:24px; }
+  .stats { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-bottom:0; }
+  .stat { background:#1a1710; border:1px solid var(--border); border-radius:10px; padding:12px 20px; text-align:center; }
+  .stat-num { font-family:'Fraunces',serif; font-size:1.4rem; font-weight:900; color:var(--gold); }
+  .stat-label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
+  main { max-width:900px; margin:0 auto; padding:40px 24px 64px; }
+  .section-title { font-family:'Fraunces',serif; font-size:1.3rem; font-weight:700; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+  .suburb-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; margin-bottom:40px; }
+  .cta-box { background:#1a1710; border:1px solid rgba(245,200,66,0.25); border-radius:14px; padding:28px; text-align:center; }
+  .cta-box h2 { font-family:'Fraunces',serif; font-size:1.3rem; margin-bottom:8px; }
+  .cta-box p { color:var(--muted); font-size:0.85rem; margin-bottom:18px; }
+  .cta-btn { display:inline-block; background:var(--gold); color:#0e0c09; font-weight:700; padding:12px 24px; border-radius:10px; text-decoration:none; }
+  footer { text-align:center; padding:24px; color:var(--muted); font-size:0.78rem; border-top:1px solid var(--border); }
+  footer a { color:var(--gold); text-decoration:none; }
+  @media(max-width:600px) { .hero h1 { font-size:1.7rem; } .suburb-grid { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <a href="https://cheapbites.com.au" class="logo">Cheap<span>Bites</span></a>
+  <a href="https://cheapbites.com.au" class="back-link">← Find food near me</a>
+</header>
+
+<div class="hero">
+  <h1>Cheap Eats in <em>${cityName}</em></h1>
+  <p>${count} budget restaurants across ${suburbs.length} suburbs — every meal under $20. Browse by suburb or search by cuisine.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">${count}</div><div class="stat-label">Restaurants</div></div>
+    <div class="stat"><div class="stat-num">${suburbs.length}</div><div class="stat-label">Suburbs</div></div>
+    <div class="stat"><div class="stat-num">$20</div><div class="stat-label">Max price</div></div>
+  </div>
+</div>
+
+<main>
+  <h2 class="section-title">📍 Browse by suburb in ${cityName}</h2>
+  <div class="suburb-grid">${suburbLinks}</div>
+
+  <div class="cta-box">
+    <h2>Find cheap eats right now</h2>
+    <p>Use your location to discover budget restaurants within 3km of you, or search any suburb in ${cityName}.</p>
+    <a href="https://cheapbites.com.au" class="cta-btn">📍 Find food near me</a>
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 <a href="https://cheapbites.com.au">CheapBites</a> — Free community directory of cheap meals under $20 across Australia</p>
+</footer>
+</body>
+</html>`;
+  }
+</script>
+</body>
+</html>
