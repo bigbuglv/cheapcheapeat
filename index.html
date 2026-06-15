@@ -1285,6 +1285,7 @@
 <!-- FOOTER -->
 <footer>
   <strong>CheapBites</strong> — Community powered. Always free. &nbsp;·&nbsp; Built with ❤️ for budget food lovers in Australia.
+  <div style="margin-top:8px;font-size:0.8rem"><a href="/browse-suburbs.html" style="color:var(--gold-dim);text-decoration:none">Browse cheap eats by suburb →</a></div>
 </footer>
 
 <!-- MODAL -->
@@ -1443,30 +1444,62 @@
   }
 
   // ── LOAD RESTAURANTS FROM FIREBASE ──
+  const CACHE_KEY = 'cb_restaurants_v1';
+  const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+
   async function loadRestaurants() {
     try {
+      // ── STEP 1: Show cached data instantly if available ──
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        try {
+          const { data, timestamp } = JSON.parse(cached);
+          const age = Date.now() - timestamp;
+          if (data && data.length > 0) {
+            // Paint the UI immediately from cache
+            restaurants = data;
+            window.restaurants = restaurants;
+            renderCards(getFiltered());
+            updateLiveCounter();
+            renderTodaysDeals();
+            // If cache is fresh (< 30 min), skip the Firestore fetch entirely
+            if (age < CACHE_TTL) return;
+          }
+        } catch(e) {
+          localStorage.removeItem(CACHE_KEY);
+        }
+      }
+
+      // ── STEP 2: Fetch fresh data from Firestore ──
       const q = query(
         collection(db, "restaurants"),
         where("status", "==", "approved")
       );
       const snapshot = await getDocs(q);
-      restaurants = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const fresh = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      // Save to cache
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ data: fresh, timestamp: Date.now() }));
+      } catch(e) { /* storage full — ignore */ }
+
+      restaurants = fresh;
       window.restaurants = restaurants;
       renderCards(getFiltered());
-      // Update live counter
       updateLiveCounter();
-      // Update pins — if map already loaded, place now; otherwise wait
       if (map) {
         updateMapPins(getFiltered());
       } else {
         window._pendingPinUpdate = true;
       }
-      // Re-render today's deals (needs both restaurants + deals)
       renderTodaysDeals();
     } catch (err) {
       console.error("Error loading restaurants:", err);
-      restaurants = [];
-      renderCards(getFiltered());
+      // If Firestore fails but we have cache, keep showing cached data
+      if (restaurants.length === 0) {
+        restaurants = [];
+        renderCards(getFiltered());
+      }
     }
   }
 
@@ -2360,6 +2393,7 @@
       });
 
       // Reload restaurants to show updated data
+      localStorage.removeItem('cb_restaurants_v1');
       await loadRestaurants();
 
       closeEditForm();
@@ -2637,6 +2671,7 @@
       const card = document.getElementById('admin-card-' + id);
       if (card) card.remove();
       showToast('✅ Restaurant approved and now live!');
+      localStorage.removeItem('cb_restaurants_v1');
       loadRestaurants();
     } catch (err) {
       console.error(err);
@@ -2819,6 +2854,7 @@
     status.textContent = `${deleted} deleted, ${errors} errors`;
     status.style.color = deleted > 0 ? 'var(--green)' : 'var(--red)';
     dupesToDelete = [];
+    localStorage.removeItem('cb_restaurants_v1');
     await loadRestaurants();
     showToast(`✅ ${deleted} duplicate(s) removed!`);
   };
@@ -3509,6 +3545,7 @@
       await updateDoc(doc(db, "edits", editId), { status: 'approved' });
       document.getElementById('edit-card-' + editId).remove();
       showToast('✅ Edit applied to listing!');
+      localStorage.removeItem('cb_restaurants_v1');
       loadRestaurants();
     } catch(err) {
       console.error(err);
@@ -3594,6 +3631,19 @@
   function applyUrlParamsAfterLoad() {
     try {
       const params = new URLSearchParams(window.location.search);
+      // ?q=Footscray → pre-fill search and filter (used by static suburb pages + Google Sitelinks search box)
+      const q = params.get('q');
+      if (q) {
+        const si = document.getElementById('searchInput');
+        if (si) {
+          si.value = q;
+          if (typeof triggerSearch === 'function') { triggerSearch(); } else { filterCards(); }
+          setTimeout(() => {
+            const listings = document.getElementById('listings') || document.querySelector('.cards-grid');
+            if (listings) listings.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 300);
+        }
+      }
       // ?deal=true or ?deals=true → auto-apply On Deal filter
       if (params.get('deal') === 'true' || params.get('deals') === 'true') {
         const dealChip = document.querySelector('.price-filter-row .filter-chip.deal');
