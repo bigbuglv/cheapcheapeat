@@ -1317,7 +1317,7 @@
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp }
+  import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp, onSnapshot }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -1444,46 +1444,20 @@
   }
 
   // ── LOAD RESTAURANTS FROM FIREBASE ──
-  const CACHE_KEY = 'cb_restaurants_v1';
-  const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+  let restaurantListener = null; // keep reference so we can unsubscribe if needed
 
   async function loadRestaurants() {
-    try {
-      // ── STEP 1: Show cached data instantly if available ──
-      const cached = localStorage.getItem(CACHE_KEY);
-      if (cached) {
-        try {
-          const { data, timestamp } = JSON.parse(cached);
-          const age = Date.now() - timestamp;
-          if (data && data.length > 0) {
-            // Paint the UI immediately from cache
-            restaurants = data;
-            window.restaurants = restaurants;
-            renderCards(getFiltered());
-            updateLiveCounter();
-            renderTodaysDeals();
-            // If cache is fresh (< 30 min), skip the Firestore fetch entirely
-            if (age < CACHE_TTL) return;
-          }
-        } catch(e) {
-          localStorage.removeItem(CACHE_KEY);
-        }
-      }
+    // Unsubscribe any existing listener first
+    if (restaurantListener) { restaurantListener(); restaurantListener = null; }
 
-      // ── STEP 2: Fetch fresh data from Firestore ──
-      const q = query(
-        collection(db, "restaurants"),
-        where("status", "==", "approved")
-      );
-      const snapshot = await getDocs(q);
-      const fresh = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const q = query(
+      collection(db, "restaurants"),
+      where("status", "==", "approved")
+    );
 
-      // Save to cache
-      try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify({ data: fresh, timestamp: Date.now() }));
-      } catch(e) { /* storage full — ignore */ }
-
-      restaurants = fresh;
+    // onSnapshot fires immediately with current data, then again on every change
+    restaurantListener = onSnapshot(q, (snapshot) => {
+      restaurants = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       window.restaurants = restaurants;
       renderCards(getFiltered());
       updateLiveCounter();
@@ -1493,14 +1467,23 @@
         window._pendingPinUpdate = true;
       }
       renderTodaysDeals();
-    } catch (err) {
-      console.error("Error loading restaurants:", err);
-      // If Firestore fails but we have cache, keep showing cached data
-      if (restaurants.length === 0) {
-        restaurants = [];
-        renderCards(getFiltered());
-      }
-    }
+    }, (err) => {
+      console.error("Snapshot error:", err);
+    });
+  }
+
+  // ── VERIFIED DATE HELPER ──
+  function formatVerifiedDate(verifiedAt) {
+    if (!verifiedAt) return null;
+    try {
+      const d = verifiedAt.toDate ? verifiedAt.toDate() : new Date(verifiedAt.seconds ? verifiedAt.seconds * 1000 : verifiedAt);
+      const now = new Date();
+      const diffDays = Math.floor((now - d) / (1000 * 60 * 60 * 24));
+      if (diffDays < 7) return 'Verified this week';
+      if (diffDays < 30) return `Verified ${Math.floor(diffDays/7)}w ago`;
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return `Verified ${months[d.getMonth()]} ${d.getFullYear()}`;
+    } catch(e) { return null; }
   }
 
   // ── PRICE TIER HELPER ──
@@ -1602,9 +1585,10 @@
           </div>` : '<div style="margin-bottom:12px"></div>'}
           <div class="card-footer">
             <div class="card-location">📍 ${r.address ? r.address.split(',').slice(1).join(',').trim() : ''}</div>
-            <div style="display:flex;align-items:center;gap:6px">
+            <div style="display:flex;align-items:center;gap:6px;flex-direction:column;align-items:flex-end">
               ${(r.distance && r.distance < 900 && typeof r.distance === 'number') ? `<span style="font-size:0.75rem;color:var(--muted)">${r.distance.toFixed(1)}km</span>` : ''}
               <div class="stars">${'★'.repeat(r.stars || 4)}</div>
+              ${r.verifiedAt ? `<span style="font-size:0.68rem;color:var(--muted);white-space:nowrap">✓ ${formatVerifiedDate(r.verifiedAt)}</span>` : ''}
             </div>
           </div>
         </div>
@@ -1947,6 +1931,7 @@
         <div class="meta-row"><span class="meta-label">Hours</span><span class="meta-val">${r.hours || 'Not listed'}</span></div>
         <div class="meta-row"><span class="meta-label">Phone</span><span class="meta-val">${r.phone || 'Not provided'}</span></div>
         <div class="meta-row"><span class="meta-label">Rating</span><span class="meta-val" style="color:var(--gold)">${'★'.repeat(r.stars || 4)}</span></div>
+        ${r.verifiedAt ? `<div class="meta-row"><span class="meta-label">Verified</span><span class="meta-val" style="color:var(--green)">✓ ${formatVerifiedDate(r.verifiedAt)}</span></div>` : `<div class="meta-row"><span class="meta-label">Verified</span><span class="meta-val" style="color:var(--muted)">Not yet verified</span></div>`}
         ${r.notes ? `<div class="meta-row"><span class="meta-label">Notes</span><span class="meta-val">${r.notes}</span></div>` : ''}
 
       </div>
@@ -2424,7 +2409,6 @@
       });
 
       // Reload restaurants to show updated data
-      localStorage.removeItem('cb_restaurants_v1');
       await loadRestaurants();
 
       closeEditForm();
@@ -2645,6 +2629,9 @@
       // Show signed-in email in the header
       const whoEl = document.getElementById('adminWhoAmI');
       if (whoEl) whoEl.textContent = user.email;
+      // Show the admin-only verify button in the edit form
+      const verifyBtn = document.getElementById('adminVerifyBtn');
+      if (verifyBtn) verifyBtn.style.display = 'block';
       loadPendingRestaurants();
     } else {
       loginEl.style.display = 'block';
@@ -2698,15 +2685,44 @@
   window.approveRestaurant = async (id) => {
     try {
       const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-      await updateDoc(doc(db, "restaurants", id), { status: "approved" });
+      await updateDoc(doc(db, "restaurants", id), { status: "approved", verifiedAt: serverTimestamp() });
       const card = document.getElementById('admin-card-' + id);
       if (card) card.remove();
       showToast('✅ Restaurant approved and now live!');
-      localStorage.removeItem('cb_restaurants_v1');
       loadRestaurants();
     } catch (err) {
       console.error(err);
       showToast('Error approving. Try again.', true);
+    }
+  };
+
+  window.markVerified = async (id, btnEl) => {
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(doc(db, "restaurants", id), { verifiedAt: serverTimestamp() });
+      if (btnEl) { btnEl.textContent = '✓ Verified'; btnEl.style.color = 'var(--green)'; btnEl.style.borderColor = 'var(--green)'; btnEl.disabled = true; }
+      showToast('✅ Marked as verified!');
+    } catch(err) {
+      showToast('Error marking verified.', true);
+    }
+  };
+
+  window.markVerifiedFromEdit = async () => {
+    const id = document.getElementById('edit_id').value;
+    if (!id) return;
+    const btn = document.getElementById('adminVerifyBtn');
+    btn.textContent = '⏳ Saving...';
+    btn.disabled = true;
+    try {
+      const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(doc(db, "restaurants", id), { verifiedAt: serverTimestamp() });
+      showToast('✅ Marked as verified!');
+      btn.textContent = '✓ Verified!';
+      btn.style.background = 'rgba(76,175,125,0.1)';
+    } catch(err) {
+      showToast('Error. Are you signed in as admin?', true);
+      btn.textContent = '✓ Mark as Verified (Admin)';
+      btn.disabled = false;
     }
   };
 
@@ -2885,7 +2901,6 @@
     status.textContent = `${deleted} deleted, ${errors} errors`;
     status.style.color = deleted > 0 ? 'var(--green)' : 'var(--red)';
     dupesToDelete = [];
-    localStorage.removeItem('cb_restaurants_v1');
     await loadRestaurants();
     showToast(`✅ ${deleted} duplicate(s) removed!`);
   };
@@ -3576,7 +3591,6 @@
       await updateDoc(doc(db, "edits", editId), { status: 'approved' });
       document.getElementById('edit-card-' + editId).remove();
       showToast('✅ Edit applied to listing!');
-      localStorage.removeItem('cb_restaurants_v1');
       loadRestaurants();
     } catch(err) {
       console.error(err);
@@ -3844,6 +3858,8 @@
       </div>
 
       <button onclick="submitEdit()" id="editSubmitBtn" style="width:100%;padding:13px;background:var(--gold);color:#0e0c09;font-family:Fraunces,serif;font-size:1rem;font-weight:900;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s">Submit Edit →</button>
+      <!-- Admin-only verify button — only visible when signed in as admin -->
+      <button id="adminVerifyBtn" onclick="markVerifiedFromEdit()" style="display:none;width:100%;margin-top:10px;padding:11px;background:transparent;color:var(--green);border:1px solid var(--green);font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:700;border-radius:10px;cursor:pointer;transition:all 0.2s">✓ Mark as Verified (Admin)</button>
     </div>
   </div>
 </div>
